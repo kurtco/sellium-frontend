@@ -83,3 +83,13 @@ export interface Recruit {
   businessAddress: string;
   spouseName: string;
 }
+
+export interface Colors {
+  blue: string[];
+  red: string[];
+  gold: string[];
+  cyan: string[];
+  green: string[];
+  grey: string[];
+  [key: string]: string[];
+}
