@@ -102,5 +102,8 @@ export default function Palette(mode: PaletteMode, presetColor: string) {
         default: paletteColor.grey.A50,
       },
     },
+    customShadows: {
+      z1: "0px 1px 3px rgba(0, 0, 0, 0.2)",
+    },
   });
 }
