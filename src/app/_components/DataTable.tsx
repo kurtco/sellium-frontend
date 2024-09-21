@@ -32,13 +32,15 @@ import ScrollX from "./ScrollX";
 import LinearWithLabel from "./LinearWithLabel";
 import {
   CsvHeader,
-  DataFromImage,
+  Recruit,
   RecruiterTableData,
+  Users,
 } from "../../interfaces/interfaces";
 import {
   AgentsDataTableHeaders,
   DataTableLabels,
 } from "@/constants/labels.enums";
+import { calculateCompletion } from "@/utils/commonFunctions";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -168,15 +170,15 @@ export default function PaginationTable() {
 
   const fetchRecruiterData = async () => {
     try {
-      const response = await fetch("/api/recruiter/A0456");
-      const result = await response.json();
+      const response = await fetch("/api/users/A0456");
+      const result: Users = await response.json();
 
-      const mappedData = result.map((item: DataFromImage) => ({
+      const mappedData = result.recruits.map((item: Recruit) => ({
         name: item.userName,
         position: item.position,
         phoneNumber: item.phone,
         email: item.email,
-        profileProgress: 0,
+        profileProgress: calculateCompletion(item),
       }));
 
       setData(mappedData);

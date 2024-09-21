@@ -5,10 +5,9 @@ export async function GET(
   { params }: { params: { recruiterCode: string } }
 ) {
   const recruiterCode = params.recruiterCode;
-
   try {
     const response = await fetch(
-      `${process.env.API_HOST}users/recruiter/${recruiterCode}`
+      `${process.env.API_HOST}users/${recruiterCode}/recruits`
     );
     const data = await response.json();
 

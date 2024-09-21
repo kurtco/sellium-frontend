@@ -27,3 +27,59 @@ export interface CsvHeader {
   label: string;
   key: string;
 }
+
+export interface Users {
+  id: number;
+  recruiterName: string;
+  leaderName: string;
+  leaderCode: string;
+  userName: string;
+  position: string;
+  recruiterCode: string;
+  userCode: string;
+  startDate: string;
+  birthDate: string;
+  phone: string;
+  email: string;
+  homeAddress: string;
+  businessAddress: string;
+  spouseName: string;
+  recruiter: Recruiter;
+  recruits: Recruit[];
+}
+
+export interface Recruiter {
+  id: number;
+  recruiterName: string;
+  leaderName: string;
+  leaderCode: string;
+  userName: string;
+  position: string;
+  recruiterCode: string;
+  userCode: string;
+  startDate: string;
+  birthDate: string;
+  phone: string;
+  email: string;
+  homeAddress: string;
+  businessAddress: string;
+  spouseName: string;
+}
+
+export interface Recruit {
+  id: number;
+  recruiterName: string;
+  leaderName: string;
+  leaderCode: string;
+  userName: string;
+  position: string;
+  recruiterCode: string;
+  userCode: string;
+  startDate: string;
+  birthDate: string;
+  phone: string;
+  email: string;
+  homeAddress: string;
+  businessAddress: string;
+  spouseName: string;
+}
