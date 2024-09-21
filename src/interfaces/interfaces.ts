@@ -14,3 +14,16 @@ export interface DataFromImage {
   recruiterCode: string;
   userCode: string;
 }
+
+export interface RecruiterTableData {
+  name: string;
+  position: string;
+  phoneNumber: string;
+  email: string;
+  profileProgress: number;
+}
+
+export interface CsvHeader {
+  label: string;
+  key: string;
+}
