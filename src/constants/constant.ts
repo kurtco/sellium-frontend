@@ -9,6 +9,7 @@ export const defaultConfig = {
   miniDrawer: false,
   menuOrientation: "horizontal",
   fontFamily: "Arial",
+  themeLayout: "default",
 };
 
 export default defaultConfig;
