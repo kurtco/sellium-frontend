@@ -7,7 +7,6 @@ import { CssBaseline, PaletteMode, ThemeProvider } from "@mui/material";
 import Palette from "@/themes/palette";
 import Header from "./_components/Header";
 import useConfig from "@/hooks/useConfig";
-import { ThemeMode } from "@/constants/config.enum";
 
 // Definir las props para RootLayout
 interface RootLayoutProps {
