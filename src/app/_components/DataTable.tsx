@@ -1,11 +1,8 @@
 "use client";
-import PropTypes from "prop-types";
-
 import { useEffect, useMemo, useState } from "react";
 
 // material-ui
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid2";
 
@@ -24,6 +21,7 @@ import {
   getPaginationRowModel,
   flexRender,
   ColumnDef,
+  CellContext,
 } from "@tanstack/react-table";
 
 import MainCard from "./MainCard";
@@ -70,8 +68,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
         typeof columns.columnDef.header === "string"
           ? columns.columnDef.header
           : "#",
-      // @ts-ignore
-      key: columns.columnDef.accessorKey,
+      key: (columns.columnDef as { accessorKey?: string }).accessorKey || "#",
     })
   );
 
@@ -199,6 +196,9 @@ export default function PaginationTable() {
       {
         header: AgentsDataTableHeaders.PROFILECOMPLETION,
         accessorKey: "profileProgress",
+        cell: (cell: CellContext<RecruiterTableData, number>) => (
+          <LinearWithLabel value={cell.getValue()} sx={{ minWidth: 75 }} />
+        ),
       },
     ],
     []
