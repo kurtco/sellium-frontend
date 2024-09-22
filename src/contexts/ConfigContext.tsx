@@ -2,8 +2,9 @@
 "use client";
 
 import React, { createContext, useContext } from "react";
+import PropTypes from "prop-types";
+import useLocalStorage from "@/hooks/useLocalStorage";
 import defaultConfig from "@/constants/constant";
-import useLocalStorage from "../hooks/useLocalStorage";
 
 // Definir la interfaz de configuración
 interface ConfigType {
@@ -21,6 +22,7 @@ interface ConfigType {
   onChangeMode: (mode: string) => void;
   onChangePresetColor: (theme: string) => void;
   onChangeDirection: (direction: string) => void;
+
   onChangeMiniDrawer: (miniDrawer: boolean) => void;
   onChangeThemeLayout: (direction: string, miniDrawer: boolean) => void;
   onChangeMenuOrientation: (layout: string) => void;
@@ -44,7 +46,7 @@ const initialState: ConfigType = {
 // Crear el contexto
 const ConfigContext = createContext<ConfigType>(initialState);
 
-// Definir las props para ConfigProvider
+// Definir las props del ConfigProvider
 interface ConfigProviderProps {
   children: React.ReactNode;
 }
@@ -57,10 +59,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   );
 
   const onChangeContainer = (container: boolean) => {
-    setConfig({
-      ...config,
-      container,
-    });
+    setConfig({ ...config, container });
   };
 
   const onChangeLocalization = (lang: string) => {
@@ -96,11 +95,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   };
 
   const onChangeThemeLayout = (direction: string, miniDrawer: boolean) => {
-    setConfig({
-      ...config,
-      miniDrawer,
-      themeDirection: direction,
-    });
+    setConfig({ ...config, miniDrawer, themeDirection: direction });
   };
 
   const onChangeMenuOrientation = (layout: string) => {
@@ -147,3 +142,5 @@ function useConfig() {
 }
 
 export { ConfigProvider, ConfigContext, useConfig };
+
+ConfigProvider.propTypes = { children: PropTypes.node };

@@ -1,57 +1,48 @@
-// "use client";
-// import { ConfigProvider } from "@/context/ConfigContext";
-// import useConfig from "@/hooks/useConfig";
-// import Palette from "@/themes/palette";
-// import { CssBaseline, ThemeProvider } from "@mui/material";
-// import { useMemo } from "react";
-
-// export default function RootLayout({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   const { mode, presetColor } = useConfig(); // obtener el modo y colores del contexto
-//   const theme = useMemo(() => Palette(mode, presetColor), [mode, presetColor]);
-
-//   return (
-//     <html lang="en">
-//       <body>
-//         <ConfigProvider>
-//           <ThemeProvider theme={theme}>
-//             <CssBaseline />
-//             <main style={{ backgroundColor: presetColor }}>{children}</main>
-//           </ThemeProvider>
-//         </ConfigProvider>
-//       </body>
-//     </html>
-//   );
-// }
-
+// src/app/layout.tsx
 "use client";
+
+import React, { useMemo } from "react";
 import { ConfigProvider } from "@/context/ConfigContext";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { useMemo } from "react";
+import { CssBaseline, PaletteMode, ThemeProvider } from "@mui/material";
 import Palette from "@/themes/palette";
+import Header from "./_components/Header";
+import useConfig from "@/hooks/useConfig";
+import { ThemeMode } from "@/constants/config.enum";
 
-export default function RootLayout({
-  children,
-}: {
+// Definir las props para RootLayout
+interface RootLayoutProps {
   children: React.ReactNode;
-}) {
-  const mode = "light"; // Forzar el modo oscuro para probar
-  const presetColor = "theme1"; // Puedes modificarlo según tus configuraciones
-  const theme = useMemo(() => Palette(mode, presetColor), [mode, presetColor]);
+}
 
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
         <ConfigProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <main style={{ backgroundColor: presetColor }}>{children}</main>
-          </ThemeProvider>
+          <ThemeWrapper>{children}</ThemeWrapper>
         </ConfigProvider>
       </body>
     </html>
+  );
+}
+
+// Definir las props para ThemeWrapper
+interface ThemeWrapperProps {
+  children: React.ReactNode;
+}
+
+function ThemeWrapper({ children }: ThemeWrapperProps) {
+  const { mode, presetColor } = useConfig();
+  const theme = useMemo(
+    () => Palette(mode as PaletteMode, presetColor),
+    [mode, presetColor]
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Header />
+      {children}
+    </ThemeProvider>
   );
 }
