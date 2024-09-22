@@ -5,8 +5,10 @@ import { ConfigContext } from "@/context/ConfigContext";
 // Define the expected structure of your ConfigContext
 interface ConfigContextType {
   mode: ThemeMode;
-  presetColor: string; // Añadimos presetColor aquí
+  presetColor: string;
   toggleThemeMode: () => void;
+  fontFamily: string;
+  themeDirection: "ltr" | "rtl";
 }
 
 // ==============================|| CONFIG - HOOKS ||============================== //
