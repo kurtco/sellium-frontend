@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-"use client";
 
 import { useState, ReactNode } from "react";
 import { useServerInsertedHTML } from "next/navigation";
-import createCache, { EmotionCache, Options } from "@emotion/cache";
+import createCache, { Options } from "@emotion/cache";
 import { CacheProvider as DefaultCacheProvider } from "@emotion/react";
 import { SerializedStyles } from "@emotion/react";
 
