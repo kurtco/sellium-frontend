@@ -38,7 +38,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const mode = "dark"; // Forzar el modo oscuro para probar
+  const mode = "light"; // Forzar el modo oscuro para probar
   const presetColor = "theme1"; // Puedes modificarlo según tus configuraciones
   const theme = useMemo(() => Palette(mode, presetColor), [mode, presetColor]);
 
