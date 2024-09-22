@@ -3,12 +3,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 // project import
-import useConfig from "hooks/useConfig";
+
 import Palette from "./palette";
 import Typography from "./typography";
 import CustomShadows from "./shadows";
-import componentsOverride from "./overrides";
-import { NextAppDirEmotionCacheProvider } from "./emotionCache";
+
+import { NextAppDirEmotionCacheProvider } from "./theme/emotionCache";
+import useConfig from "@/hooks/useConfig";
 
 // types
 interface ThemeCustomizationProps {
@@ -54,7 +55,6 @@ export default function ThemeCustomization({
   );
 
   const themes = createTheme(themeOptions);
-  themes.components = componentsOverride(themes);
 
   return (
     <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>

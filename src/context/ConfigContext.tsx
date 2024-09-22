@@ -103,6 +103,9 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
         onChangeThemeLayout,
         onChangeMenuOrientation,
         onChangeFontFamily,
+        presetColor: config.presetColor,
+        themeDirection: config.themeDirection,
+        fontFamily: config.fontFamily,
       }}
     >
       {children}
