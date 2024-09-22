@@ -2,7 +2,7 @@
 import { alpha, Theme } from "@mui/material/styles";
 
 // project import
-import { ThemeMode } from "config";
+import { ThemeMode } from "@/constants/config.enum";
 
 // ==============================|| DEFAULT THEME - CUSTOM SHADOWS ||============================== //
 
