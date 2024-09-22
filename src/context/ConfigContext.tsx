@@ -11,7 +11,7 @@ interface ConfigType {
   i18n: string;
   mode: string;
   presetColor: string;
-  themeDirection: string;
+  themeDirection: "ltr" | "rtl";
   miniDrawer: boolean;
   themeLayout: string;
   menuOrientation: string;
@@ -20,9 +20,9 @@ interface ConfigType {
   onChangeLocalization: (lang: string) => void;
   onChangeMode: (mode: string) => void;
   onChangePresetColor: (theme: string) => void;
-  onChangeDirection: (direction: string) => void;
+  onChangeDirection: (direction: "ltr" | "rtl") => void;
   onChangeMiniDrawer: (miniDrawer: boolean) => void;
-  onChangeThemeLayout: (direction: string, miniDrawer: boolean) => void;
+  onChangeThemeLayout: (direction: "ltr" | "rtl", miniDrawer: boolean) => void;
   onChangeMenuOrientation: (layout: string) => void;
   onChangeFontFamily: (fontFamily: string) => void;
 }
@@ -30,6 +30,7 @@ interface ConfigType {
 // Estado inicial del contexto
 const initialState: ConfigType = {
   ...defaultConfig,
+  themeDirection: "ltr", // o 'rtl', según corresponda
   onChangeContainer: () => {},
   onChangeLocalization: () => {},
   onChangeMode: () => {},
@@ -84,7 +85,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     });
   };
 
-  const onChangeDirection = (direction: string) => {
+  const onChangeDirection = (direction: "ltr" | "rtl") => {
     setConfig({ ...config, themeDirection: direction });
   };
 
@@ -95,7 +96,10 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     });
   };
 
-  const onChangeThemeLayout = (direction: string, miniDrawer: boolean) => {
+  const onChangeThemeLayout = (
+    direction: "ltr" | "rtl",
+    miniDrawer: boolean
+  ) => {
     setConfig({
       ...config,
       miniDrawer,
