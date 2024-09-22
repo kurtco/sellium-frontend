@@ -1,4 +1,4 @@
-import { ThemeMode } from "./config.enum";
+import { ThemeMode } from "@/constants/config.enum";
 
 export const defaultConfig = {
   container: false,
