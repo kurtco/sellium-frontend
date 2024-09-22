@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, PaletteMode, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 // project import
@@ -23,7 +23,10 @@ export default function ThemeCustomization({
 }: ThemeCustomizationProps) {
   const { themeDirection, mode, presetColor, fontFamily } = useConfig();
 
-  const theme = useMemo(() => Palette(mode, presetColor), [mode, presetColor]);
+  const theme = useMemo(
+    () => Palette(mode as PaletteMode, presetColor),
+    [mode, presetColor]
+  );
 
   const themeTypography = useMemo(() => Typography(fontFamily), [fontFamily]);
   const themeCustomShadows = useMemo(() => CustomShadows(theme), [theme]);
