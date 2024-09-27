@@ -102,6 +102,18 @@ export default function Palette(mode: PaletteMode, presetColor: string) {
         default: paletteColor.grey.A50,
       },
     },
+    components: {
+      MuiTableRow: {
+        styleOverrides: {
+          root: {
+            "&:hover": {
+              backgroundColor:
+                mode === ThemeMode.DARK ? greyPrimary[1] : greyPrimary[2],
+            },
+          },
+        },
+      },
+    },
     customShadows: {
       z1: "0px 1px 3px rgba(0, 0, 0, 0.2)",
     },
