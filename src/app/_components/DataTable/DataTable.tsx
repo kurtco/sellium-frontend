@@ -38,7 +38,6 @@ import MainCard from "../MainCard";
 import ScrollX from "../ScrollX";
 import TablePagination from "../TablePagination";
 import LinearWithLabel from "../LinearWithLabel";
-import "./datatable.css";
 import { dummyDataTable } from "@/constants/constant";
 
 // ==============================|| REACT TABLE ||============================== //
@@ -126,7 +125,14 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
               </TableHead>
               <TableBody>
                 {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} className="table-row">
+                  <TableRow
+                    key={row.id}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "#f5f5f5",
+                      },
+                    }}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id} {...cell.column.columnDef.meta}>
                         {flexRender(
