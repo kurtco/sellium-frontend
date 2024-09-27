@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 // material-ui
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Grid2";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -24,21 +23,23 @@ import {
   CellContext,
 } from "@tanstack/react-table";
 
-import MainCard from "./MainCard";
-import TablePagination from "./TablePagination";
-import ScrollX from "./ScrollX";
-import LinearWithLabel from "./LinearWithLabel";
 import {
   CsvHeader,
   Recruit,
   RecruiterTableData,
   Users,
-} from "../../interfaces/interfaces";
+} from "../../../interfaces/interfaces";
 import {
   AgentsDataTableHeaders,
   DataTableLabels,
 } from "@/constants/labels.enums";
 import { calculateCompletion } from "@/utils/commonFunctions";
+import MainCard from "../MainCard";
+import ScrollX from "../ScrollX";
+import TablePagination from "../TablePagination";
+import LinearWithLabel from "../LinearWithLabel";
+import "./datatable.css";
+import { dummyDataTable } from "@/constants/constant";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -52,6 +53,7 @@ interface ReactTableStructure {
 }
 
 const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
+  data = dummyDataTable;
   const table = useReactTable({
     data,
     columns,
@@ -124,7 +126,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
               </TableHead>
               <TableBody>
                 {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow key={row.id} className="table-row">
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id} {...cell.column.columnDef.meta}>
                         {flexRender(
@@ -205,10 +207,8 @@ export default function PaginationTable() {
   );
 
   return (
-    <Grid container spacing={3}>
-      <Grid size={{ xs: 12 }}>
-        <ReactTable {...{ data, columns }} />
-      </Grid>
-    </Grid>
+    <>
+      <ReactTable {...{ data, columns }} />
+    </>
   );
 }
