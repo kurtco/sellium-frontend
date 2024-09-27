@@ -1,12 +1,17 @@
 import React from "react";
-import DataTable from "./_components/DataTable";
+import DataTable from "./_components/DataTable/DataTable";
+import Grid from "@mui/material/Grid2";
 
 export default function Home() {
   return (
-    <>
-      <div className="p-8 flex justify-center items-center">
+    <Grid container justifyContent="center" alignItems="center">
+      <Grid
+        size={12}
+        width={"100%"}
+        maxWidth={{ xs: "100%", sm: "80%", md: "70%" }}
+      >
         <DataTable />
-      </div>
-    </>
+      </Grid>
+    </Grid>
   );
 }
