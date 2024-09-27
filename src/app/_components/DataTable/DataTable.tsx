@@ -53,6 +53,7 @@ interface ReactTableStructure {
 
 const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   data = dummyDataTable;
+
   const table = useReactTable({
     data,
     columns,
@@ -125,14 +126,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
               </TableHead>
               <TableBody>
                 {table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "#f5f5f5",
-                      },
-                    }}
-                  >
+                  <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id} {...cell.column.columnDef.meta}>
                         {flexRender(
