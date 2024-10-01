@@ -1,15 +1,16 @@
-import { AppBar, Toolbar, Typography, Switch, Box } from "@mui/material";
-
-import { ThemeMode } from "@/constants/config.enum";
+import { AppBar, Toolbar, Box, Avatar, Typography } from "@mui/material";
 import useConfig from "@/hooks/useConfig";
+import HeaderLogo from "./HeaderLogo";
+import ThemeModeAvatar from "./ThemeModeAvatar";
+import { useTheme } from "@mui/material/styles";
+import { ThemeMode } from "@/constants/config.enum";
 
 export default function Header() {
-  const label = { inputProps: { "aria-label": "Switch demo" } };
-
+  const theme = useTheme();
   const { mode, onChangeMode } = useConfig();
 
   const handleToggleMode = () => {
-    const newMode = mode === "light" ? "dark" : "light";
+    const newMode = mode === ThemeMode.LIGHT ? ThemeMode.DARK : ThemeMode.LIGHT;
     onChangeMode(newMode);
   };
 
@@ -17,9 +18,8 @@ export default function Header() {
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "white",
+        backgroundColor: theme.palette.background.default,
         height: "58px",
-        padding: "9px 24px",
         borderBottom: "1px solid #e0e0e0",
         boxShadow: "none",
       }}
@@ -28,18 +28,36 @@ export default function Header() {
         sx={{
           display: "flex",
           justifyContent: "space-between",
+          paddingLeft: "24px",
+          paddingRight: "24px",
+          paddingBottom: "16px",
+          paddingTop: "16px",
         }}
       >
-        <Typography variant="h6" color="textPrimary">
-          My Application
-        </Typography>
-
+        <HeaderLogo />
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Typography variant="body1" color="textSecondary">
-            {mode === ThemeMode.DARK ? "Dark Mode" : "Light Mode"}
-          </Typography>
-
-          <Switch {...label} onChange={handleToggleMode} />
+          <Avatar
+            alt="Light Mode"
+            style={{
+              backgroundColor: theme.palette.primary.lighter,
+              width: 40,
+              height: 40,
+            }}
+            onClick={handleToggleMode}
+            sx={{ cursor: "pointer" }}
+          >
+            <ThemeModeAvatar />
+          </Avatar>
+          <Avatar
+            alt="User Profile"
+            style={{
+              backgroundColor: theme.palette.primary.lighter,
+              width: 40,
+              height: 40,
+            }}
+          >
+            <Typography style={{ color: "#166EE0" }}>BG</Typography>
+          </Avatar>
         </Box>
       </Toolbar>
     </AppBar>

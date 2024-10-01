@@ -9,7 +9,7 @@ export const defaultConfig = {
   miniDrawer: false,
   menuOrientation: "horizontal",
   fontFamily: "Arial",
-  themeLayout: "default",
+  themeLayout: "theme1",
 };
 export const dummyDataTable = [
   {

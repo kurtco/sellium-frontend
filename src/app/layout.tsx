@@ -7,6 +7,7 @@ import { CssBaseline, PaletteMode, ThemeProvider } from "@mui/material";
 import Palette from "@/themes/palette";
 import Header from "./_components/Header";
 import useConfig from "@/hooks/useConfig";
+import defaultConfig from "@/constants/constant";
 
 // Definir las props para RootLayout
 interface RootLayoutProps {
@@ -31,10 +32,11 @@ interface ThemeWrapperProps {
 }
 
 function ThemeWrapper({ children }: ThemeWrapperProps) {
-  const { mode, presetColor } = useConfig();
+  const { mode } = useConfig();
+
   const theme = useMemo(
-    () => Palette(mode as PaletteMode, presetColor),
-    [mode, presetColor]
+    () => Palette(mode as PaletteMode, defaultConfig.themeLayout),
+    [mode]
   );
 
   return (

@@ -43,6 +43,10 @@ import TablePagination from "../TablePagination";
 import LinearWithLabel from "../LinearWithLabel";
 import { dummyDataTable } from "@/constants/constant";
 import { useTheme } from "@mui/material/styles";
+import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import TreeButtonIcon from "../TreeButtonIcon";
+import GridButtonIcon from "../GridButtonIcon";
+import { TableView } from "@/constants/config.enum";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -58,6 +62,19 @@ interface ReactTableStructure {
 const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   data = dummyDataTable;
   const theme = useTheme();
+
+  const [toogleViewSelected, setToogleViewSelected] = useState<TableView>(
+    TableView.GRID
+  );
+
+  const handleToogleView = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string
+  ) => {
+    if (newAlignment !== null) {
+      setToogleViewSelected(newAlignment as TableView);
+    }
+  };
 
   const table = useReactTable({
     data,
@@ -81,7 +98,51 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   );
 
   return (
-    <MainCard title={DataTableLabels.MAINCARDTITLE} content={false}>
+    <MainCard
+      content={true}
+      sx={{
+        "& .MuiCardHeader-title": {
+          fontSize: "16px", // Cambiar el tamaño de la fuente del título
+          fontWeight: "600",
+        },
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ fontWeight: "bold", fontSize: "16px" }}>
+          {DataTableLabels.MAINCARDTITLE}
+        </Typography>
+
+        <Box>
+          <ToggleButtonGroup
+            color="primary"
+            value={toogleViewSelected}
+            exclusive
+            onChange={handleToogleView}
+            aria-label="view toggle"
+          >
+            <ToggleButton value={TableView.GRID} aria-label="grid view">
+              <GridButtonIcon
+                selected={toogleViewSelected === TableView.GRID}
+              />
+            </ToggleButton>
+            <ToggleButton value={TableView.TREE} aria-label="tree view">
+              <TreeButtonIcon
+                selected={toogleViewSelected === TableView.TREE}
+              />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+      </Box>
+
       <ScrollX>
         <Stack>
           {top && (
@@ -106,7 +167,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
                       <TableCell
                         key={header.id}
                         onClick={() => header.column.toggleSorting()}
-                        sx={{ cursor: "pointer" }}
+                        sx={{ cursor: "pointer", paddingLeft: 0 }}
                       >
                         {header.isPlaceholder ? null : (
                           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -166,7 +227,11 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
                 {table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} {...cell.column.columnDef.meta}>
+                      <TableCell
+                        key={cell.id}
+                        {...cell.column.columnDef.meta}
+                        sx={{ paddingLeft: 0 }}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
