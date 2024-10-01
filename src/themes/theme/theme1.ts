@@ -9,6 +9,7 @@ interface Colors {
 
 export default function Theme1(colors: Colors, mode: ThemeMode) {
   const { grey } = colors;
+  console.log("grey", grey);
   const greyColors = {
     0: grey[0],
     50: grey[1],
