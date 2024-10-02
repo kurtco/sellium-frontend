@@ -4,9 +4,19 @@ import useConfig from "@/hooks/useConfig";
 import { ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 
-const RecycleBinIcon = () => {
+interface RecycleBinIconProps {
+  disabled?: boolean;
+}
+
+const RecycleBinIcon = ({ disabled = false }: RecycleBinIconProps) => {
   const theme = useTheme();
   const { mode } = useConfig();
+
+  const iconColor = disabled
+    ? theme.palette.grey[400] // Color deshabilitado
+    : mode === ThemeMode.DARK
+    ? theme.palette.text.primary
+    : defaultBlueColor;
 
   return (
     <svg
@@ -16,10 +26,8 @@ const RecycleBinIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{
-        color:
-          mode === ThemeMode.DARK
-            ? theme.palette.text.primary
-            : defaultBlueColor,
+        color: iconColor,
+        opacity: disabled ? 0.5 : 1, // Baja la opacidad si está deshabilitado
       }}
     >
       <path

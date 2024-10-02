@@ -98,8 +98,25 @@ const UploadAgentCapture = ({
         <Typography fontWeight={"bold"}>
           {UploadAgentCaptureLabels.MODALTITLE}
         </Typography>
-        <CloseIcon />
+        <Button
+          disableElevation
+          variant="outlined"
+          onClick={handleCloseModal}
+          startIcon={<CloseIcon />}
+          sx={{
+            paddingRight: 0,
+
+            justifyContent: "flex-end",
+            border: "none",
+            boxShadow: "none",
+            "&:hover": {
+              border: "none",
+              boxShadow: "none",
+            },
+          }}
+        ></Button>
       </Box>
+
       <DropzoneWrapper
         {...getRootProps()}
         sx={(theme) => ({
@@ -164,9 +181,13 @@ const UploadAgentCapture = ({
       >
         <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
           <Button
+            disableElevation
             variant="outlined"
             onClick={onRemoveScreenShot}
-            startIcon={<RecycleBinIcon />}
+            disabled={!file || file?.length === 0}
+            startIcon={
+              <RecycleBinIcon disabled={!file || file?.length === 0} />
+            }
             sx={{
               color:
                 mode === ThemeMode.DARK
@@ -181,6 +202,7 @@ const UploadAgentCapture = ({
         <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           <Button
             variant="outlined"
+            disableElevation
             onClick={handleCloseModal}
             sx={{ textTransform: "none" }}
           >
@@ -193,6 +215,7 @@ const UploadAgentCapture = ({
             onClick={onSendScreenShot}
             disabled={!file || file?.length === 0}
             sx={{ textTransform: "none" }}
+            disableElevation
           >
             {UploadAgentCaptureLabels.ADDBUTTON}
           </Button>
