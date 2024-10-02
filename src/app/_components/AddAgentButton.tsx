@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button } from "@mui/material";
-import AddIcon from "./AddIcon";
 import { ButtonsLabels } from "@/constants/labels.enums";
 import AddAgentModal from "./AddAgentModal";
 
@@ -16,7 +15,6 @@ const AddAgentButton = () => {
         variant="contained"
         color="primary"
         disableElevation
-        startIcon={<AddIcon />}
         sx={{
           width: "140px",
           height: "36px",

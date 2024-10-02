@@ -179,27 +179,38 @@ const UploadAgentCapture = ({
           gap: 2,
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
-          <Button
-            disableElevation
-            variant="outlined"
-            onClick={onRemoveScreenShot}
-            disabled={!file || file?.length === 0}
-            startIcon={
-              <RecycleBinIcon disabled={!file || file?.length === 0} />
-            }
-            sx={{
-              color:
-                mode === ThemeMode.DARK
-                  ? theme.palette.text.primary
-                  : defaultBlueColor,
-              textTransform: "none",
-            }}
-          >
-            {UploadAgentCaptureLabels.REMOVEICON}
-          </Button>
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+        {file && file?.length > 0 && (
+          <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+            <Button
+              disableElevation
+              variant="outlined"
+              onClick={onRemoveScreenShot}
+              disabled={!file || file?.length === 0}
+              startIcon={
+                <RecycleBinIcon disabled={!file || file?.length === 0} />
+              }
+              sx={{
+                color:
+                  mode === ThemeMode.DARK
+                    ? theme.palette.text.primary
+                    : defaultBlueColor,
+                textTransform: "none",
+              }}
+            >
+              {UploadAgentCaptureLabels.REMOVEICON}
+            </Button>
+          </Box>
+        )}
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            gap: 2,
+            flexGrow: 1,
+          }}
+        >
           <Button
             variant="outlined"
             disableElevation
@@ -217,7 +228,9 @@ const UploadAgentCapture = ({
             sx={{ textTransform: "none" }}
             disableElevation
           >
-            {UploadAgentCaptureLabels.ADDBUTTON}
+            <Typography sx={{ color: theme.palette.text.disabled }}>
+              {UploadAgentCaptureLabels.ADDBUTTON}
+            </Typography>
           </Button>
         </Box>
       </Box>

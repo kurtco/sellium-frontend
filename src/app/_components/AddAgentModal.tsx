@@ -37,7 +37,7 @@ const AddAgentModal = ({ open, handleClose, mode }: AddAgentModalProps) => {
           transform: "translate(-50%, -50%)",
           maxWidth: "1024px",
           backgroundColor: theme.palette.background.default,
-          border: `${"2px solid"} ${theme.palette.common.black}`,
+          border: `${"2px solid"} ${theme.palette.background.default}`,
           boxShadow: 24,
           p: 4,
         }}
