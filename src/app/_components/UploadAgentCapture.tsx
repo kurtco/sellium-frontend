@@ -1,17 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CardMedia from "@mui/material/CardMedia";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { useDropzone } from "react-dropzone";
+import Link from "@mui/material/Link";
 
 // project import
-
 import RejectionFiles from "./RejectionFiles";
-import PlaceholderContent from "./PlaceholderContent";
-import { DropzoneType } from "@/config";
+import UploadFileIcon from "./UploapFileIcon";
+import { UploadAgentCaptureLabels } from "@/constants/labels.enums";
+import CloseIcon from "./CloseIcon";
+import RecycleBinIcon from "./RecycleBinIcon";
+import useConfig from "@/hooks/useConfig";
+import { ThemeMode } from "@/constants/config.enum";
+import { defaultBlueColor } from "@/constants/constant";
 
 // Define los tipos de las props del componente
 interface UploadAgentCaptureProps {
@@ -19,6 +25,7 @@ interface UploadAgentCaptureProps {
   file: FileWithPreview[] | null;
   setFieldValue: (field: string, value: unknown) => void;
   sx?: object;
+  handleCloseModal: () => void;
 }
 
 // Define un tipo para manejar el objeto File con la propiedad preview
@@ -33,19 +40,21 @@ const DropzoneWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(5, 1),
   borderRadius: theme.shape.borderRadius,
   transition: theme.transitions.create("padding"),
-  background: theme.palette.background.paper,
-  border: `1px dashed ${theme.palette.secondary.main}`,
+  backgroundColor: theme.palette.background.default,
+  border: `1px dashed ${theme.palette.grey[400]}`,
   "&:hover": { opacity: 0.72, cursor: "pointer" },
+  textAlign: "center",
 }));
-
-// ==============================|| UPLOAD - SINGLE FILE (TSX) ||============================== //
 
 const UploadAgentCapture = ({
   error,
   file,
   setFieldValue,
   sx,
+  handleCloseModal,
 }: UploadAgentCaptureProps) => {
+  const theme = useTheme();
+  const { mode } = useConfig();
   const {
     getRootProps,
     getInputProps,
@@ -69,64 +78,126 @@ const UploadAgentCapture = ({
     },
   });
 
-  const thumbs =
-    file &&
-    file.map((item) => (
-      <CardMedia
-        key={item.name}
-        component="img"
-        src={item.preview}
-        sx={{
-          top: 8,
-          left: 8,
-          borderRadius: 2,
-          position: "absolute",
-          width: "calc(100% - 16px)",
-          height: "calc(100% - 16px)",
-          bgcolor: "background.paper",
-        }}
-        onLoad={() => {
-          URL.revokeObjectURL(item.preview);
-        }}
-      />
-    ));
-
-  const onRemove = () => {
+  const onRemoveScreenShot = () => {
     setFieldValue("files", null);
+  };
+
+  const onSendScreenShot = () => {
+    console.log("onSendScreenShot func");
   };
 
   return (
     <Box sx={{ width: "100%", ...sx }}>
-      <DropzoneWrapper
-        {...getRootProps()}
+      <Box
         sx={{
-          ...(isDragActive && { opacity: 0.72 }),
-          ...((isDragReject || error) && {
-            color: "error.main",
-            borderColor: "error.light",
-            bgcolor: "error.lighter",
-          }),
-          ...(file && {
-            padding: "12% 0",
-          }),
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "0px 0px 16px 0px",
         }}
       >
+        <Typography fontWeight={"bold"}>
+          {UploadAgentCaptureLabels.MODALTITLE}
+        </Typography>
+        <CloseIcon />
+      </Box>
+      <DropzoneWrapper
+        {...getRootProps()}
+        sx={(theme) => ({
+          ...(isDragActive && { opacity: 0.72 }),
+          ...((isDragReject || error) && {
+            color: theme.palette.error.main,
+            borderColor: theme.palette.error.light,
+            bgcolor: theme.palette.error.lighter,
+          }),
+          ...(file && {
+            padding: "0", // Remueve padding cuando hay imagen
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }),
+        })}
+      >
         <input {...getInputProps()} />
-        <PlaceholderContent type={DropzoneType.STANDARD} />
-        {thumbs}
+
+        {/* Si no hay archivo, muestra el contenido del dropzone */}
+        {!file && (
+          <Stack spacing={2} alignItems="center" justifyContent="center">
+            <UploadFileIcon />
+            <Typography variant="h6" fontWeight={"bold"}>
+              {UploadAgentCaptureLabels.CONTENTTITLE}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {UploadAgentCaptureLabels.CONTENT}
+              <Link href="#" color="primary">
+                {" "}
+                {UploadAgentCaptureLabels.CHOSEIMAGE}
+              </Link>
+            </Typography>
+          </Stack>
+        )}
+
+        {/* Si hay archivo, muestra la imagen adjuntada */}
+        {file && (
+          <CardMedia
+            component="img"
+            src={file[0].preview}
+            sx={{
+              width: "100%", // Ajusta el tamaño al 100% del contenedor
+              maxHeight: "500px", // O ajusta esto según el tamaño máximo que quieras mostrar
+              objectFit: "contain", // Asegura que la imagen se muestre correctamente
+            }}
+          />
+        )}
       </DropzoneWrapper>
 
       {fileRejections.length > 0 && (
         <RejectionFiles fileRejections={fileRejections} />
       )}
-
-      {file && file.length > 0 && (
-        <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1.5 }}>
-          <Button variant="contained" color="error" onClick={onRemove}>
-            Remove
+      <Box
+        sx={{
+          paddingTop: 2,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          gap: 2,
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+          <Button
+            variant="outlined"
+            onClick={onRemoveScreenShot}
+            startIcon={<RecycleBinIcon />}
+            sx={{
+              color:
+                mode === ThemeMode.DARK
+                  ? theme.palette.text.primary
+                  : defaultBlueColor,
+              textTransform: "none",
+            }}
+          >
+            {UploadAgentCaptureLabels.REMOVEICON}
           </Button>
-        </Stack>
-      )}
+        </Box>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={handleCloseModal}
+            sx={{ textTransform: "none" }}
+          >
+            {UploadAgentCaptureLabels.CANCELBUTTON}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="info"
+            onClick={onSendScreenShot}
+            disabled={!file || file?.length === 0}
+            sx={{ textTransform: "none" }}
+          >
+            {UploadAgentCaptureLabels.ADDBUTTON}
+          </Button>
+        </Box>
+      </Box>
     </Box>
   );
 };

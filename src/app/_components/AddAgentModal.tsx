@@ -1,18 +1,22 @@
-import { Box, Modal } from "@mui/material";
+import { Box, Modal, useTheme } from "@mui/material";
 import UploadAgentCapture from "./UploadAgentCapture";
 import { useState } from "react";
 
+import { ThemeMode } from "@/constants/config.enum";
 interface AddAgentModalProps {
   open: boolean;
   handleClose: () => void;
+  mode?: ThemeMode.DARK | ThemeMode.LIGHT;
 }
 interface FileWithPreview extends File {
   preview: string;
 }
 
-const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
+const AddAgentModal = ({ open, handleClose, mode }: AddAgentModalProps) => {
   const [files, setFiles] = useState<FileWithPreview[] | null>(null);
 
+  const theme = useTheme();
+  console.log("AddAgentModal mode -> ", mode);
   const setFieldValue = (field: string, value: unknown) => {
     if (field === "files") {
       setFiles(value as FileWithPreview[]);
@@ -31,9 +35,9 @@ const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 400,
-          bgcolor: "background.paper",
-          border: "2px solid #000",
+          maxWidth: "1024px",
+          backgroundColor: theme.palette.background.default,
+          border: `${"2px solid"} ${theme.palette.common.black}`,
           boxShadow: 24,
           p: 4,
         }}
@@ -42,6 +46,7 @@ const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
           file={files}
           setFieldValue={setFieldValue}
           error={false}
+          handleCloseModal={handleClose}
         />
       </Box>
     </Modal>

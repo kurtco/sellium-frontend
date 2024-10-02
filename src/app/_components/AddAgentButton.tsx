@@ -3,8 +3,10 @@ import { Button } from "@mui/material";
 import AddIcon from "./AddIcon";
 import { ButtonsLabels } from "@/constants/labels.enums";
 import AddAgentModal from "./AddAgentModal";
+import useConfig from "@/hooks/useConfig";
 
 const AddAgentButton = () => {
+  const { mode } = useConfig();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -30,7 +32,7 @@ const AddAgentButton = () => {
         {ButtonsLabels.ADDAGENT}
       </Button>
 
-      <AddAgentModal open={open} handleClose={handleClose} />
+      <AddAgentModal open={open} handleClose={handleClose} mode={mode} />
     </>
   );
 };
