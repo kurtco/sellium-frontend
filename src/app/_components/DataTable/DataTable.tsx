@@ -54,6 +54,7 @@ import GridButtonIcon from "../GridButtonIcon";
 import { TableView } from "@/constants/config.enum";
 import FilterButton from "../FilterButton";
 import SearchBar from "../SearchBar";
+import AddAgentButton from "../AddAgentButton";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -155,6 +156,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          paddingTop: 2,
         }}
       >
         <Box>
@@ -177,7 +179,9 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
           </ToggleButtonGroup>
           <SearchBar />
         </Box>
-        <Box></Box>
+        <Box>
+          <AddAgentButton />
+        </Box>
       </Box>
 
       <ScrollX>

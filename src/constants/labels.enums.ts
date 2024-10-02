@@ -10,3 +10,7 @@ export enum AgentsDataTableHeaders {
   EMAIL = "Email",
   PROFILECOMPLETION = "Profile Completion",
 }
+
+export enum ButtonsLabels {
+  ADDAGENT = "Add Agent",
+}

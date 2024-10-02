@@ -7,7 +7,7 @@ import {
   Box,
   useTheme,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import SearchIcon from "./SearchIcon";
 
 const SearchBar = () => {
   const theme = useTheme();
