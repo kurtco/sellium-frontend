@@ -32,10 +32,7 @@ import {
   RecruiterTableData,
   Users,
 } from "../../../interfaces/interfaces";
-import {
-  AgentsDataTableHeaders,
-  DataTableLabels,
-} from "@/constants/labels.enums";
+import { AgentsDataTableHeaders } from "@/constants/labels.enums";
 import { calculateCompletion } from "@/utils/commonFunctions";
 import MainCard from "../MainCard";
 import ScrollX from "../ScrollX";
@@ -43,18 +40,7 @@ import TablePagination from "../TablePagination";
 import LinearWithLabel from "../LinearWithLabel";
 import { dummyDataTable } from "@/constants/constant";
 import { useTheme } from "@mui/material/styles";
-import {
-  Button,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
-import TreeButtonIcon from "../TreeButtonIcon";
-import GridButtonIcon from "../GridButtonIcon";
-import { TableView } from "@/constants/config.enum";
-import FilterButton from "../FilterButton";
-import SearchBar from "../SearchBar";
-import AddAgentButton from "../AddAgentButton";
+import DataTableHeaderActions from "./DataTableHeaderActions";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -70,19 +56,6 @@ interface ReactTableStructure {
 const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   data = dummyDataTable;
   const theme = useTheme();
-
-  const [toogleViewSelected, setToogleViewSelected] = useState<TableView>(
-    TableView.GRID
-  );
-
-  const handleToogleView = (
-    event: React.MouseEvent<HTMLElement>,
-    newAlignment: string
-  ) => {
-    if (newAlignment !== null) {
-      setToogleViewSelected(newAlignment as TableView);
-    }
-  };
 
   const table = useReactTable({
     data,
@@ -118,72 +91,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
         justifyContent: "space-between",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography sx={{ fontWeight: "bold", fontSize: "16px" }}>
-          {DataTableLabels.MAINCARDTITLE}
-        </Typography>
-
-        <Box>
-          <ToggleButtonGroup
-            color="primary"
-            value={toogleViewSelected}
-            exclusive
-            onChange={handleToogleView}
-            aria-label="view toggle"
-          >
-            <ToggleButton value={TableView.GRID} aria-label="grid view">
-              <GridButtonIcon
-                selected={toogleViewSelected === TableView.GRID}
-              />
-            </ToggleButton>
-            <ToggleButton value={TableView.TREE} aria-label="tree view">
-              <TreeButtonIcon
-                selected={toogleViewSelected === TableView.TREE}
-              />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Box>
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingTop: 2,
-        }}
-      >
-        <Box>
-          <ToggleButtonGroup
-            color="primary"
-            exclusive
-            aria-label="filters"
-            sx={{
-              borderColor: theme.palette.grey[300],
-              borderWidth: 1,
-              borderStyle: "solid",
-              "& .MuiToggleButton-root": {
-                borderColor: theme.palette.grey[300], // Aplicar a los botones dentro del grupo
-              },
-            }}
-          >
-            <Button>
-              <FilterButton />
-            </Button>
-          </ToggleButtonGroup>
-          <SearchBar />
-        </Box>
-        <Box>
-          <AddAgentButton />
-        </Box>
-      </Box>
-
+      <DataTableHeaderActions />
       <ScrollX>
         <Stack>
           {top && (
@@ -334,7 +242,7 @@ export default function PaginationTable() {
     fetchRecruiterData();
   }, []);
 
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<RecruiterTableData>[]>(
     () => [
       { header: AgentsDataTableHeaders.NAME, accessorKey: "name" },
       { header: AgentsDataTableHeaders.POSITION, accessorKey: "position" },
@@ -343,9 +251,10 @@ export default function PaginationTable() {
       {
         header: AgentsDataTableHeaders.PROFILECOMPLETION,
         accessorKey: "profileProgress",
-        cell: (cell: CellContext<RecruiterTableData, number>) => (
-          <LinearWithLabel value={cell.getValue()} sx={{ minWidth: 75 }} />
-        ),
+        cell: (cell: CellContext<RecruiterTableData, unknown>) => {
+          const value = cell.getValue() as number;
+          return <LinearWithLabel value={value} sx={{ minWidth: 75 }} />;
+        },
       },
     ],
     []
@@ -353,7 +262,7 @@ export default function PaginationTable() {
 
   return (
     <>
-      <ReactTable {...{ data, columns }} />
+      <ReactTable data={data} columns={columns} top={false} />
     </>
   );
 }

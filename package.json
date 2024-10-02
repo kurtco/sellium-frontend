@@ -18,16 +18,20 @@
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
     "@tanstack/react-table": "^8.20.5",
+    "config": "^3.3.12",
     "next": "14.2.12",
     "react": "^18.3.1",
     "react-csv": "^2.2.2",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-dropzone": "^14.2.6"
   },
   "devDependencies": {
+    "@types/config": "^3.3.5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-csv": "^1.1.10",
     "@types/react-dom": "^18",
+    "@types/react-dropzone": "^5.1.0",
     "@types/react-table": "^7.7.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.12",

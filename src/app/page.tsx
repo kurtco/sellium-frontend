@@ -1,6 +1,6 @@
 import React from "react";
-import DataTable from "./_components/DataTable/DataTable";
 import Grid from "@mui/material/Grid2";
+import DataTable from "./_components/DataTable/DataTable";
 
 export default function Home() {
   return (
