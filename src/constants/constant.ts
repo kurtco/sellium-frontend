@@ -9,8 +9,12 @@ export const defaultConfig = {
   miniDrawer: false,
   menuOrientation: "horizontal",
   fontFamily: "Arial",
-  themeLayout: "default",
+  themeLayout: "theme1",
 };
+export default defaultConfig;
+
+export const defaultBlueColor: string = "#166EE0";
+
 export const dummyDataTable = [
   {
     name: "User 1 Example",
@@ -153,5 +157,3 @@ export const dummyDataTable = [
     profileProgress: 100,
   },
 ];
-
-export default defaultConfig;

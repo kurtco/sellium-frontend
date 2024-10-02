@@ -8,7 +8,9 @@ interface Colors {
 // ==============================|| PRESET THEME - DEFAULT ||============================== //
 
 export default function Theme1(colors: Colors, mode: ThemeMode) {
+  console.log("colors", colors);
   const { grey } = colors;
+
   const greyColors = {
     0: grey[0],
     50: grey[1],
@@ -31,7 +33,7 @@ export default function Theme1(colors: Colors, mode: ThemeMode) {
   const contrastText = "#fff";
 
   let primaryColors = [
-    "#D6E4FF",
+    "#F5F9FF",
     "#D6E4FF",
     "#ADC8FF",
     "#84A9FF",

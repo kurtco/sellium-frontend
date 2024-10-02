@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "config": ["./node_modules/config"]
     }
   },
   "include": [
@@ -28,7 +29,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/themes/theme/index.js",
-    "src/types/**/*.d.ts"
+    "src/types/**/*.d.ts",
+    "react-dropzone.d.ts"
   ],
   "exclude": ["node_modules"]
 }

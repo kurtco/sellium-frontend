@@ -12,12 +12,15 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Stack from "@mui/material/Stack";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 
 // third-party
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   flexRender,
   ColumnDef,
   CellContext,
@@ -29,16 +32,15 @@ import {
   RecruiterTableData,
   Users,
 } from "../../../interfaces/interfaces";
-import {
-  AgentsDataTableHeaders,
-  DataTableLabels,
-} from "@/constants/labels.enums";
+import { AgentsDataTableHeaders } from "@/constants/labels.enums";
 import { calculateCompletion } from "@/utils/commonFunctions";
 import MainCard from "../MainCard";
 import ScrollX from "../ScrollX";
 import TablePagination from "../TablePagination";
 import LinearWithLabel from "../LinearWithLabel";
 import { dummyDataTable } from "@/constants/constant";
+import { useTheme } from "@mui/material/styles";
+import DataTableHeaderActions from "./DataTableHeaderActions";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -53,12 +55,14 @@ interface ReactTableStructure {
 
 const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   data = dummyDataTable;
+  const theme = useTheme();
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     debugTable: true,
   });
 
@@ -76,18 +80,18 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
 
   return (
     <MainCard
-      title={DataTableLabels.MAINCARDTITLE}
-      content={false}
-      // secondary={
-      //   <CSVExport
-      //     {...{
-      //       data,
-      //       headers,
-      //       filename: DataTableLabels.CSVFILENAME,
-      //     }}
-      //   />
-      // }
+      content={true}
+      sx={{
+        "& .MuiCardHeader-title": {
+          fontSize: "16px",
+          fontWeight: "600",
+        },
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
     >
+      <DataTableHeaderActions />
       <ScrollX>
         <Stack>
           {top && (
@@ -111,14 +115,58 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
                     {headerGroup.headers.map((header) => (
                       <TableCell
                         key={header.id}
-                        {...header.column.columnDef.meta}
+                        onClick={() => header.column.toggleSorting()}
+                        sx={{ cursor: "pointer", paddingLeft: 0 }}
                       >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
+                        {header.isPlaceholder ? null : (
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            {flexRender(
                               header.column.columnDef.header,
                               header.getContext()
                             )}
+                            {header.column.getIsSorted() ? (
+                              header.column.getIsSorted() === "desc" ? (
+                                <FontAwesomeIcon
+                                  icon={faCaretDown}
+                                  style={{
+                                    color:
+                                      header.column.getIsSorted() === "desc"
+                                        ? theme.palette.text.primary
+                                        : theme.palette.grey[500],
+                                    padding: "5px",
+                                    borderRadius: "4px",
+                                  }}
+                                />
+                              ) : (
+                                <FontAwesomeIcon
+                                  icon={faCaretUp}
+                                  style={{
+                                    color:
+                                      header.column.getIsSorted() === "asc"
+                                        ? theme.palette.text.primary
+                                        : theme.palette.grey[500],
+                                    padding: "5px",
+                                    borderRadius: "4px",
+                                  }}
+                                />
+                              )
+                            ) : (
+                              <Box
+                                sx={{
+                                  padding: "5px",
+                                  borderRadius: "4px",
+                                }}
+                              >
+                                <FontAwesomeIcon
+                                  icon={faCaretUp}
+                                  style={{
+                                    color: theme.palette.grey[500],
+                                  }}
+                                />
+                              </Box>
+                            )}
+                          </Box>
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -128,7 +176,11 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
                 {table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} {...cell.column.columnDef.meta}>
+                      <TableCell
+                        key={cell.id}
+                        {...cell.column.columnDef.meta}
+                        sx={{ paddingLeft: 0 }}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -190,17 +242,19 @@ export default function PaginationTable() {
     fetchRecruiterData();
   }, []);
 
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<RecruiterTableData>[]>(
     () => [
       { header: AgentsDataTableHeaders.NAME, accessorKey: "name" },
       { header: AgentsDataTableHeaders.POSITION, accessorKey: "position" },
       { header: AgentsDataTableHeaders.PHONE, accessorKey: "phoneNumber" },
+      { header: AgentsDataTableHeaders.EMAIL, accessorKey: "email" },
       {
         header: AgentsDataTableHeaders.PROFILECOMPLETION,
         accessorKey: "profileProgress",
-        cell: (cell: CellContext<RecruiterTableData, number>) => (
-          <LinearWithLabel value={cell.getValue()} sx={{ minWidth: 75 }} />
-        ),
+        cell: (cell: CellContext<RecruiterTableData, unknown>) => {
+          const value = cell.getValue() as number;
+          return <LinearWithLabel value={value} sx={{ minWidth: 75 }} />;
+        },
       },
     ],
     []
@@ -208,7 +262,7 @@ export default function PaginationTable() {
 
   return (
     <>
-      <ReactTable {...{ data, columns }} />
+      <ReactTable data={data} columns={columns} top={false} />
     </>
   );
 }
