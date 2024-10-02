@@ -4,6 +4,7 @@ import HeaderLogo from "./HeaderLogo";
 import ThemeModeAvatar from "./ThemeModeAvatar";
 import { useTheme } from "@mui/material/styles";
 import { ThemeMode } from "@/constants/config.enum";
+import { defaultBlueColor } from "@/constants/constant";
 
 export default function Header() {
   const theme = useTheme();
@@ -56,7 +57,16 @@ export default function Header() {
               height: 40,
             }}
           >
-            <Typography style={{ color: "#166EE0" }}>BG</Typography>
+            <Typography
+              style={{
+                color:
+                  mode === ThemeMode.DARK
+                    ? theme.palette.text.primary
+                    : defaultBlueColor,
+              }}
+            >
+              BG
+            </Typography>
           </Avatar>
         </Box>
       </Toolbar>

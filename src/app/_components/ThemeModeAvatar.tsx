@@ -2,6 +2,7 @@ import React from "react";
 import { useTheme } from "@mui/material/styles";
 import useConfig from "@/hooks/useConfig";
 import { ThemeMode } from "@/constants/config.enum";
+import { defaultBlueColor } from "@/constants/constant";
 
 const ThemeModeAvatar = () => {
   const theme = useTheme();
@@ -15,7 +16,10 @@ const ThemeModeAvatar = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{
-        color: mode === ThemeMode.DARK ? theme.palette.text.primary : "#166EE0",
+        color:
+          mode === ThemeMode.DARK
+            ? theme.palette.text.primary
+            : defaultBlueColor,
         height: 26,
         width: 40,
       }}

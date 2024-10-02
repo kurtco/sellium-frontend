@@ -99,7 +99,7 @@ export default function Palette(mode: PaletteMode, presetColor: string) {
           mode === ThemeMode.DARK
             ? paletteColor.grey[100]
             : paletteColor.grey[0],
-        default: paletteColor.grey.A50,
+        default: paletteColor.grey[0],
       },
     },
     components: {

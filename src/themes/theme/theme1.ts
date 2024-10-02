@@ -8,6 +8,7 @@ interface Colors {
 // ==============================|| PRESET THEME - DEFAULT ||============================== //
 
 export default function Theme1(colors: Colors, mode: ThemeMode) {
+  // console.log("colors", colors);
   const { grey } = colors;
 
   const greyColors = {

@@ -2,7 +2,7 @@ import React from "react";
 import { useTheme } from "@mui/material/styles";
 import useConfig from "@/hooks/useConfig";
 import { ThemeMode } from "@/constants/config.enum";
-
+import { defaultBlueColor } from "@/constants/constant";
 interface TreeButtonIconProps {
   selected: boolean;
 }
@@ -22,7 +22,7 @@ const TreeButtonIcon = ({ selected }: TreeButtonIconProps) => {
         color:
           !selected || mode === ThemeMode.DARK
             ? theme.palette.text.primary
-            : "#166EE0",
+            : defaultBlueColor,
         height: 26,
         width: 40,
       }}

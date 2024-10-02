@@ -43,10 +43,17 @@ import TablePagination from "../TablePagination";
 import LinearWithLabel from "../LinearWithLabel";
 import { dummyDataTable } from "@/constants/constant";
 import { useTheme } from "@mui/material/styles";
-import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import {
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
 import TreeButtonIcon from "../TreeButtonIcon";
 import GridButtonIcon from "../GridButtonIcon";
 import { TableView } from "@/constants/config.enum";
+import FilterButton from "../FilterButton";
+import SearchBar from "../SearchBar";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -102,7 +109,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
       content={true}
       sx={{
         "& .MuiCardHeader-title": {
-          fontSize: "16px", // Cambiar el tamaño de la fuente del título
+          fontSize: "16px",
           fontWeight: "600",
         },
         display: "flex",
@@ -141,6 +148,36 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box>
+          <ToggleButtonGroup
+            color="primary"
+            exclusive
+            aria-label="filters"
+            sx={{
+              borderColor: theme.palette.grey[300],
+              borderWidth: 1,
+              borderStyle: "solid",
+              "& .MuiToggleButton-root": {
+                borderColor: theme.palette.grey[300], // Aplicar a los botones dentro del grupo
+              },
+            }}
+          >
+            <Button>
+              <FilterButton />
+            </Button>
+          </ToggleButtonGroup>
+          <SearchBar />
+        </Box>
+        <Box></Box>
       </Box>
 
       <ScrollX>

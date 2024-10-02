@@ -11,6 +11,10 @@ export const defaultConfig = {
   fontFamily: "Arial",
   themeLayout: "theme1",
 };
+export default defaultConfig;
+
+export const defaultBlueColor: string = "#166EE0";
+
 export const dummyDataTable = [
   {
     name: "User 1 Example",
@@ -153,5 +157,3 @@ export const dummyDataTable = [
     profileProgress: 100,
   },
 ];
-
-export default defaultConfig;
