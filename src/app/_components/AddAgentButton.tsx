@@ -32,7 +32,7 @@ const AddAgentButton = () => {
         {ButtonsLabels.ADDAGENT}
       </Button>
 
-      <AddAgentModal open={open} handleClose={handleClose} mode={mode} />
+      <AddAgentModal open={open} handleClose={handleClose} />
     </>
   );
 };
