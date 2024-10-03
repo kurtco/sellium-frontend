@@ -51,6 +51,7 @@ const DataTableHeaderActions = () => {
             exclusive
             onChange={handleToogleView}
             aria-label="view toggle"
+            size="small"
           >
             <ToggleButton value={TableView.GRID} aria-label="grid view">
               <GridButtonIcon
@@ -84,9 +85,10 @@ const DataTableHeaderActions = () => {
               borderWidth: 1,
               borderStyle: "solid",
               "& .MuiToggleButton-root": {
-                borderColor: theme.palette.grey[300], // Aplicar a los botones dentro del grupo
+                borderColor: theme.palette.grey[300],
               },
             }}
+            size="small"
           >
             <Button>
               <FilterButton />

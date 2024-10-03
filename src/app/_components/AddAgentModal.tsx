@@ -56,6 +56,7 @@ const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
           border: `${"2px solid"} ${theme.palette.background.default}`,
           boxShadow: 24,
           p: 4,
+          borderRadius: "4px",
         }}
       >
         <UploadAgentCapture

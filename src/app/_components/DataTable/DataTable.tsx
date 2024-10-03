@@ -54,7 +54,7 @@ interface ReactTableStructure {
 
 const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   // data = dummyDataTable;
-  console.log("datatable", data);
+  // console.log("datatable", data);
   const theme = useTheme();
 
   const table = useReactTable({
