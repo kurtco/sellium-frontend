@@ -1,7 +1,10 @@
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 
-const CloseIcon = () => {
+interface CloseIconProps {
+  iconWhite?: boolean;
+}
+const CloseIcon = ({ iconWhite = false }: CloseIconProps) => {
   const theme = useTheme();
   return (
     <svg
@@ -11,7 +14,9 @@ const CloseIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{
-        color: theme.palette.grey[500],
+        color: !iconWhite
+          ? theme.palette.grey[500]
+          : theme.palette.common.white,
         height: 12,
         width: 12,
       }}

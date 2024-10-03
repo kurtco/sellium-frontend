@@ -12,22 +12,38 @@ interface FileWithPreview extends File {
   preview: string;
 }
 
-const AddAgentModal = ({ open, handleClose, mode }: AddAgentModalProps) => {
+const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
   const [files, setFiles] = useState<FileWithPreview[] | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const theme = useTheme();
-  console.log("AddAgentModal mode -> ", mode);
+
   const setFieldValue = (field: string, value: unknown) => {
     if (field === "files") {
       setFiles(value as FileWithPreview[]);
     }
   };
+
+  const closeModal = () => {
+    if (loading) return;
+    handleClose();
+  };
+
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      onClose={closeModal}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      slotProps={{
+        backdrop: {
+          onClick: (event) => {
+            closeModal();
+            event.stopPropagation();
+          },
+        },
+      }}
+      disableEscapeKeyDown={loading}
     >
       <Box
         sx={{
@@ -37,9 +53,10 @@ const AddAgentModal = ({ open, handleClose, mode }: AddAgentModalProps) => {
           transform: "translate(-50%, -50%)",
           maxWidth: "1024px",
           backgroundColor: theme.palette.background.default,
-          border: `${"2px solid"} ${theme.palette.common.black}`,
+          border: `${"2px solid"} ${theme.palette.background.default}`,
           boxShadow: 24,
           p: 4,
+          borderRadius: "4px",
         }}
       >
         <UploadAgentCapture
@@ -47,6 +64,8 @@ const AddAgentModal = ({ open, handleClose, mode }: AddAgentModalProps) => {
           setFieldValue={setFieldValue}
           error={false}
           handleCloseModal={handleClose}
+          loading={loading}
+          setLoading={setLoading}
         />
       </Box>
     </Modal>

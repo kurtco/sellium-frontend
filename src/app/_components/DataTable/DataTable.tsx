@@ -38,7 +38,6 @@ import MainCard from "../MainCard";
 import ScrollX from "../ScrollX";
 import TablePagination from "../TablePagination";
 import LinearWithLabel from "../LinearWithLabel";
-import { dummyDataTable } from "@/constants/constant";
 import { useTheme } from "@mui/material/styles";
 import DataTableHeaderActions from "./DataTableHeaderActions";
 
@@ -54,7 +53,8 @@ interface ReactTableStructure {
 }
 
 const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
-  data = dummyDataTable;
+  // data = dummyDataTable;
+  // console.log("datatable", data);
   const theme = useTheme();
 
   const table = useReactTable({
