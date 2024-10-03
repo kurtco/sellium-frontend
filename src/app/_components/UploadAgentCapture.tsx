@@ -23,6 +23,7 @@ import { ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 import LoadingSpinner from "./LoadingSpinner";
 import { DataFromImage } from "@/interfaces/interfaces";
+import SnackbarMessage from "./SnackbarMessage";
 
 interface UploadAgentCaptureProps {
   error?: boolean;
@@ -66,6 +67,8 @@ const UploadAgentCapture = ({
   const [imageProcessedData, setImageProcessedData] =
     useState<DataFromImage | null>(null);
 
+  const [showSnackBar, setShowSnackBar] = useState<boolean>(false);
+
   const {
     getRootProps,
     getInputProps,
@@ -103,9 +106,15 @@ const UploadAgentCapture = ({
     if (!imageProcessedData || !imageProcessedData?.userCode || loading) {
       return;
     }
+    alert("Agent added successfully");
+    setShowSnackBar(true);
     onRemoveScreenShot();
     closeModal();
   }, [loading, imageProcessedData, onRemoveScreenShot, closeModal]);
+
+  const handleCloseSnackbar = () => {
+    setShowSnackBar(false);
+  };
 
   const onSendScreenShot = async () => {
     if (!file || file.length === 0) return;
@@ -182,6 +191,13 @@ const UploadAgentCapture = ({
 
       {errorMessage && <Typography color="error">{errorMessage}</Typography>}
       {loading && <LoadingSpinner text={LoadingSpinnerLabels.message} />}
+      {showSnackBar && (
+        <SnackbarMessage
+          message="Please wait, this process could take a few seconds"
+          open={showSnackBar}
+          handleClose={handleCloseSnackbar}
+        />
+      )}
 
       {!loading && (
         <DropzoneWrapper

@@ -33,7 +33,7 @@ const LoadingSpinner = ({ text }: LoadingSpinnerProps) => {
           variant="h6"
           sx={{
             color: theme.palette.grey[700],
-            fontSize: "1.2rem",
+            fontSize: "14px",
             textAlign: "center",
           }}
         >
