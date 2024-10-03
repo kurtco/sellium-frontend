@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -14,7 +16,6 @@ import RejectionFiles from "./RejectionFiles";
 import UploadFileIcon from "./UploapFileIcon";
 import {
   LoadingSpinnerLabels,
-  SnackBarLabels,
   UploadAgentCaptureLabels,
 } from "@/constants/labels.enums";
 import CloseIcon from "./CloseIcon";
@@ -24,7 +25,8 @@ import { ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 import LoadingSpinner from "./LoadingSpinner";
 import { DataFromImage } from "@/interfaces/interfaces";
-import SnackbarMessage from "./SnackbarMessage";
+import { AppDispatch, RootState } from "../../../store/store";
+import { processImage } from "../../../store/imageSlice";
 
 interface UploadAgentCaptureProps {
   error?: boolean;
@@ -54,21 +56,20 @@ const DropzoneWrapper = styled("div")(({ theme }) => ({
 }));
 
 const UploadAgentCapture = ({
-  error,
   file,
   setFieldValue,
   sx,
   handleCloseModal,
-  loading,
-  setLoading,
 }: UploadAgentCaptureProps) => {
   const theme = useTheme();
   const { mode } = useConfig();
-  const [errorMessage, setErrorMessage] = useState("");
-  const [imageProcessedData, setImageProcessedData] =
-    useState<DataFromImage | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const [showSnackBar, setShowSnackBar] = useState<boolean>(false);
+  const { loading, dataFromImage, error } = useSelector(
+    (state: RootState) => state.image
+  );
+
+  useState<DataFromImage | null>(null);
 
   const {
     getRootProps,
@@ -104,57 +105,16 @@ const UploadAgentCapture = ({
   }, [loading, setFieldValue]);
 
   useEffect(() => {
-    if (!imageProcessedData || !imageProcessedData?.userCode || loading) {
+    if (!dataFromImage || !dataFromImage?.userCode || loading) {
       return;
     }
-    alert(SnackBarLabels.message);
-    setShowSnackBar(true);
     onRemoveScreenShot();
     closeModal();
-  }, [loading, imageProcessedData, onRemoveScreenShot, closeModal]);
+  }, [loading, dataFromImage, onRemoveScreenShot, closeModal]);
 
-  const handleCloseSnackbar = () => {
-    setShowSnackBar(false);
-  };
-
-  const onSendScreenShot = async () => {
+  const onSendScreenShot = () => {
     if (!file || file.length === 0) return;
-
-    setLoading(true);
-    setErrorMessage("");
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file[0]);
-
-      const base64Response = await fetch("/api/base64", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!base64Response.ok) {
-        throw new Error("Error al Processing image");
-      }
-
-      const { base64 } = await base64Response.json();
-
-      const processResponse = await fetch("/api/ocr", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64: base64 }),
-      });
-
-      if (!processResponse.ok) {
-        throw new Error("Error al Processing image");
-      }
-
-      const processedData = await processResponse.json();
-      setImageProcessedData(processedData.data);
-    } catch (error: any) {
-      setErrorMessage(error?.message || error);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(processImage(file[0]));
   };
 
   return (
@@ -190,15 +150,8 @@ const UploadAgentCapture = ({
         </Box>
       )}
 
-      {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
       {loading && <LoadingSpinner text={LoadingSpinnerLabels.message} />}
-      {showSnackBar && (
-        <SnackbarMessage
-          message={SnackBarLabels.message}
-          open={showSnackBar}
-          handleClose={handleCloseSnackbar}
-        />
-      )}
 
       {!loading && (
         <DropzoneWrapper

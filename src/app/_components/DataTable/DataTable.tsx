@@ -32,7 +32,10 @@ import {
   RecruiterTableData,
   Users,
 } from "../../../interfaces/interfaces";
-import { AgentsDataTableHeaders } from "@/constants/labels.enums";
+import {
+  AgentsDataTableHeaders,
+  SnackBarLabels,
+} from "@/constants/labels.enums";
 import { calculateCompletion } from "@/utils/commonFunctions";
 import MainCard from "../MainCard";
 import ScrollX from "../ScrollX";
@@ -40,6 +43,10 @@ import TablePagination from "../TablePagination";
 import LinearWithLabel from "../LinearWithLabel";
 import { useTheme } from "@mui/material/styles";
 import DataTableHeaderActions from "./DataTableHeaderActions";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../store/store";
+import SnackbarMessage from "../SnackbarMessage";
+import { setShowSnackbar } from "../../../../store/imageSlice";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -56,6 +63,15 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   // data = dummyDataTable;
   // console.log("datatable", data);
   const theme = useTheme();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { dataFromImage, error, showSnackbar } = useSelector(
+    (state: RootState) => state.image
+  );
+
+  const handleCloseSnackbar = () => {
+    dispatch(setShowSnackbar(false));
+  };
 
   const table = useReactTable({
     data,
@@ -92,6 +108,13 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
       }}
     >
       <DataTableHeaderActions />
+      {showSnackbar && !error && dataFromImage?.userCode && (
+        <SnackbarMessage
+          message={SnackBarLabels.message}
+          open={showSnackbar}
+          handleClose={handleCloseSnackbar}
+        />
+      )}
       <ScrollX>
         <Stack>
           {top && (

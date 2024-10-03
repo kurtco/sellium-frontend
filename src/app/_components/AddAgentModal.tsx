@@ -3,6 +3,8 @@ import UploadAgentCapture from "./UploadAgentCapture";
 import { useState } from "react";
 
 import { ThemeMode } from "@/constants/config.enum";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
 interface AddAgentModalProps {
   open: boolean;
   handleClose: () => void;
@@ -14,7 +16,7 @@ interface FileWithPreview extends File {
 
 const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
   const [files, setFiles] = useState<FileWithPreview[] | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { loading } = useSelector((state: RootState) => state.image);
 
   const theme = useTheme();
 
@@ -64,8 +66,6 @@ const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
           setFieldValue={setFieldValue}
           error={false}
           handleCloseModal={handleClose}
-          loading={loading}
-          setLoading={setLoading}
         />
       </Box>
     </Modal>
