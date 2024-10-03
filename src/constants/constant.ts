@@ -14,6 +14,7 @@ export const defaultConfig = {
 export default defaultConfig;
 
 export const defaultBlueColor: string = "#166EE0";
+export const successSnackbarBackground: string = "#4caf50";
 
 export const dummyDataTable = [
   {
@@ -157,3 +158,5 @@ export const dummyDataTable = [
     profileProgress: 100,
   },
 ];
+
+export const snackBarCloseTime: number = 3000;
