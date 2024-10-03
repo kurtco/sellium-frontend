@@ -14,6 +14,7 @@ import RejectionFiles from "./RejectionFiles";
 import UploadFileIcon from "./UploapFileIcon";
 import {
   LoadingSpinnerLabels,
+  SnackBarLabels,
   UploadAgentCaptureLabels,
 } from "@/constants/labels.enums";
 import CloseIcon from "./CloseIcon";
@@ -106,7 +107,7 @@ const UploadAgentCapture = ({
     if (!imageProcessedData || !imageProcessedData?.userCode || loading) {
       return;
     }
-    alert("Agent added successfully");
+    alert(SnackBarLabels.message);
     setShowSnackBar(true);
     onRemoveScreenShot();
     closeModal();
@@ -193,7 +194,7 @@ const UploadAgentCapture = ({
       {loading && <LoadingSpinner text={LoadingSpinnerLabels.message} />}
       {showSnackBar && (
         <SnackbarMessage
-          message="Please wait, this process could take a few seconds"
+          message={SnackBarLabels.message}
           open={showSnackBar}
           handleClose={handleCloseSnackbar}
         />

@@ -28,3 +28,7 @@ export enum UploadAgentCaptureLabels {
 export enum LoadingSpinnerLabels {
   message = "Processing the image. This may take a few minutes, please wait.",
 }
+
+export enum SnackBarLabels {
+  message = "Agent added successfully",
+}
