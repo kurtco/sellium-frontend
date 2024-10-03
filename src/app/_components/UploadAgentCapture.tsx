@@ -25,6 +25,8 @@ interface UploadAgentCaptureProps {
   setFieldValue: (field: string, value: unknown) => void;
   sx?: object;
   handleCloseModal: () => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
 }
 
 interface FileWithPreview extends File {
@@ -50,10 +52,11 @@ const UploadAgentCapture = ({
   setFieldValue,
   sx,
   handleCloseModal,
+  loading,
+  setLoading,
 }: UploadAgentCaptureProps) => {
   const theme = useTheme();
   const { mode } = useConfig();
-  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
@@ -79,7 +82,13 @@ const UploadAgentCapture = ({
     },
   });
 
+  const closeModal = () => {
+    if (loading) return;
+    handleCloseModal();
+  };
+
   const onRemoveScreenShot = () => {
+    if (loading) return;
     setFieldValue("files", null);
   };
 
@@ -119,7 +128,7 @@ const UploadAgentCapture = ({
       console.log("Datos procesados: ", processedData);
     } catch (error: any) {
       console.error("Error en el flujo de procesamiento: ", error);
-      setErrorMessage(error.message);
+      setErrorMessage(error?.message || error);
     } finally {
       setLoading(false);
     }
@@ -140,7 +149,7 @@ const UploadAgentCapture = ({
         <Button
           disableElevation
           variant="outlined"
-          onClick={handleCloseModal}
+          onClick={closeModal}
           startIcon={<CloseIcon />}
           sx={{
             paddingRight: 0,
@@ -254,7 +263,7 @@ const UploadAgentCapture = ({
           <Button
             variant="outlined"
             disableElevation
-            onClick={handleCloseModal}
+            onClick={closeModal}
             sx={{ textTransform: "none" }}
           >
             {UploadAgentCaptureLabels.CANCELBUTTON}
