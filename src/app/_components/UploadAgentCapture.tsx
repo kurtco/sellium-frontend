@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -19,7 +19,6 @@ import useConfig from "@/hooks/useConfig";
 import { ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 
-// Define los tipos de las props del componente
 interface UploadAgentCaptureProps {
   error?: boolean;
   file: FileWithPreview[] | null;
@@ -28,7 +27,6 @@ interface UploadAgentCaptureProps {
   handleCloseModal: () => void;
 }
 
-// Define un tipo para manejar el objeto File con la propiedad preview
 interface FileWithPreview extends File {
   preview: string;
 }
@@ -55,6 +53,9 @@ const UploadAgentCapture = ({
 }: UploadAgentCaptureProps) => {
   const theme = useTheme();
   const { mode } = useConfig();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const {
     getRootProps,
     getInputProps,
@@ -82,8 +83,46 @@ const UploadAgentCapture = ({
     setFieldValue("files", null);
   };
 
-  const onSendScreenShot = () => {
-    console.log("onSendScreenShot func");
+  const onSendScreenShot = async () => {
+    if (!file || file.length === 0) return;
+
+    setLoading(true);
+    setErrorMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file[0]);
+
+      const base64Response = await fetch("/api/base64", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!base64Response.ok) {
+        throw new Error("Error al convertir imagen a base64");
+      }
+
+      const { base64 } = await base64Response.json();
+      console.log("base64 ", base64);
+
+      const processResponse = await fetch("/api/ocr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: base64 }),
+      });
+
+      if (!processResponse.ok) {
+        throw new Error("Error al procesar el base64");
+      }
+
+      const processedData = await processResponse.json();
+      console.log("Datos procesados: ", processedData);
+    } catch (error: any) {
+      console.error("Error en el flujo de procesamiento: ", error);
+      setErrorMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -116,6 +155,9 @@ const UploadAgentCapture = ({
           }}
         ></Button>
       </Box>
+      {loading && <Typography variant="h6">Cargando...</Typography>}
+
+      {errorMessage && <Typography color="error">{errorMessage}</Typography>}
 
       <DropzoneWrapper
         {...getRootProps()}
@@ -127,7 +169,7 @@ const UploadAgentCapture = ({
             bgcolor: theme.palette.error.lighter,
           }),
           ...(file && {
-            padding: "0", // Remueve padding cuando hay imagen
+            padding: "0", // removing padding when there is a image
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -136,7 +178,6 @@ const UploadAgentCapture = ({
       >
         <input {...getInputProps()} />
 
-        {/* Si no hay archivo, muestra el contenido del dropzone */}
         {!file && (
           <Stack spacing={2} alignItems="center" justifyContent="center">
             <UploadFileIcon />
@@ -153,15 +194,14 @@ const UploadAgentCapture = ({
           </Stack>
         )}
 
-        {/* Si hay archivo, muestra la imagen adjuntada */}
         {file && (
           <CardMedia
             component="img"
             src={file[0].preview}
             sx={{
-              width: "100%", // Ajusta el tamaño al 100% del contenedor
-              maxHeight: "500px", // O ajusta esto según el tamaño máximo que quieras mostrar
-              objectFit: "contain", // Asegura que la imagen se muestre correctamente
+              width: "100%",
+              maxHeight: "500px",
+              objectFit: "contain",
             }}
           />
         )}
