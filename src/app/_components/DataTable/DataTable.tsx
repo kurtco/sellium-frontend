@@ -74,7 +74,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (showSnackbar && !error && dataFromImage?.userCode) {
+    if (showSnackbar) {
       const timeoutId = setTimeout(() => {
         handleCloseSnackbar();
       }, 5000);
@@ -124,11 +124,22 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
       }}
     >
       <DataTableHeaderActions />
+
       {showSnackbar && !error && dataFromImage?.userCode && (
         <SnackbarMessage
           message={SnackBarLabels.message}
           open={showSnackbar}
           handleClose={handleCloseSnackbar}
+          error={false}
+        />
+      )}
+
+      {showSnackbar && error && !dataFromImage?.userCode && (
+        <SnackbarMessage
+          message={SnackBarLabels.error}
+          open={showSnackbar}
+          handleClose={handleCloseSnackbar}
+          error={true}
         />
       )}
       <ScrollX>

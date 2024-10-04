@@ -85,6 +85,7 @@ const imageSlice = createSlice({
       .addCase(processImage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        state.showSnackbar = true;
       });
   },
 });

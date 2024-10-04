@@ -8,7 +8,7 @@ interface Colors {
 // ==============================|| PRESET THEME - DEFAULT ||============================== //
 
 export default function Theme1(colors: Colors, mode: ThemeMode) {
-  // console.log("colors", colors);
+  //console.log("colors", colors);
   const { grey } = colors;
 
   const greyColors = {
@@ -44,10 +44,10 @@ export default function Theme1(colors: Colors, mode: ThemeMode) {
     "#102693",
     "#102693",
   ];
-  let errorColors = ["#FFE7D3", "#FF805D", "#FF4528", "#DB271D", "#930C1A"];
+  let errorColors = ["#FFE7D3", "#FF805D", "#CC1414", "#DB271D", "#930C1A"];
   let warningColors = ["#FFF6D0", "#FFCF4E", "#FFB814", "#DB970E", "#935B06"];
   let infoColors = ["#DCF0FF", "#7EB9FF", "#549BFF", "#3D78DB", "#1A3D93"];
-  let successColors = ["#EAFCD4", "#8AE65B", "#58D62A", "#3DB81E", "#137C0D"];
+  let successColors = ["#EAFCD4", "#8AE65B", "#4caf50", "#3DB81E", "#137C0D"];
 
   if (mode === ThemeMode.DARK) {
     primaryColors = [
@@ -67,8 +67,7 @@ export default function Theme1(colors: Colors, mode: ThemeMode) {
     infoColors = ["#202734", "#416fb0", "#4c88dd", "#74a8e9", "#ecf4fb"];
     successColors = ["#1f2e1c", "#449626", "#4fba28", "#74cf4d", "#e3fbd2"];
   }
-
-  return {
+  const colorsPallete = {
     primary: {
       lighter: primaryColors[0],
       100: primaryColors[1],
@@ -132,4 +131,6 @@ export default function Theme1(colors: Colors, mode: ThemeMode) {
     },
     grey: greyColors,
   };
+  // console.log("theme1 todos los colores ", colorsPallete);
+  return colorsPallete;
 }

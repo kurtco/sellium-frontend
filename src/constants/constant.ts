@@ -14,7 +14,6 @@ export const defaultConfig = {
 export default defaultConfig;
 
 export const defaultBlueColor: string = "#166EE0";
-export const successSnackbarBackground: string = "#4caf50";
 
 export const dummyDataTable = [
   {

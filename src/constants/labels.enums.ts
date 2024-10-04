@@ -31,4 +31,19 @@ export enum LoadingSpinnerLabels {
 
 export enum SnackBarLabels {
   message = "Agent added successfully",
+  error = "Couldn't add the agent. Try again.",
+}
+
+export enum DuplicateUserMessageLabels {
+  title = "Duplicate Agent",
+  message = "The agent with the code ",
+  message2 = "already exists.",
+  button = "Ok",
+}
+
+export enum RepresentativeTypeLabels {
+  title = "Representative Type",
+  message = "Choose your representative type to continue",
+  StudentButton = "Student",
+  LicensedButton = "Licensed",
 }

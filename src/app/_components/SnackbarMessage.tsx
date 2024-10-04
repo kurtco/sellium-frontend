@@ -3,21 +3,20 @@ import { Snackbar, IconButton } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "./CloseIcon";
-import {
-  snackBarCloseTime,
-  successSnackbarBackground,
-} from "@/constants/constant";
+import { snackBarCloseTime } from "@/constants/constant";
 
 interface SnackbarMessageProps {
   message: string;
   open: boolean;
   handleClose: () => void;
+  error: boolean;
 }
 
 const SnackbarMessage = ({
   message,
   open,
   handleClose,
+  error,
 }: SnackbarMessageProps) => {
   const theme = useTheme();
 
@@ -30,7 +29,9 @@ const SnackbarMessage = ({
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       ContentProps={{
         sx: {
-          backgroundColor: successSnackbarBackground,
+          backgroundColor: !error
+            ? theme.palette.success.main
+            : theme.palette.error.main,
           color: theme.palette.common.white,
           padding: theme.spacing(1.5),
           display: "flex",
