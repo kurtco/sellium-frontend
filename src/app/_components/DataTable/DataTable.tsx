@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 // material-ui
 import Box from "@mui/material/Box";
@@ -46,7 +46,7 @@ import DataTableHeaderActions from "./DataTableHeaderActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import SnackbarMessage from "../SnackbarMessage";
-import { setShowSnackbar } from "../../../../store/imageSlice";
+import { resetImageState } from "../../../../store/imageSlice";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -69,9 +69,25 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
     (state: RootState) => state.image
   );
 
-  const handleCloseSnackbar = () => {
-    dispatch(setShowSnackbar(false));
-  };
+  const handleCloseSnackbar = useCallback(() => {
+    dispatch(resetImageState());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (showSnackbar && !error && dataFromImage?.userCode) {
+      const timeoutId = setTimeout(() => {
+        handleCloseSnackbar();
+      }, 5000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [
+    dispatch,
+    showSnackbar,
+    error,
+    dataFromImage?.userCode,
+    handleCloseSnackbar,
+  ]);
 
   const table = useReactTable({
     data,

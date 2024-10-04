@@ -63,6 +63,12 @@ const imageSlice = createSlice({
     setShowSnackbar(state, action) {
       state.showSnackbar = action.payload;
     },
+    resetImageState: (state) => {
+      state.loading = false;
+      state.dataFromImage = null;
+      state.error = null;
+      state.showSnackbar = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -83,5 +89,5 @@ const imageSlice = createSlice({
   },
 });
 
-export const { setShowSnackbar } = imageSlice.actions; // Let's import the actions to handle the snack bar throughout the UI.
+export const { setShowSnackbar, resetImageState } = imageSlice.actions; // Let's import the actions to handle the snack bar throughout the UI.
 export default imageSlice.reducer;

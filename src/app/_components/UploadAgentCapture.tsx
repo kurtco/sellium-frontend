@@ -34,8 +34,6 @@ interface UploadAgentCaptureProps {
   setFieldValue: (field: string, value: unknown) => void;
   sx?: object;
   handleCloseModal: () => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
 }
 
 interface FileWithPreview extends File {
