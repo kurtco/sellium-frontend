@@ -2,12 +2,18 @@ import React, { useState } from "react";
 import { Button } from "@mui/material";
 import { ButtonsLabels } from "@/constants/labels.enums";
 import AddAgentModal from "./AddAgentModal";
+import { FileWithPreview } from "@/interfaces/interfaces";
 
 const AddAgentButton = () => {
   const [open, setOpen] = useState(false);
+  const [files, setFiles] = useState<FileWithPreview[] | null>(null);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  const handleClose = () => {
+    setFiles(null);
+    setOpen(false);
+  };
 
   return (
     <>
@@ -28,7 +34,14 @@ const AddAgentButton = () => {
         {ButtonsLabels.ADDAGENT}
       </Button>
 
-      <AddAgentModal open={open} handleClose={handleClose} />
+      {open && (
+        <AddAgentModal
+          open={open}
+          handleClose={handleClose}
+          files={files}
+          setFiles={setFiles}
+        />
+      )}
     </>
   );
 };

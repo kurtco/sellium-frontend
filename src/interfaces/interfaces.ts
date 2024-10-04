@@ -93,3 +93,7 @@ export interface Colors {
   grey: string[];
   [key: string]: string[];
 }
+
+export interface FileWithPreview extends File {
+  preview: string;
+}

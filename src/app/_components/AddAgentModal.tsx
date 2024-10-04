@@ -1,21 +1,25 @@
 import { Box, Modal, useTheme } from "@mui/material";
 import UploadAgentCapture from "./UploadAgentCapture";
-import { useState } from "react";
 
 import { ThemeMode } from "@/constants/config.enum";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
+import { FileWithPreview } from "@/interfaces/interfaces";
+
 interface AddAgentModalProps {
   open: boolean;
   handleClose: () => void;
   mode?: ThemeMode.DARK | ThemeMode.LIGHT;
-}
-interface FileWithPreview extends File {
-  preview: string;
+  files: FileWithPreview[] | null;
+  setFiles: React.Dispatch<React.SetStateAction<FileWithPreview[] | null>>;
 }
 
-const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
-  const [files, setFiles] = useState<FileWithPreview[] | null>(null);
+const AddAgentModal = ({
+  open,
+  handleClose,
+  files,
+  setFiles,
+}: AddAgentModalProps) => {
   const { loading } = useSelector((state: RootState) => state.image);
 
   const theme = useTheme();
@@ -26,23 +30,15 @@ const AddAgentModal = ({ open, handleClose }: AddAgentModalProps) => {
     }
   };
 
-  const closeModal = () => {
-    if (loading) return;
-    handleClose();
-  };
-
   return (
     <Modal
       open={open}
-      onClose={closeModal}
+      onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       slotProps={{
         backdrop: {
-          onClick: (event) => {
-            closeModal();
-            event.stopPropagation();
-          },
+          style: { pointerEvents: loading ? "none" : "auto" },
         },
       }}
       disableEscapeKeyDown={loading}
