@@ -22,11 +22,16 @@ import CloseIcon from "./CloseIcon";
 import RecycleBinIcon from "./RecycleBinIcon";
 import useConfig from "@/hooks/useConfig";
 import { ThemeMode } from "@/constants/config.enum";
-import { defaultBlueColor } from "@/constants/constant";
+import {
+  defaultBlueColor,
+  defaultImageUploapError,
+} from "@/constants/constant";
 import LoadingSpinner from "./LoadingSpinner";
 import { DataFromImage } from "@/interfaces/interfaces";
 import { AppDispatch, RootState } from "../../../store/store";
 import { processImage } from "../../../store/imageSlice";
+import { Alert } from "@mui/material";
+import WarningIcon from "./WarningIcon";
 
 interface UploadAgentCaptureProps {
   error?: boolean;
@@ -66,6 +71,8 @@ const UploadAgentCapture = ({
   const { loading, dataFromImage, error } = useSelector(
     (state: RootState) => state.image
   );
+
+  console.log("uploadagentecopturee error ", error);
 
   useState<DataFromImage | null>(null);
 
@@ -148,7 +155,6 @@ const UploadAgentCapture = ({
         </Box>
       )}
 
-      {error && <Typography color="error">{error}</Typography>}
       {loading && <LoadingSpinner text={LoadingSpinnerLabels.message} />}
 
       {!loading && (
@@ -203,6 +209,17 @@ const UploadAgentCapture = ({
 
       {fileRejections.length > 0 && (
         <RejectionFiles fileRejections={fileRejections} />
+      )}
+
+      {error?.message && !dataFromImage?.userCode && (
+        <Alert
+          sx={{ marginTop: 2 }}
+          variant="filled"
+          severity="error"
+          icon={<WarningIcon />}
+        >
+          {error.message || defaultImageUploapError}
+        </Alert>
       )}
 
       {!loading && (

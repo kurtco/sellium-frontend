@@ -133,15 +133,6 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
           error={false}
         />
       )}
-
-      {showSnackbar && error && !dataFromImage?.userCode && (
-        <SnackbarMessage
-          message={SnackBarLabels.error}
-          open={showSnackbar}
-          handleClose={handleCloseSnackbar}
-          error={true}
-        />
-      )}
       <ScrollX>
         <Stack>
           {top && (

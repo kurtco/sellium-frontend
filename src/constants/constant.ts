@@ -159,3 +159,5 @@ export const dummyDataTable = [
 ];
 
 export const snackBarCloseTime: number = 3000;
+export const defaultImageUploapError: string =
+  "There was a issue processing the image, please try again!";

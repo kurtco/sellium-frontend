@@ -1,57 +1,70 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { DataFromImage } from "@/interfaces/interfaces";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { defaultImageUploapError } from "@/constants/constant";
 
-// Acción asíncrona para procesar la imagen
-export const processImage = createAsyncThunk(
-  "image/processImage",
-  async (file: File, { rejectWithValue }) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
+// Definimos un tipo para el error que esperamos recibir del backend
+interface ErrorContent {
+  error?: string;
+  message?: string;
+}
 
-      // Convertir a base64
-      const base64Response = await fetch("/api/base64", {
-        method: "POST",
-        body: formData,
-      });
+// Acción asíncrona para procesar la imagen con un tipo explícito para el valor rechazado
+export const processImage = createAsyncThunk<
+  DataFromImage, // Tipo de datos cuando la promesa se resuelve correctamente
+  File, // Tipo del argumento (archivo) que se pasa a la función
+  { rejectValue: ErrorContent } // Tipo del valor rechazado
+>("image/processImage", async (file: File, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
 
-      if (!base64Response.ok) {
-        throw new Error("Error al convertir la imagen a base64");
-      }
+    const base64Response = await fetch("/api/base64", {
+      method: "POST",
+      body: formData,
+    });
 
-      const { base64 } = await base64Response.json();
-
-      // Procesar la imagen
-      const processResponse = await fetch("/api/ocr", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64: base64 }),
-      });
-
-      if (!processResponse.ok) {
-        throw new Error("Error al procesar la imagen");
-      }
-
-      const processedData = await processResponse.json();
-      return processedData.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    if (!base64Response.ok) {
+      throw new Error("Error al convertir la imagen a base64");
     }
-  }
-);
 
+    const { base64 } = await base64Response.json();
+
+    const processResponse = await fetch("/api/ocr", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64: base64 }),
+    });
+
+    if (!processResponse.ok) {
+      const errorData: ErrorContent = await processResponse.json();
+      return rejectWithValue(errorData); // Devolver el error usando rejectWithValue
+    }
+
+    const processedData = await processResponse.json();
+    return processedData.data;
+  } catch (error) {
+    const errorContent: ErrorContent = {
+      message: error instanceof Error ? error.message : defaultImageUploapError,
+    };
+    return rejectWithValue(errorContent);
+  }
+});
+
+// Definimos el estado inicial con el error tipado correctamente
 interface ImageState {
   loading: boolean;
   dataFromImage: DataFromImage | null;
-  error: string | null;
+  error: ErrorContent;
   showSnackbar: boolean;
 }
 
 const initialState: ImageState = {
   loading: false,
   dataFromImage: null,
-  error: null,
+  error: {
+    error: "",
+    message: "",
+  },
   showSnackbar: false,
 };
 
@@ -59,14 +72,16 @@ const imageSlice = createSlice({
   name: "image",
   initialState,
   reducers: {
-    // action to trigger from the UI
-    setShowSnackbar(state, action) {
+    setShowSnackbar(state, action: PayloadAction<boolean>) {
       state.showSnackbar = action.payload;
     },
     resetImageState: (state) => {
       state.loading = false;
       state.dataFromImage = null;
-      state.error = null;
+      state.error = {
+        error: "",
+        message: "",
+      };
       state.showSnackbar = false;
     },
   },
@@ -74,21 +89,32 @@ const imageSlice = createSlice({
     builder
       .addCase(processImage.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = {
+          error: "",
+          message: "",
+        };
         state.showSnackbar = false;
       })
-      .addCase(processImage.fulfilled, (state, action) => {
-        state.loading = false;
-        state.dataFromImage = action.payload;
-        state.showSnackbar = true;
-      })
-      .addCase(processImage.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-        state.showSnackbar = true;
-      });
+      .addCase(
+        processImage.fulfilled,
+        (state, action: PayloadAction<DataFromImage>) => {
+          state.loading = false;
+          state.dataFromImage = action.payload;
+          state.showSnackbar = true;
+        }
+      )
+      .addCase(
+        processImage.rejected,
+        (state, action: PayloadAction<ErrorContent | undefined>) => {
+          state.loading = false;
+          state.error = action.payload || {
+            message: defaultImageUploapError,
+          };
+          state.showSnackbar = true;
+        }
+      );
   },
 });
 
-export const { setShowSnackbar, resetImageState } = imageSlice.actions; // Let's import the actions to handle the snack bar throughout the UI.
+export const { setShowSnackbar, resetImageState } = imageSlice.actions;
 export default imageSlice.reducer;

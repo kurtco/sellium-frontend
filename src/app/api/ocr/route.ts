@@ -1,3 +1,4 @@
+import { defaultImageUploapError } from "@/constants/constant";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -12,15 +13,22 @@ export async function POST(req: Request) {
     });
 
     if (!nestResponse.ok) {
-      throw new Error(`NestJS API Error: ${nestResponse.statusText}`);
+      const errorData = await nestResponse.json();
+      return NextResponse.json(errorData, { status: nestResponse.status });
     }
 
     const data = await nestResponse.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error processing image: ", error);
-    return new NextResponse("Error en la API POST", {
-      status: 500,
-    });
+    const errorMessage =
+      error instanceof Error ? error.message : defaultImageUploapError;
+
+    return NextResponse.json(
+      {
+        message: "Error en la API POST",
+        error: errorMessage,
+      },
+      { status: 500 }
+    );
   }
 }
