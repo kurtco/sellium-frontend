@@ -1,18 +1,23 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import { Button } from "@mui/material";
 import { ButtonsLabels } from "@/constants/labels.enums";
 import AddAgentModal from "./AddAgentModal";
 import { FileWithPreview } from "@/interfaces/interfaces";
+import { resetImageState } from "../../../store/imageSlice";
 
 const AddAgentButton = () => {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<FileWithPreview[] | null>(null);
+  const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => {
     setFiles(null);
     setOpen(false);
+    dispatch(resetImageState());
   };
 
   return (

@@ -97,3 +97,9 @@ export interface Colors {
 export interface FileWithPreview extends File {
   preview: string;
 }
+
+export interface UploadImageError {
+  error?: string;
+  message?: string;
+  userCode?: string;
+}

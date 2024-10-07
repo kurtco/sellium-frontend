@@ -1,10 +1,11 @@
 import { Box, Modal, useTheme } from "@mui/material";
 import UploadAgentCapture from "./UploadAgentCapture";
 
-import { ThemeMode } from "@/constants/config.enum";
+import { OcrServiceStatus, ThemeMode } from "@/constants/config.enum";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { FileWithPreview } from "@/interfaces/interfaces";
+import WarningMessage from "./WarningMessage";
 
 interface AddAgentModalProps {
   open: boolean;
@@ -20,7 +21,7 @@ const AddAgentModal = ({
   files,
   setFiles,
 }: AddAgentModalProps) => {
-  const { loading } = useSelector((state: RootState) => state.image);
+  const { loading, error } = useSelector((state: RootState) => state.image);
 
   const theme = useTheme();
 
@@ -55,14 +56,22 @@ const AddAgentModal = ({
           boxShadow: 24,
           p: 4,
           borderRadius: "4px",
+          width: "100%",
         }}
       >
-        <UploadAgentCapture
-          file={files}
-          setFieldValue={setFieldValue}
-          error={false}
-          handleCloseModal={handleClose}
-        />
+        {String(error.error) === String(OcrServiceStatus.Conflict) ? (
+          <WarningMessage
+            userCode={error?.userCode?.toUpperCase() || ""}
+            onClose={handleClose}
+          />
+        ) : (
+          <UploadAgentCapture
+            file={files}
+            setFieldValue={setFieldValue}
+            error={false}
+            handleCloseModal={handleClose}
+          />
+        )}
       </Box>
     </Modal>
   );

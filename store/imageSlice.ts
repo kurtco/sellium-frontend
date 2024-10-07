@@ -1,18 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { DataFromImage } from "@/interfaces/interfaces";
+import { DataFromImage, UploadImageError } from "@/interfaces/interfaces";
 import { defaultImageUploapError } from "@/constants/constant";
-
-// Definimos un tipo para el error que esperamos recibir del backend
-interface ErrorContent {
-  error?: string;
-  message?: string;
-}
-
-// Acción asíncrona para procesar la imagen con un tipo explícito para el valor rechazado
 export const processImage = createAsyncThunk<
   DataFromImage, // Tipo de datos cuando la promesa se resuelve correctamente
   File, // Tipo del argumento (archivo) que se pasa a la función
-  { rejectValue: ErrorContent } // Tipo del valor rechazado
+  { rejectValue: UploadImageError } // Tipo del valor rechazado
 >("image/processImage", async (file: File, { rejectWithValue }) => {
   try {
     const formData = new FormData();
@@ -36,15 +28,18 @@ export const processImage = createAsyncThunk<
     });
 
     if (!processResponse.ok) {
-      const errorData: ErrorContent = await processResponse.json();
+      const errorData: UploadImageError = await processResponse.json();
       return rejectWithValue(errorData); // Devolver el error usando rejectWithValue
     }
 
     const processedData = await processResponse.json();
     return processedData.data;
   } catch (error) {
-    const errorContent: ErrorContent = {
-      message: error instanceof Error ? error.message : defaultImageUploapError,
+    const errorContent: UploadImageError = {
+      message:
+        error instanceof Error
+          ? error.message
+          : defaultImageUploapError.message,
     };
     return rejectWithValue(errorContent);
   }
@@ -54,7 +49,7 @@ export const processImage = createAsyncThunk<
 interface ImageState {
   loading: boolean;
   dataFromImage: DataFromImage | null;
-  error: ErrorContent;
+  error: UploadImageError;
   showSnackbar: boolean;
 }
 
@@ -64,6 +59,7 @@ const initialState: ImageState = {
   error: {
     error: "",
     message: "",
+    userCode: "",
   },
   showSnackbar: false,
 };
@@ -75,15 +71,7 @@ const imageSlice = createSlice({
     setShowSnackbar(state, action: PayloadAction<boolean>) {
       state.showSnackbar = action.payload;
     },
-    resetImageState: (state) => {
-      state.loading = false;
-      state.dataFromImage = null;
-      state.error = {
-        error: "",
-        message: "",
-      };
-      state.showSnackbar = false;
-    },
+    resetImageState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -92,6 +80,7 @@ const imageSlice = createSlice({
         state.error = {
           error: "",
           message: "",
+          userCode: "",
         };
         state.showSnackbar = false;
       })
@@ -105,12 +94,14 @@ const imageSlice = createSlice({
       )
       .addCase(
         processImage.rejected,
-        (state, action: PayloadAction<ErrorContent | undefined>) => {
+        (state, action: PayloadAction<UploadImageError | undefined>) => {
           state.loading = false;
-          state.error = action.payload || {
-            message: defaultImageUploapError,
+          state.error = {
+            error: action.payload?.error || defaultImageUploapError.error,
+            message: action.payload?.message || defaultImageUploapError.message,
+            userCode: action.payload?.userCode || "",
           };
-          state.showSnackbar = true;
+          state.showSnackbar = false;
         }
       );
   },

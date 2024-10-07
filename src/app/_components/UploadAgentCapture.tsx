@@ -21,7 +21,7 @@ import {
 import CloseIcon from "./CloseIcon";
 import RecycleBinIcon from "./RecycleBinIcon";
 import useConfig from "@/hooks/useConfig";
-import { ThemeMode } from "@/constants/config.enum";
+import { OcrServiceStatus, ThemeMode } from "@/constants/config.enum";
 import {
   defaultBlueColor,
   defaultImageUploapError,
@@ -72,8 +72,6 @@ const UploadAgentCapture = ({
     (state: RootState) => state.image
   );
 
-  console.log("uploadagentecopturee error ", error);
-
   useState<DataFromImage | null>(null);
 
   const {
@@ -123,7 +121,12 @@ const UploadAgentCapture = ({
   };
 
   return (
-    <Box sx={{ width: "100%", ...sx }}>
+    <Box
+      sx={{
+        width: "100%",
+        ...sx,
+      }}
+    >
       {!loading && (
         <Box
           sx={{
@@ -164,8 +167,8 @@ const UploadAgentCapture = ({
             ...(isDragActive && { opacity: 0.72 }),
             ...((isDragReject || error) && {
               color: theme.palette.error.main,
-              borderColor: theme.palette.error.light,
-              bgcolor: theme.palette.error.lighter,
+              borderColor: theme.palette.common.black,
+              bgcolor: theme.palette.background.default,
             }),
             ...(file && {
               padding: "0", // removing padding when there is a image
@@ -180,7 +183,10 @@ const UploadAgentCapture = ({
           {!file && (
             <Stack spacing={2} alignItems="center" justifyContent="center">
               <UploadFileIcon />
-              <Typography variant="h6" fontWeight={"bold"}>
+              <Typography
+                color={theme.palette.text.primary}
+                sx={{ fontWeight: 500 }}
+              >
                 {UploadAgentCaptureLabels.CONTENTTITLE}
               </Typography>
               <Typography variant="body2" color="textSecondary">
@@ -211,16 +217,17 @@ const UploadAgentCapture = ({
         <RejectionFiles fileRejections={fileRejections} />
       )}
 
-      {error?.message && !dataFromImage?.userCode && (
-        <Alert
-          sx={{ marginTop: 2 }}
-          variant="filled"
-          severity="error"
-          icon={<WarningIcon />}
-        >
-          {error.message || defaultImageUploapError}
-        </Alert>
-      )}
+      {String(error.error) === String(OcrServiceStatus.BadImage) &&
+        !dataFromImage?.userCode && (
+          <Alert
+            sx={{ marginTop: 2 }}
+            variant="filled"
+            severity="error"
+            icon={<WarningIcon />}
+          >
+            {error.message || defaultImageUploapError.message}
+          </Alert>
+        )}
 
       {!loading && (
         <Box

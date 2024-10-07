@@ -45,7 +45,7 @@ export default function Theme1(colors: Colors, mode: ThemeMode) {
     "#102693",
   ];
   let errorColors = ["#FFE7D3", "#FF805D", "#CC1414", "#DB271D", "#930C1A"];
-  let warningColors = ["#FFF6D0", "#FFCF4E", "#FFB814", "#DB970E", "#935B06"];
+  let warningColors = ["#FFF6D0", "#FFCF4E", "#FAAD14", "#DB970E", "#935B06"];
   let infoColors = ["#DCF0FF", "#7EB9FF", "#549BFF", "#3D78DB", "#1A3D93"];
   let successColors = ["#EAFCD4", "#8AE65B", "#4caf50", "#3DB81E", "#137C0D"];
 
@@ -131,6 +131,6 @@ export default function Theme1(colors: Colors, mode: ThemeMode) {
     },
     grey: greyColors,
   };
-  // console.log("theme1 todos los colores ", colorsPallete);
+  console.log("theme1 todos los colores ", colorsPallete);
   return colorsPallete;
 }

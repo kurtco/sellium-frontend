@@ -1,4 +1,5 @@
 import { defaultImageUploapError } from "@/constants/constant";
+import { UploadImageError } from "@/interfaces/interfaces";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -20,13 +21,18 @@ export async function POST(req: Request) {
     const data = await nestResponse.json();
     return NextResponse.json(data);
   } catch (error) {
+    const uploadError = error as UploadImageError;
+
     const errorMessage =
-      error instanceof Error ? error.message : defaultImageUploapError;
+      uploadError?.message || defaultImageUploapError.message;
+    const errorType = uploadError?.error || defaultImageUploapError.error;
+    const userCode = uploadError?.userCode || "";
 
     return NextResponse.json(
       {
-        message: "Error en la API POST",
-        error: errorMessage,
+        error: errorType,
+        message: errorMessage,
+        userCode,
       },
       { status: 500 }
     );
