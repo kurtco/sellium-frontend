@@ -1,28 +1,26 @@
 import { Box, Modal, useTheme } from "@mui/material";
 import UploadAgentCapture from "./UploadAgentCapture";
-
-import { OcrServiceStatus, ThemeMode } from "@/constants/config.enum";
+import { OcrServiceStatus } from "@/constants/config.enum";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { FileWithPreview } from "@/interfaces/interfaces";
 import WarningMessage from "./WarningMessage";
+import { RepresentativeTypeLabels } from "@/constants/labels.enums";
 
 interface AddAgentModalProps {
   open: boolean;
-  handleClose: () => void;
-  mode?: ThemeMode.DARK | ThemeMode.LIGHT;
   files: FileWithPreview[] | null;
   setFiles: React.Dispatch<React.SetStateAction<FileWithPreview[] | null>>;
+  handleClose: () => void;
 }
 
 const AddAgentModal = ({
   open,
-  handleClose,
   files,
   setFiles,
+  handleClose,
 }: AddAgentModalProps) => {
   const { loading, error } = useSelector((state: RootState) => state.image);
-
   const theme = useTheme();
 
   const setFieldValue = (field: string, value: unknown) => {
@@ -30,6 +28,10 @@ const AddAgentModal = ({
       setFiles(value as FileWithPreview[]);
     }
   };
+
+  const showWarningMessage =
+    String(error.error) === String(OcrServiceStatus.Conflict) ||
+    String(error.error) === String(OcrServiceStatus.UserRepresentiveType);
 
   return (
     <Modal
@@ -52,18 +54,33 @@ const AddAgentModal = ({
           transform: "translate(-50%, -50%)",
           maxWidth: "1024px",
           backgroundColor: theme.palette.background.default,
-          border: `${"2px solid"} ${theme.palette.background.default}`,
+          border: `2px solid ${theme.palette.background.default}`,
           boxShadow: 24,
           p: 4,
           borderRadius: "4px",
-          width: "100%",
+          width: showWarningMessage ? "444px" : "100%",
         }}
       >
-        {String(error.error) === String(OcrServiceStatus.Conflict) ? (
-          <WarningMessage
-            userCode={error?.userCode?.toUpperCase() || ""}
-            onClose={handleClose}
-          />
+        {showWarningMessage ? (
+          <>
+            {String(error.error) === String(OcrServiceStatus.Conflict) && (
+              <WarningMessage
+                userCode={error?.userCode?.toUpperCase() || ""}
+                onClose={handleClose}
+              />
+            )}
+            {String(error.error) ===
+              String(OcrServiceStatus.UserRepresentiveType) && (
+              <WarningMessage
+                title={RepresentativeTypeLabels.title}
+                message={RepresentativeTypeLabels.message}
+                showOneActionButton={false}
+                showCloseIcon={false}
+                userCode=""
+                onClose={handleClose}
+              />
+            )}
+          </>
         ) : (
           <UploadAgentCapture
             file={files}

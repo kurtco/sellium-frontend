@@ -1,5 +1,5 @@
-import { defaultImageUploapError } from "@/constants/constant";
-import { UploadImageError } from "@/interfaces/interfaces";
+import { defaultImageUploapError } from "@/constants/config.enum";
+import { ErrorResponse } from "@/interfaces/interfaces";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const data = await nestResponse.json();
     return NextResponse.json(data);
   } catch (error) {
-    const uploadError = error as UploadImageError;
+    const uploadError = error as ErrorResponse;
 
     const errorMessage =
       uploadError?.message || defaultImageUploapError.message;

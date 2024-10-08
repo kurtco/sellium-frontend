@@ -21,11 +21,12 @@ import {
 import CloseIcon from "./CloseIcon";
 import RecycleBinIcon from "./RecycleBinIcon";
 import useConfig from "@/hooks/useConfig";
-import { OcrServiceStatus, ThemeMode } from "@/constants/config.enum";
 import {
-  defaultBlueColor,
   defaultImageUploapError,
-} from "@/constants/constant";
+  OcrServiceStatus,
+  ThemeMode,
+} from "@/constants/config.enum";
+import { defaultBlueColor } from "@/constants/constant";
 import LoadingSpinner from "./LoadingSpinner";
 import { DataFromImage } from "@/interfaces/interfaces";
 import { AppDispatch, RootState } from "../../../store/store";

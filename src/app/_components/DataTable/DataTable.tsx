@@ -125,7 +125,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
     >
       <DataTableHeaderActions />
 
-      {showSnackbar && !error && dataFromImage?.userCode && (
+      {showSnackbar && dataFromImage?.userCode && (
         <SnackbarMessage
           message={SnackBarLabels.message}
           open={showSnackbar}

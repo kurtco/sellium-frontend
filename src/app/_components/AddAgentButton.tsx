@@ -1,23 +1,26 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-
 import { Button } from "@mui/material";
 import { ButtonsLabels } from "@/constants/labels.enums";
 import AddAgentModal from "./AddAgentModal";
-import { FileWithPreview } from "@/interfaces/interfaces";
 import { resetImageState } from "../../../store/imageSlice";
+import { AppDispatch } from "../../../store/store";
+import { FileWithPreview } from "@/interfaces/interfaces";
 
 const AddAgentButton = () => {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<FileWithPreview[] | null>(null);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    setOpen(true);
+    dispatch(resetImageState());
+  };
 
   const handleClose = () => {
-    setFiles(null);
     setOpen(false);
-    dispatch(resetImageState());
+    setFiles(null);
   };
 
   return (
@@ -39,14 +42,12 @@ const AddAgentButton = () => {
         {ButtonsLabels.ADDAGENT}
       </Button>
 
-      {open && (
-        <AddAgentModal
-          open={open}
-          handleClose={handleClose}
-          files={files}
-          setFiles={setFiles}
-        />
-      )}
+      <AddAgentModal
+        open={open}
+        files={files}
+        setFiles={setFiles}
+        handleClose={handleClose}
+      />
     </>
   );
 };

@@ -98,7 +98,7 @@ export interface FileWithPreview extends File {
   preview: string;
 }
 
-export interface UploadImageError {
+export interface ErrorResponse {
   error?: string;
   message?: string;
   userCode?: string;

@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { DataFromImage, UploadImageError } from "@/interfaces/interfaces";
-import { defaultImageUploapError } from "@/constants/constant";
+import { DataFromImage, ErrorResponse } from "@/interfaces/interfaces";
+import { defaultImageUploapError } from "@/constants/config.enum";
+
 export const processImage = createAsyncThunk<
   DataFromImage, // Tipo de datos cuando la promesa se resuelve correctamente
   File, // Tipo del argumento (archivo) que se pasa a la función
-  { rejectValue: UploadImageError } // Tipo del valor rechazado
+  { rejectValue: ErrorResponse } // Tipo del valor rechazado
 >("image/processImage", async (file: File, { rejectWithValue }) => {
   try {
     const formData = new FormData();
@@ -28,14 +29,14 @@ export const processImage = createAsyncThunk<
     });
 
     if (!processResponse.ok) {
-      const errorData: UploadImageError = await processResponse.json();
+      const errorData: ErrorResponse = await processResponse.json();
       return rejectWithValue(errorData); // Devolver el error usando rejectWithValue
     }
 
     const processedData = await processResponse.json();
     return processedData.data;
   } catch (error) {
-    const errorContent: UploadImageError = {
+    const errorContent: ErrorResponse = {
       message:
         error instanceof Error
           ? error.message
@@ -49,7 +50,7 @@ export const processImage = createAsyncThunk<
 interface ImageState {
   loading: boolean;
   dataFromImage: DataFromImage | null;
-  error: UploadImageError;
+  error: ErrorResponse;
   showSnackbar: boolean;
 }
 
@@ -71,7 +72,18 @@ const imageSlice = createSlice({
     setShowSnackbar(state, action: PayloadAction<boolean>) {
       state.showSnackbar = action.payload;
     },
-    resetImageState: () => initialState,
+    resetImageState: (state) => {
+      return {
+        ...state,
+        loading: false,
+        error: {
+          error: "",
+          message: "",
+          userCode: "",
+        },
+        showSnackbar: false,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -94,7 +106,7 @@ const imageSlice = createSlice({
       )
       .addCase(
         processImage.rejected,
-        (state, action: PayloadAction<UploadImageError | undefined>) => {
+        (state, action: PayloadAction<ErrorResponse | undefined>) => {
           state.loading = false;
           state.error = {
             error: action.payload?.error || defaultImageUploapError.error,

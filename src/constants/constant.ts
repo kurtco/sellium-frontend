@@ -159,8 +159,3 @@ export const dummyDataTable = [
 ];
 
 export const snackBarCloseTime: number = 3000;
-
-export const defaultImageUploapError = {
-  message: "There was a issue processing the image, please try again!",
-  error: "Internal Server Error",
-};
