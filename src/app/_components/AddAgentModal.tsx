@@ -23,15 +23,33 @@ const AddAgentModal = ({
   const { loading, error } = useSelector((state: RootState) => state.image);
   const theme = useTheme();
 
+  const showWarningMessage =
+    String(error.error) === String(OcrServiceStatus.Conflict) ||
+    String(error.error) === String(OcrServiceStatus.UserRepresentiveType);
+
   const setFieldValue = (field: string, value: unknown) => {
     if (field === "files") {
       setFiles(value as FileWithPreview[]);
     }
   };
 
-  const showWarningMessage =
-    String(error.error) === String(OcrServiceStatus.Conflict) ||
-    String(error.error) === String(OcrServiceStatus.UserRepresentiveType);
+  const updateUserPosition = async (representative: string) => {
+    try {
+      const response = await fetch(`/api/users/recruit/${error.userCode}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ representative }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error updating user position: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error updating user position:", error);
+    }
+  };
 
   return (
     <Modal
@@ -67,6 +85,7 @@ const AddAgentModal = ({
               <WarningMessage
                 userCode={error?.userCode?.toUpperCase() || ""}
                 onClose={handleClose}
+                updateUserPosition={updateUserPosition}
               />
             )}
             {String(error.error) ===
@@ -78,6 +97,7 @@ const AddAgentModal = ({
                 showCloseIcon={false}
                 userCode=""
                 onClose={handleClose}
+                updateUserPosition={updateUserPosition}
               />
             )}
           </>

@@ -131,6 +131,6 @@ export default function Theme1(colors: Colors, mode: ThemeMode) {
     },
     grey: greyColors,
   };
-  console.log("theme1 todos los colores ", colorsPallete);
+  // console.log("theme1 todos los colores ", colorsPallete);
   return colorsPallete;
 }

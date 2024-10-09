@@ -68,12 +68,11 @@ const UploadAgentCapture = ({
   const theme = useTheme();
   const { mode } = useConfig();
   const dispatch = useDispatch<AppDispatch>();
+  useState<DataFromImage | null>(null);
 
-  const { loading, dataFromImage, error } = useSelector(
+  const { loading, dataFromImage, error, showSuccessSnackbar } = useSelector(
     (state: RootState) => state.image
   );
-
-  useState<DataFromImage | null>(null);
 
   const {
     getRootProps,
@@ -100,7 +99,9 @@ const UploadAgentCapture = ({
 
   const closeModal = useCallback(() => {
     if (loading) return;
-    handleCloseModal();
+    if (typeof closeModal === "function") {
+      handleCloseModal();
+    }
   }, [loading, handleCloseModal]);
 
   const onRemoveScreenShot = useCallback(() => {
@@ -109,12 +110,23 @@ const UploadAgentCapture = ({
   }, [loading, setFieldValue]);
 
   useEffect(() => {
-    if (!dataFromImage || !dataFromImage?.userCode || loading) {
+    if (
+      !dataFromImage ||
+      !dataFromImage?.userCode ||
+      loading ||
+      !showSuccessSnackbar
+    ) {
       return;
     }
     onRemoveScreenShot();
     closeModal();
-  }, [loading, dataFromImage, onRemoveScreenShot, closeModal]);
+  }, [
+    loading,
+    dataFromImage,
+    onRemoveScreenShot,
+    closeModal,
+    showSuccessSnackbar,
+  ]);
 
   const onSendScreenShot = () => {
     if (!file || file.length === 0) return;

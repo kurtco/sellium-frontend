@@ -46,7 +46,10 @@ import DataTableHeaderActions from "./DataTableHeaderActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import SnackbarMessage from "../SnackbarMessage";
-import { resetImageState } from "../../../../store/imageSlice";
+import {
+  resetImageState,
+  setshowSuccessSnackbar,
+} from "../../../../store/imageSlice";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -65,16 +68,16 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   const theme = useTheme();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { dataFromImage, error, showSnackbar } = useSelector(
+  const { dataFromImage, error, showSuccessSnackbar } = useSelector(
     (state: RootState) => state.image
   );
 
   const handleCloseSnackbar = useCallback(() => {
-    dispatch(resetImageState());
+    dispatch(setshowSuccessSnackbar(false));
   }, [dispatch]);
 
   useEffect(() => {
-    if (showSnackbar) {
+    if (showSuccessSnackbar) {
       const timeoutId = setTimeout(() => {
         handleCloseSnackbar();
       }, 5000);
@@ -83,7 +86,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
     }
   }, [
     dispatch,
-    showSnackbar,
+    showSuccessSnackbar,
     error,
     dataFromImage?.userCode,
     handleCloseSnackbar,
@@ -125,10 +128,10 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
     >
       <DataTableHeaderActions />
 
-      {showSnackbar && dataFromImage?.userCode && (
+      {showSuccessSnackbar && dataFromImage?.userCode && (
         <SnackbarMessage
           message={SnackBarLabels.message}
-          open={showSnackbar}
+          open={showSuccessSnackbar}
           handleClose={handleCloseSnackbar}
           error={false}
         />
@@ -262,7 +265,7 @@ export default function PaginationTable() {
 
   const fetchRecruiterData = async () => {
     try {
-      const response = await fetch("/api/users/A0456");
+      const response = await fetch("/api/users/recruiter/A0456");
       const result: Users = await response.json();
 
       const mappedData = result.recruits.map((item: Recruit) => ({

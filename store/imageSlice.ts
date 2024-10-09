@@ -51,7 +51,7 @@ interface ImageState {
   loading: boolean;
   dataFromImage: DataFromImage | null;
   error: ErrorResponse;
-  showSnackbar: boolean;
+  showSuccessSnackbar: boolean;
 }
 
 const initialState: ImageState = {
@@ -62,15 +62,15 @@ const initialState: ImageState = {
     message: "",
     userCode: "",
   },
-  showSnackbar: false,
+  showSuccessSnackbar: false,
 };
 
 const imageSlice = createSlice({
   name: "image",
   initialState,
   reducers: {
-    setShowSnackbar(state, action: PayloadAction<boolean>) {
-      state.showSnackbar = action.payload;
+    setshowSuccessSnackbar(state, action: PayloadAction<boolean>) {
+      state.showSuccessSnackbar = action.payload;
     },
     resetImageState: (state) => {
       return {
@@ -81,7 +81,7 @@ const imageSlice = createSlice({
           message: "",
           userCode: "",
         },
-        showSnackbar: false,
+        showSuccessSnackbar: false,
       };
     },
   },
@@ -94,14 +94,14 @@ const imageSlice = createSlice({
           message: "",
           userCode: "",
         };
-        state.showSnackbar = false;
+        state.showSuccessSnackbar = false;
       })
       .addCase(
         processImage.fulfilled,
         (state, action: PayloadAction<DataFromImage>) => {
           state.loading = false;
           state.dataFromImage = action.payload;
-          state.showSnackbar = true;
+          state.showSuccessSnackbar = true;
         }
       )
       .addCase(
@@ -113,11 +113,11 @@ const imageSlice = createSlice({
             message: action.payload?.message || defaultImageUploapError.message,
             userCode: action.payload?.userCode || "",
           };
-          state.showSnackbar = false;
+          state.showSuccessSnackbar = false;
         }
       );
   },
 });
 
-export const { setShowSnackbar, resetImageState } = imageSlice.actions;
+export const { setshowSuccessSnackbar, resetImageState } = imageSlice.actions;
 export default imageSlice.reducer;

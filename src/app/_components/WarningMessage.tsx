@@ -15,6 +15,7 @@ interface WarningMessageProps {
   showWarningIcon?: boolean;
   showCloseIcon?: boolean;
   showOneActionButton?: boolean;
+  updateUserPosition: (representative: string) => Promise<void>;
 }
 
 const WarningMessage = ({
@@ -25,11 +26,22 @@ const WarningMessage = ({
   showWarningIcon = true,
   showCloseIcon = true,
   showOneActionButton = true,
+  updateUserPosition,
 }: WarningMessageProps) => {
   const theme = useTheme();
+
   const handleCloseClick = () => {
     if (typeof handleCloseClick === "function") {
       onClose();
+    }
+  };
+
+  const callUpdatePositionApi = async (representative: string) => {
+    try {
+      await updateUserPosition(representative);
+      handleCloseClick();
+    } catch (error) {
+      console.error("Error updating user position:", error);
     }
   };
 
@@ -88,7 +100,9 @@ const WarningMessage = ({
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handleCloseClick()}
+            onClick={() =>
+              callUpdatePositionApi(RepresentativeTypeLabels.StudentButton)
+            }
             disableElevation={true}
             sx={{ fontSize: "14px", width: "50%", borderRadius: "4px" }}
           >
@@ -97,7 +111,9 @@ const WarningMessage = ({
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handleCloseClick()}
+            onClick={() =>
+              callUpdatePositionApi(RepresentativeTypeLabels.LicensedButton)
+            }
             disableElevation={true}
             sx={{ fontSize: "14px", width: "50%", borderRadius: "4px" }}
           >
