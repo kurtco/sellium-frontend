@@ -98,8 +98,10 @@ export interface FileWithPreview extends File {
   preview: string;
 }
 
-export interface ErrorResponse {
-  error?: string;
-  message?: string;
+export interface ErrorResponse<T = unknown> {
+  statusCode?: number;
+  error: string;
+  message: string;
   userCode?: string;
+  data?: T;
 }

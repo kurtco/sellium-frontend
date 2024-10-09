@@ -45,5 +45,7 @@ export enum RepresentativeTypeLabels {
   title = "Representative Type",
   message = "Choose your representative type to continue",
   StudentButton = "Student",
+  StudentButtonValue = "Representative Student",
   LicensedButton = "Licensed",
+  LicensedButtonValue = "Representative Licensed",
 }

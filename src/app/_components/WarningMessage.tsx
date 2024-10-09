@@ -101,7 +101,7 @@ const WarningMessage = ({
             variant="contained"
             color="primary"
             onClick={() =>
-              callUpdatePositionApi(RepresentativeTypeLabels.StudentButton)
+              callUpdatePositionApi(RepresentativeTypeLabels.StudentButtonValue)
             }
             disableElevation={true}
             sx={{ fontSize: "14px", width: "50%", borderRadius: "4px" }}
@@ -112,7 +112,9 @@ const WarningMessage = ({
             variant="contained"
             color="primary"
             onClick={() =>
-              callUpdatePositionApi(RepresentativeTypeLabels.LicensedButton)
+              callUpdatePositionApi(
+                RepresentativeTypeLabels.LicensedButtonValue
+              )
             }
             disableElevation={true}
             sx={{ fontSize: "14px", width: "50%", borderRadius: "4px" }}

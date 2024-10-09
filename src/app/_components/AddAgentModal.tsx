@@ -20,7 +20,9 @@ const AddAgentModal = ({
   setFiles,
   handleClose,
 }: AddAgentModalProps) => {
-  const { loading, error } = useSelector((state: RootState) => state.image);
+  const { loading, error, dataFromImage } = useSelector(
+    (state: RootState) => state.image
+  );
   const theme = useTheme();
 
   const showWarningMessage =
@@ -34,20 +36,26 @@ const AddAgentModal = ({
   };
 
   const updateUserPosition = async (representative: string) => {
+    const userData = { ...dataFromImage, position: representative }; // Actualizamos el campo position
+
+    console.log("new user ", userData);
     try {
-      const response = await fetch(`/api/users/recruit/${error.userCode}`, {
-        method: "PATCH",
+      const response = await fetch("/api/users/newuser/", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ representative }),
+        body: JSON.stringify(userData),
       });
 
       if (!response.ok) {
-        throw new Error(`Error updating user position: ${response.statusText}`);
+        throw new Error(`Error creating new user: ${response.statusText}`);
       }
+
+      const result = await response.json();
+      console.log("User created successfully:", result);
     } catch (error) {
-      console.error("Error updating user position:", error);
+      console.error("Error creating new user:", error);
     }
   };
 

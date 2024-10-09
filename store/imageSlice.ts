@@ -36,24 +36,26 @@ export const processImage = createAsyncThunk<
     const processedData = await processResponse.json();
     return processedData.data;
   } catch (error) {
+    const errorMessage = error as ErrorResponse;
     const errorContent: ErrorResponse = {
-      message:
-        error instanceof Error
-          ? error.message
-          : defaultImageUploapError.message,
+      statusCode: errorMessage.statusCode || 404,
+      error: errorMessage.error || defaultImageUploapError.error,
+      message: errorMessage.message || defaultImageUploapError.message,
+      userCode: errorMessage.userCode || "",
+      data: errorMessage.data || null,
     };
     return rejectWithValue(errorContent);
   }
 });
 
-// Definimos el estado inicial con el error tipado correctamente
 interface ImageState {
   loading: boolean;
   dataFromImage: DataFromImage | null;
-  error: ErrorResponse;
+  error: ErrorResponse; // Podemos utilizar el genérico aquí si es necesario: ErrorResponse<T>
   showSuccessSnackbar: boolean;
 }
 
+// Inicializamos el estado utilizando el nuevo tipo para error
 const initialState: ImageState = {
   loading: false,
   dataFromImage: null,
@@ -61,6 +63,7 @@ const initialState: ImageState = {
     error: "",
     message: "",
     userCode: "",
+    data: null,
   },
   showSuccessSnackbar: false,
 };
@@ -113,6 +116,7 @@ const imageSlice = createSlice({
             message: action.payload?.message || defaultImageUploapError.message,
             userCode: action.payload?.userCode || "",
           };
+          state.dataFromImage = action.payload?.data as DataFromImage;
           state.showSuccessSnackbar = false;
         }
       );
