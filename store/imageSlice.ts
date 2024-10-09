@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { DataFromImage, ErrorResponse } from "@/interfaces/interfaces";
-import { defaultImageUploapError } from "@/constants/config.enum";
+import {
+  defaultImageUploapError,
+  OcrServiceStatus,
+} from "@/constants/config.enum";
 
 export const processImage = createAsyncThunk<
   DataFromImage, // Tipo de datos cuando la promesa se resuelve correctamente
@@ -53,6 +56,7 @@ interface ImageState {
   dataFromImage: DataFromImage | null;
   error: ErrorResponse; // Podemos utilizar el genérico aquí si es necesario: ErrorResponse<T>
   showSuccessSnackbar: boolean;
+  showErrorAlert?: boolean;
 }
 
 // Inicializamos el estado utilizando el nuevo tipo para error
@@ -66,6 +70,7 @@ const initialState: ImageState = {
     data: null,
   },
   showSuccessSnackbar: false,
+  showErrorAlert: false,
 };
 
 const imageSlice = createSlice({
@@ -74,6 +79,9 @@ const imageSlice = createSlice({
   reducers: {
     setshowSuccessSnackbar(state, action: PayloadAction<boolean>) {
       state.showSuccessSnackbar = action.payload;
+    },
+    setShowErrorAlert(state, action: PayloadAction<boolean>) {
+      state.showErrorAlert = action.payload;
     },
     resetImageState: (state) => {
       return {
@@ -85,6 +93,7 @@ const imageSlice = createSlice({
           userCode: "",
         },
         showSuccessSnackbar: false,
+        showErrorAlert: false,
       };
     },
   },
@@ -118,10 +127,13 @@ const imageSlice = createSlice({
           };
           state.dataFromImage = action.payload?.data as DataFromImage;
           state.showSuccessSnackbar = false;
+          state.showErrorAlert =
+            String(action.payload?.error) === String(OcrServiceStatus.BadImage);
         }
       );
   },
 });
 
-export const { setshowSuccessSnackbar, resetImageState } = imageSlice.actions;
+export const { setshowSuccessSnackbar, resetImageState, setShowErrorAlert } =
+  imageSlice.actions;
 export default imageSlice.reducer;

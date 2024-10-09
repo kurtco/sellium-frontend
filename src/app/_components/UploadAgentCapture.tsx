@@ -21,16 +21,12 @@ import {
 import CloseIcon from "./CloseIcon";
 import RecycleBinIcon from "./RecycleBinIcon";
 import useConfig from "@/hooks/useConfig";
-import {
-  defaultImageUploapError,
-  OcrServiceStatus,
-  ThemeMode,
-} from "@/constants/config.enum";
+import { defaultImageUploapError, ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 import LoadingSpinner from "./LoadingSpinner";
 import { DataFromImage } from "@/interfaces/interfaces";
 import { AppDispatch, RootState } from "../../../store/store";
-import { processImage } from "../../../store/imageSlice";
+import { processImage, setShowErrorAlert } from "../../../store/imageSlice";
 import { Alert } from "@mui/material";
 import WarningIcon from "./WarningIcon";
 
@@ -70,9 +66,8 @@ const UploadAgentCapture = ({
   const dispatch = useDispatch<AppDispatch>();
   useState<DataFromImage | null>(null);
 
-  const { loading, dataFromImage, error, showSuccessSnackbar } = useSelector(
-    (state: RootState) => state.image
-  );
+  const { loading, dataFromImage, error, showSuccessSnackbar, showErrorAlert } =
+    useSelector((state: RootState) => state.image);
 
   const {
     getRootProps,
@@ -86,6 +81,7 @@ const UploadAgentCapture = ({
     },
     multiple: false,
     onDrop: (acceptedFiles: any) => {
+      dispatch(setShowErrorAlert(false));
       setFieldValue(
         "files",
         acceptedFiles.map((file: FileWithPreview) =>
@@ -106,8 +102,10 @@ const UploadAgentCapture = ({
 
   const onRemoveScreenShot = useCallback(() => {
     if (loading) return;
+
     setFieldValue("files", null);
-  }, [loading, setFieldValue]);
+    dispatch(setShowErrorAlert(false));
+  }, [loading, setFieldValue, dispatch]);
 
   useEffect(() => {
     if (
@@ -130,6 +128,7 @@ const UploadAgentCapture = ({
 
   const onSendScreenShot = () => {
     if (!file || file.length === 0) return;
+    dispatch(setShowErrorAlert(false));
     dispatch(processImage(file[0]));
   };
 
@@ -230,17 +229,16 @@ const UploadAgentCapture = ({
         <RejectionFiles fileRejections={fileRejections} />
       )}
 
-      {String(error.error) === String(OcrServiceStatus.BadImage) &&
-        !dataFromImage?.userCode && (
-          <Alert
-            sx={{ marginTop: 2 }}
-            variant="filled"
-            severity="error"
-            icon={<WarningIcon />}
-          >
-            {error.message || defaultImageUploapError.message}
-          </Alert>
-        )}
+      {showErrorAlert && (
+        <Alert
+          sx={{ marginTop: 2 }}
+          variant="filled"
+          severity="error"
+          icon={<WarningIcon />}
+        >
+          {error.message || defaultImageUploapError.message}
+        </Alert>
+      )}
 
       {!loading && (
         <Box
