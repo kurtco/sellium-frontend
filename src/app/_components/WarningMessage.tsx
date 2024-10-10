@@ -15,7 +15,7 @@ interface WarningMessageProps {
   showWarningIcon?: boolean;
   showCloseIcon?: boolean;
   showOneActionButton?: boolean;
-  updateUserPosition: (representative: string) => Promise<void>;
+  updateUserPosition: (representative: string) => void;
 }
 
 const WarningMessage = ({
@@ -37,12 +37,8 @@ const WarningMessage = ({
   };
 
   const callUpdatePositionApi = async (representative: string) => {
-    try {
-      await updateUserPosition(representative);
-      handleCloseClick();
-    } catch (error) {
-      console.error("Error updating user position:", error);
-    }
+    updateUserPosition(representative);
+    handleCloseClick();
   };
 
   return (

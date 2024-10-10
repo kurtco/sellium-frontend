@@ -5,6 +5,7 @@ import {
   OcrServiceStatus,
 } from "@/constants/config.enum";
 
+// Request to proccess the Image
 export const processImage = createAsyncThunk<
   DataFromImage, // Tipo de datos cuando la promesa se resuelve correctamente
   File, // Tipo del argumento (archivo) que se pasa a la función
@@ -33,7 +34,7 @@ export const processImage = createAsyncThunk<
 
     if (!processResponse.ok) {
       const errorData: ErrorResponse = await processResponse.json();
-      return rejectWithValue(errorData); // Devolver el error usando rejectWithValue
+      return rejectWithValue(errorData);
     }
 
     const processedData = await processResponse.json();
@@ -51,15 +52,53 @@ export const processImage = createAsyncThunk<
   }
 });
 
+// Request to update the representative position once google AI processed the image
+export const updateUserPosition = createAsyncThunk<
+  DataFromImage, // Tipo de datos cuando la promesa se resuelve correctamente
+  DataFromImage, // Tipo del argumento (interface ) que se pasa a la función
+  { rejectValue: ErrorResponse } // Tipo del valor rechazado
+>(
+  "image/updateUserPosition",
+  async (data: DataFromImage, { rejectWithValue }) => {
+    try {
+      const response = await fetch("/api/users/updateuserposition", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData: ErrorResponse = await response.json();
+        return rejectWithValue(errorData);
+      }
+
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      const errorMessage = error as ErrorResponse;
+      const errorContent: ErrorResponse = {
+        statusCode: errorMessage.statusCode || 404,
+        error: errorMessage.error || defaultImageUploapError.error,
+        message: errorMessage.message || defaultImageUploapError.message,
+        userCode: errorMessage.userCode || "",
+        data: errorMessage.data || null,
+      };
+      return rejectWithValue(errorContent);
+    }
+  }
+);
+
+// Initial state
 interface ImageState {
   loading: boolean;
   dataFromImage: DataFromImage | null;
-  error: ErrorResponse; // Podemos utilizar el genérico aquí si es necesario: ErrorResponse<T>
+  error: ErrorResponse;
   showSuccessSnackbar: boolean;
   showErrorAlert?: boolean;
 }
 
-// Inicializamos el estado utilizando el nuevo tipo para error
 const initialState: ImageState = {
   loading: false,
   dataFromImage: null,
@@ -99,6 +138,7 @@ const imageSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // *********************  processImage cases  *******************
       .addCase(processImage.pending, (state) => {
         state.loading = true;
         state.error = {
@@ -129,6 +169,36 @@ const imageSlice = createSlice({
           state.showSuccessSnackbar = false;
           state.showErrorAlert =
             String(action.payload?.error) === String(OcrServiceStatus.BadImage);
+        }
+      )
+
+      // *********************  updateUserPosition cases  *******************
+      .addCase(updateUserPosition.pending, (state) => {
+        state.error = {
+          error: "",
+          message: "",
+          userCode: "",
+        };
+        state.showSuccessSnackbar = false;
+      })
+      .addCase(
+        updateUserPosition.fulfilled,
+        (state, action: PayloadAction<DataFromImage>) => {
+          state.loading = false;
+          state.dataFromImage = action.payload;
+          state.showSuccessSnackbar = true;
+        }
+      )
+      .addCase(
+        updateUserPosition.rejected,
+        (state, action: PayloadAction<ErrorResponse | undefined>) => {
+          state.loading = false;
+          state.error = {
+            error: action.payload?.error || defaultImageUploapError.error,
+            message: action.payload?.message || defaultImageUploapError.message,
+            userCode: action.payload?.userCode || "",
+          };
+          state.showSuccessSnackbar = false;
         }
       );
   },

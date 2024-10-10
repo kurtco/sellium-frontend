@@ -46,10 +46,7 @@ import DataTableHeaderActions from "./DataTableHeaderActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import SnackbarMessage from "../SnackbarMessage";
-import {
-  resetImageState,
-  setshowSuccessSnackbar,
-} from "../../../../store/imageSlice";
+import { setshowSuccessSnackbar } from "../../../../store/imageSlice";
 
 // ==============================|| REACT TABLE ||============================== //
 

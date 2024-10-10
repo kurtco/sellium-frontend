@@ -5,13 +5,16 @@ export async function POST(req: Request) {
   try {
     const data: DataFromImage = await req.json();
     console.log("funtion api post creating user", data);
-    const response = await fetch(`${process.env.API_HOST}users/newUser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `${process.env.API_HOST}users/updateuserposition`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Error creating new user: ${response.statusText}`);
