@@ -49,3 +49,7 @@ export enum RepresentativeTypeLabels {
   LicensedButton = "Licensed",
   LicensedButtonValue = "Representative Licensed",
 }
+export enum AgentDetalsLabels {
+  title = "Agent Details",
+  profileCompletation = "Profile Completion",
+}
