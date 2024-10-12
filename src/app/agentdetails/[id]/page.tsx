@@ -1,8 +1,9 @@
-import CustomTabs from "@/app/_components/DetailsTabs";
 import React from "react";
+import SummaryWrapper from "@/app/_components/Details/Summary/SummaryWrapper";
+import CustomTabs from "@/app/_components/DetailsTabs";
 
 const tabsData = [
-  { label: "Summary", content: <div>Summary content here</div> },
+  { label: "Summary", content: <SummaryWrapper /> },
   {
     label: "Personal Information",
     content: <div>Personal Information content here</div>,

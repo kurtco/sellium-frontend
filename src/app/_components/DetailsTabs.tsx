@@ -1,7 +1,13 @@
 "use client";
-
-import React, { useState } from "react";
-import { Tabs, Tab, Box, Typography, LinearProgress } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+  LinearProgress,
+  useTheme,
+} from "@mui/material";
 import { AgentDetalsLabels } from "@/constants/labels.enums";
 import { useParams } from "next/navigation";
 
@@ -16,10 +22,17 @@ interface CustomTabsProps {
 }
 
 const CustomTabs = ({ tabs, progress }: CustomTabsProps) => {
+  const theme = useTheme();
+
   const params = useParams();
   const id = params?.id;
 
-  console.log("id ", id);
+  useEffect(() => {
+    if (id) {
+      console.log(`Fetching details for agent with ID: ${id}`);
+    }
+  }, [id]);
+
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -27,7 +40,17 @@ const CustomTabs = ({ tabs, progress }: CustomTabsProps) => {
   };
 
   return (
-    <Box sx={{ width: "100%", padding: 2 }}>
+    <Box
+      sx={{
+        width: "100%",
+        padding: 2,
+        border: `1px solid ${theme.palette.grey[200]}`,
+        borderRadius: 2,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+        margin: 2,
+      }}
+    >
       <Typography variant="h6" gutterBottom>
         {AgentDetalsLabels.title}
       </Typography>

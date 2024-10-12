@@ -53,3 +53,13 @@ export enum AgentDetalsLabels {
   title = "Agent Details",
   profileCompletation = "Profile Completion",
 }
+
+export enum SummaryCardComponentLabels {
+  leader = "Leader",
+  recruiter = "Recruiter",
+  edit = "Edit",
+  agents = "Agents",
+  polices = "Policies Sold",
+  agentsUpgrade = "Agent to Upgrade to Associate",
+  associateUpgrade = "to Upgrade to Associate",
+}
