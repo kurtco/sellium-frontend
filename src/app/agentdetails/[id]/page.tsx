@@ -1,6 +1,6 @@
 import React from "react";
 import SummaryWrapper from "@/app/_components/Details/Summary/SummaryWrapper";
-import CustomTabs from "@/app/_components/DetailsTabs";
+import DetailsTabs from "@/app/_components/DetailsTabs";
 
 const tabsData = [
   { label: "Summary", content: <SummaryWrapper /> },
@@ -20,7 +20,7 @@ const tabsData = [
 ];
 
 const AgentDetails: React.FC = () => {
-  return <CustomTabs tabs={tabsData} progress={75} />;
+  return <DetailsTabs tabs={tabsData} progress={75} />;
 };
 
 export default AgentDetails;

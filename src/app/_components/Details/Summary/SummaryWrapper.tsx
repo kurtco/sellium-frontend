@@ -12,7 +12,7 @@ const SummaryWrapper = () => {
         padding: 2,
         display: "grid",
         gridTemplateColumns: { xs: "1fr", md: "1fr 2fr" },
-        gap: 2,
+        gap: "22px",
       }}
     >
       <Grid>

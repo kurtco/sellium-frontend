@@ -9,64 +9,67 @@ import {
   Link,
   Divider,
 } from "@mui/material";
+import { PersonalInformationCardLabels } from "@/constants/labels.enums";
 
 const PersonalInformationCard = () => {
   return (
     <Card variant="outlined" sx={{ marginBottom: 2 }}>
       <CardContent>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Personal Information</Typography>
+          <Typography variant="h6">
+            {PersonalInformationCardLabels.title}
+          </Typography>
           <Link href="#" variant="body2">
-            Edit
+            {PersonalInformationCardLabels.edit}
           </Link>
         </Box>
         <Divider sx={{ my: 2 }} />
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              Full Name
+              {PersonalInformationCardLabels.fullName}
             </Typography>
             <Typography>Oswely Urbano</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              Date of Birth
+              {PersonalInformationCardLabels.birthDate}
             </Typography>
             <Typography>09/29/1980</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              Phone Number
+              {PersonalInformationCardLabels.phoneNumber}
             </Typography>
             <Typography>+1 865 423 9581</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              Email
+              {PersonalInformationCardLabels.email}
             </Typography>
             <Typography>oswelyurbano@gmail.com</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              Home Address
+              {PersonalInformationCardLabels.homeAddress}
             </Typography>
             <Typography>299 MILLER RD apt 124, MAULDIN, SC 29662</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              Business Address
+              {PersonalInformationCardLabels.businessAddress}
             </Typography>
             <Typography>299 MILLER RD apt 124, MAULDIN, SC 29662</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              Insured with the Company?
+              {PersonalInformationCardLabels.areYouInsured}
             </Typography>
             <Typography>Yes</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              Product Type
+              {PersonalInformationCardLabels.productType}
             </Typography>
             <Typography>IUL</Typography>
           </Grid>

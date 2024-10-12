@@ -11,9 +11,10 @@ import {
   LinearProgress,
   Link,
   useTheme,
+  Chip,
 } from "@mui/material";
 import { SummaryCardComponentLabels } from "@/constants/labels.enums";
-import { monthsList } from "@/constants/constant";
+import { defaultBlueColor, monthsList } from "@/constants/constant";
 
 const SummaryCard = () => {
   const theme = useTheme();
@@ -22,18 +23,13 @@ const SummaryCard = () => {
     <Card variant="outlined">
       <CardContent>
         {/* Avatar and Agent Information */}
-        <Box
-          display="flex"
-          flexDirection={{ xs: "column", md: "row" }} // Cambia a columna en dispositivos móviles
-          alignItems="center"
-          mb={2}
-          gap={2} // Añade un espacio entre los elementos para un diseño más limpio
-        >
+        <Box display="flex" flexDirection={"column"} alignItems="center" mb={2}>
           <Avatar
             sx={{
               bgcolor: theme.palette.grey[200],
               width: 56,
               height: 56,
+              marginBottom: "20px",
             }}
           >
             OU
@@ -43,7 +39,7 @@ const SummaryCard = () => {
             <Typography variant="body2" color="textSecondary">
               Representative Licensed
             </Typography>
-            <Typography variant="subtitle1" sx={{ mt: 1 }}>
+            <Typography variant="subtitle1" sx={{ mt: 1, textAlign: "center" }}>
               A0260
             </Typography>
           </Box>
@@ -53,7 +49,7 @@ const SummaryCard = () => {
         {/* Leader and Recruiter Information */}
         <Box
           display="flex"
-          flexDirection={{ xs: "column", md: "row" }} // Cambia a columna en móviles y fila en pantallas más grandes
+          flexDirection={{ xs: "column", md: "row" }} //responsive flex direction
           gap={2}
           mb={2}
         >
@@ -84,9 +80,11 @@ const SummaryCard = () => {
           textAlign={{ xs: "center", md: "left" }}
           mb={1}
         >
-          <Typography variant="subtitle1">Agents Recruited & Sales</Typography>
+          <Typography variant="subtitle1">
+            {SummaryCardComponentLabels.agentsRecruitAndSales}
+          </Typography>
           <Link href="#" variant="body2">
-            {SummaryCardComponentLabels.recruiter}
+            {SummaryCardComponentLabels.edit}
           </Link>
         </Box>
         <Grid container spacing={1} mb={2}>
@@ -96,16 +94,27 @@ const SummaryCard = () => {
               {SummaryCardComponentLabels.agents}
             </Typography>
           </Grid>
-          <Grid size={6}>
+          <Grid size={6} sx={{ marginBottom: "12px" }}>
             <Typography variant="h6">3</Typography>
             <Typography variant="body2" color="textSecondary">
               {SummaryCardComponentLabels.polices}
             </Typography>
           </Grid>
           <Grid size={12}>
-            <Typography variant="body2" color="primary">
-              1 {SummaryCardComponentLabels.agentsUpgrade}
-            </Typography>
+            <Chip
+              label={`1 ${SummaryCardComponentLabels.agentsUpgrade}`}
+              variant="outlined"
+              sx={{
+                backgroundColor: theme.palette.primary.lighter,
+                color: defaultBlueColor,
+                borderColor: "transparent",
+                fontWeight: 500,
+                fontSize: "14px",
+                padding: "0 8px",
+                borderRadius: "16px",
+              }}
+            />
+            <Typography variant="body2" color="primary"></Typography>
           </Grid>
         </Grid>
       </CardContent>
@@ -120,7 +129,9 @@ const SummaryCard = () => {
           textAlign={{ xs: "center", md: "left" }}
           mb={1}
         >
-          <Typography variant="subtitle1">Monthly Points 2024</Typography>
+          <Typography variant="subtitle1">
+            {SummaryCardComponentLabels.monthlyPoints}
+          </Typography>
           <Link href="#" variant="body2">
             {SummaryCardComponentLabels.edit}
           </Link>
@@ -149,9 +160,26 @@ const SummaryCard = () => {
             </Grid>
           ))}
         </Grid>
-        <Typography variant="body2" color="primary" sx={{ mt: 2 }}>
-          6,113 {SummaryCardComponentLabels.associateUpgrade}
-        </Typography>
+        <Grid
+          container
+          display="flex"
+          flexDirection="row"
+          justifyContent="flex-end"
+        >
+          <Chip
+            label={`6,113 ${SummaryCardComponentLabels.associateUpgrade}`}
+            variant="outlined"
+            sx={{
+              backgroundColor: theme.palette.primary.lighter,
+              color: defaultBlueColor,
+              borderColor: "transparent",
+              fontWeight: 500,
+              fontSize: "14px",
+              marginTop: 1,
+              borderRadius: "16px",
+            }}
+          />
+        </Grid>
       </CardContent>
     </Card>
   );

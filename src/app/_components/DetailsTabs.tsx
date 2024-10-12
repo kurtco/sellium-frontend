@@ -5,10 +5,10 @@ import {
   Tab,
   Box,
   Typography,
-  LinearProgress,
   useTheme,
+  LinearProgress,
 } from "@mui/material";
-import { AgentDetalsLabels } from "@/constants/labels.enums";
+import { AgentDetailsLabels } from "@/constants/labels.enums";
 import { useParams } from "next/navigation";
 
 interface TabContent {
@@ -16,12 +16,12 @@ interface TabContent {
   content: React.ReactNode;
 }
 
-interface CustomTabsProps {
+interface DetailsTabsProps {
   tabs: TabContent[];
   progress: number;
 }
 
-const CustomTabs = ({ tabs, progress }: CustomTabsProps) => {
+const DetailsTabs = ({ tabs, progress }: DetailsTabsProps) => {
   const theme = useTheme();
 
   const params = useParams();
@@ -47,13 +47,39 @@ const CustomTabs = ({ tabs, progress }: CustomTabsProps) => {
         border: `1px solid ${theme.palette.grey[200]}`,
         borderRadius: 2,
         backgroundColor: theme.palette.background.paper,
-        boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+        boxShadow: "none",
         margin: 2,
       }}
     >
-      <Typography variant="h6" gutterBottom>
-        {AgentDetalsLabels.title}
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="h6" gutterBottom>
+          {AgentDetailsLabels.title}
+        </Typography>
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          marginRight={{ xs: 0, md: 6 }}
+        >
+          <Typography
+            variant="body2"
+            sx={{ marginRight: 1 }}
+            color="textSecondary"
+          >
+            {AgentDetailsLabels.profileCompletion}
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{ width: 80, marginRight: 1 }}
+          />
+          <Typography
+            variant="body2"
+            color="textSecondary"
+          >{`${progress}%`}</Typography>
+        </Box>
+      </Box>
+
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Tabs
           value={selectedTab}
@@ -64,24 +90,13 @@ const CustomTabs = ({ tabs, progress }: CustomTabsProps) => {
           scrollButtons="auto"
         >
           {tabs.map((tab, index) => (
-            <Tab key={index} label={tab.label} />
+            <Tab key={index} label={tab.label} sx={{ textTransform: "none" }} />
           ))}
         </Tabs>
-        <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
-          <Typography variant="body2" sx={{ marginRight: 1 }}>
-            {AgentDetalsLabels.profileCompletation}
-          </Typography>
-          <LinearProgress
-            variant="determinate"
-            value={progress}
-            sx={{ width: 100, marginRight: 1 }}
-          />
-          <Typography variant="body2">{`${progress}%`}</Typography>
-        </Box>
       </Box>
       <Box sx={{ padding: 2 }}>{tabs[selectedTab].content}</Box>
     </Box>
   );
 };
 
-export default CustomTabs;
+export default DetailsTabs;
