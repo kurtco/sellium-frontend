@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 import {
@@ -9,7 +10,20 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 
-const JobDependenciesCard = () => {
+interface JobDependenciesCardProps {
+  jobDependencies: {
+    recruiter: string;
+    recruiterCode: string;
+    leader: string;
+    leaderCode: string;
+  };
+  setJobDependencies: (details: any) => void;
+}
+
+const JobDependenciesCard = ({
+  jobDependencies,
+  setJobDependencies,
+}: JobDependenciesCardProps) => {
   return (
     <Card variant="outlined">
       <CardContent>
@@ -23,7 +37,13 @@ const JobDependenciesCard = () => {
             <TextField
               fullWidth
               label="Recruiter"
-              defaultValue="Francisco Velázquez Rojas"
+              value={jobDependencies.recruiter}
+              onChange={(e) =>
+                setJobDependencies({
+                  ...jobDependencies,
+                  recruiter: e.target.value,
+                })
+              }
               variant="outlined"
             />
           </Grid2>
@@ -32,7 +52,7 @@ const JobDependenciesCard = () => {
             <TextField
               fullWidth
               label="Recruiter Code"
-              defaultValue="A0563"
+              value={jobDependencies.recruiterCode}
               variant="outlined"
               disabled
             />
@@ -42,7 +62,13 @@ const JobDependenciesCard = () => {
             <TextField
               fullWidth
               label="Leader"
-              defaultValue="Marcel & Isa Macias"
+              value={jobDependencies.leader}
+              onChange={(e) =>
+                setJobDependencies({
+                  ...jobDependencies,
+                  leader: e.target.value,
+                })
+              }
               variant="outlined"
             />
           </Grid2>
@@ -51,7 +77,7 @@ const JobDependenciesCard = () => {
             <TextField
               fullWidth
               label="Leader Code"
-              defaultValue="GFI09"
+              value={jobDependencies.leaderCode}
               variant="outlined"
               disabled
             />
@@ -61,4 +87,5 @@ const JobDependenciesCard = () => {
     </Card>
   );
 };
+
 export default JobDependenciesCard;

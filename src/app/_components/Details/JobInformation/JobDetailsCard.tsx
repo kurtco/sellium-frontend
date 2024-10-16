@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Box,
   Card,
@@ -9,84 +10,37 @@ import {
   Divider,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
-
-import { getCurrentMonth, getDaysInMonth } from "@/utils/commonFunctions";
 import DateSelectField from "../../DateSelectedField";
 
-interface DateInfo {
-  month: string;
-  day: number;
-  year: number;
+interface JobDetailsCardProps {
+  jobDetails: {
+    position: string;
+    promotionDate: {
+      month: string;
+      day: number;
+      year: number;
+    };
+    personalCode: string;
+    companyDate: {
+      month: string;
+      day: number;
+      year: number;
+    };
+    appointed: string;
+  };
+  setJobDetails: (details: any) => void;
 }
 
-const JobDetailsCard = () => {
-  const currentDate = new Date();
-  const currentDay = currentDate.getDate();
-  const currentYear = currentDate.getFullYear();
-
-  const [dates, setDates] = useState<{
-    promotionDate: DateInfo;
-    companyDate: DateInfo;
-  }>({
-    promotionDate: {
-      month: getCurrentMonth(),
-      day: currentDay,
-      year: currentYear,
-    },
-    companyDate: {
-      month: getCurrentMonth(),
-      day: currentDay,
-      year: currentYear,
-    },
-  });
-
+const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
   const handleDateChange = (
-    fieldType: keyof typeof dates,
-    updatedDate: Partial<DateInfo>
+    fieldType: keyof typeof jobDetails,
+    updatedDate: Partial<{ month: string; day: number; year: number }>
   ) => {
-    setDates((prevDates) => ({
-      ...prevDates,
-      [fieldType]: { ...prevDates[fieldType], ...updatedDate },
+    setJobDetails((prevDetails: any) => ({
+      ...prevDetails,
+      [fieldType]: { ...prevDetails[fieldType], ...updatedDate },
     }));
   };
-
-  useEffect(() => {
-    const days = getDaysInMonth(
-      dates.promotionDate.month,
-      dates.promotionDate.year
-    );
-
-    if (dates.promotionDate.day > days.length) {
-      setDates((prevDates) => ({
-        ...prevDates,
-        promotionDate: {
-          ...prevDates.promotionDate,
-          day: days.length,
-        },
-      }));
-    }
-  }, [
-    dates.promotionDate.month,
-    dates.promotionDate.year,
-    dates.promotionDate.day,
-  ]);
-
-  useEffect(() => {
-    const days = getDaysInMonth(
-      dates.companyDate.month,
-      dates.companyDate.year
-    );
-
-    if (dates.companyDate.day > days.length) {
-      setDates((prevDates) => ({
-        ...prevDates,
-        companyDate: {
-          ...prevDates.companyDate,
-          day: days.length,
-        },
-      }));
-    }
-  }, [dates.companyDate.month, dates.companyDate.year, dates.companyDate.day]);
 
   return (
     <Box>
@@ -102,22 +56,22 @@ const JobDetailsCard = () => {
               <TextField
                 fullWidth
                 label="Position"
-                value="Representative Licensed"
+                value={jobDetails.position}
+                onChange={(e) =>
+                  setJobDetails({ ...jobDetails, position: e.target.value })
+                }
                 variant="outlined"
               />
             </Grid2>
 
-            {/* Promotion Date usando DateSelectField */}
             <Grid2 size={12}>
               <DateSelectField
                 label="Promotion Date"
-                selectedMonth={dates.promotionDate.month}
-                selectedDay={dates.promotionDate.day}
-                selectedYear={dates.promotionDate.year}
+                selectedMonth={jobDetails.promotionDate.month}
+                selectedDay={jobDetails.promotionDate.day}
+                selectedYear={jobDetails.promotionDate.year}
                 onMonthChange={(e) =>
-                  handleDateChange("promotionDate", {
-                    month: String(e.target.value),
-                  })
+                  handleDateChange("promotionDate", { month: e.target.value })
                 }
                 onDayChange={(e) =>
                   handleDateChange("promotionDate", {
@@ -136,23 +90,20 @@ const JobDetailsCard = () => {
               <TextField
                 fullWidth
                 label="Personal Code"
-                defaultValue="GFI09"
+                value={jobDetails.personalCode}
                 variant="outlined"
                 disabled
               />
             </Grid2>
 
-            {/* Part of Company Since usando DateSelectField */}
             <Grid2 size={12}>
               <DateSelectField
                 label="Part of Company Since"
-                selectedMonth={dates.companyDate.month}
-                selectedDay={dates.companyDate.day}
-                selectedYear={dates.companyDate.year}
+                selectedMonth={jobDetails.companyDate.month}
+                selectedDay={jobDetails.companyDate.day}
+                selectedYear={jobDetails.companyDate.year}
                 onMonthChange={(e) =>
-                  handleDateChange("companyDate", {
-                    month: String(e.target.value),
-                  })
+                  handleDateChange("companyDate", { month: e.target.value })
                 }
                 onDayChange={(e) =>
                   handleDateChange("companyDate", {
@@ -171,7 +122,10 @@ const JobDetailsCard = () => {
               <TextField
                 fullWidth
                 label="Appointed"
-                defaultValue="American Equity Investment Life Ins Co, ANICO, American National Life Ins Co of New York, +5"
+                value={jobDetails.appointed}
+                onChange={(e) =>
+                  setJobDetails({ ...jobDetails, appointed: e.target.value })
+                }
                 variant="outlined"
               />
             </Grid2>
