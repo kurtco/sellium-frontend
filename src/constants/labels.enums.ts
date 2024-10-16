@@ -64,6 +64,7 @@ export enum SummaryCardComponentLabels {
   associateUpgrade = "to Upgrade to Associate",
   agentsRecruitAndSales = "Agents Recruited & Sales",
   monthlyPoints = "Monthly Points 2024",
+  title = "Summary",
 }
 
 export enum PersonalInformationCardLabels {
@@ -80,7 +81,7 @@ export enum PersonalInformationCardLabels {
 }
 
 export enum JobInformationCardLabels {
-  title = "Personal Information",
+  title = "Job Information",
   edit = "Edit",
   promotionDate = "Promotion Date",
   sinceInCompany = "Part of the company since",
@@ -98,4 +99,12 @@ export enum LicensedAndTrainingCardLabels {
   examPresented = "Exam Presented",
   examApproved = "Exam Approved?",
   trainingPerformed = "Training Performed",
+}
+
+export enum ProgressCardLabels {
+  title = "Progress",
+}
+
+export enum JobInformationWrapperLabels {
+  button = "Save",
 }

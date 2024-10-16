@@ -143,19 +143,28 @@ const SummaryCard = () => {
                 display="flex"
                 alignItems="center"
                 justifyContent="space-between"
-                flexDirection={{ xs: "column", md: "row" }} // Responsive layout for mobile
+                flexDirection="row"
                 textAlign={{ xs: "center", md: "left" }}
-                gap={1} // Espaciado entre elementos en dispositivos móviles
+                gap={2}
               >
-                <Typography variant="body2">{month}</Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ width: { xs: "100%", md: "100px" }, textAlign: "left" }}
+                >
+                  {month}
+                </Typography>
                 <LinearProgress
                   variant="determinate"
                   value={Math.random() * 100}
                   sx={{ width: { xs: "100%", md: "60%" }, mx: 2 }}
                 />
-                <Typography variant="body2">{`${Math.floor(
-                  Math.random() * 30
-                )}%`}</Typography>
+
+                <Typography
+                  variant="body2"
+                  sx={{ width: "50px", textAlign: "right" }}
+                >
+                  {`${Math.floor(Math.random() * 30)}%`}
+                </Typography>
               </Box>
             </Grid>
           ))}
