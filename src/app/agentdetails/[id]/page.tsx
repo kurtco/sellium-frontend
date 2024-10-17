@@ -9,12 +9,13 @@ import {
   ProgressCardLabels,
   SummaryCardComponentLabels,
 } from "@/constants/labels.enums";
+import PersonalInformationWrapper from "@/app/_components/Details/PersonalInformation/PersonalInformationWrapper";
 
 const tabsData = [
   { label: SummaryCardComponentLabels.title, content: <SummaryWrapper /> },
   {
     label: PersonalInformationCardLabels.title,
-    content: <div>Personal Information content here</div>,
+    content: <PersonalInformationWrapper />,
   },
   {
     label: JobInformationCardLabels.title,
@@ -30,7 +31,7 @@ const tabsData = [
   },
 ];
 
-const AgentDetails: React.FC = () => {
+const AgentDetails = () => {
   return <DetailsTabs tabs={tabsData} progress={75} />;
 };
 

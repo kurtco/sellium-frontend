@@ -125,3 +125,28 @@ export enum ProgressCardLabels {
 export enum JobInformationWrapperLabels {
   button = "Save",
 }
+
+export enum PersonalDetailsCardLabels {
+  title = "Personal Details",
+  birthDate = "Date of Birth",
+  firstName = "First Name",
+  lastName = "Last Name",
+}
+export enum ProductCardLabels {
+  title = "Product",
+  productType = "Product Type",
+  areYouInsured = " Insured with the Company?",
+}
+
+export enum ContactDetalilsCardLabels {
+  title = "Contact",
+  phoneNumber = "Phone Number",
+  email = "Email",
+  homeAddress = "Home Address",
+  businessAddress = "Business Address",
+}
+
+export enum FamilyDetailsCardLabels {
+  title = "Family (optional)",
+  spouseName = "Spouse Name",
+}

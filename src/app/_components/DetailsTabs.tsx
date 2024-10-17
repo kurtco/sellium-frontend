@@ -33,7 +33,7 @@ const DetailsTabs = ({ tabs, progress }: DetailsTabsProps) => {
     }
   }, [id]);
 
-  const [selectedTab, setSelectedTab] = useState(2);
+  const [selectedTab, setSelectedTab] = useState(1);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -80,7 +80,18 @@ const DetailsTabs = ({ tabs, progress }: DetailsTabsProps) => {
         </Box>
       </Box>
 
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{
+          marginBottom: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          borderRadius: 1,
+          padding: "16px 0px 0px 20px ",
+        }}
+      >
         <Tabs
           value={selectedTab}
           onChange={handleTabChange}

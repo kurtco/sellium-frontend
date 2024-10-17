@@ -105,3 +105,27 @@ export interface ErrorResponse<T = unknown> {
   userCode?: string;
   data?: T;
 }
+
+export interface PersonalDetails {
+  firstName: string;
+  lastName: string;
+  birthDate: {
+    month: string;
+    day: number;
+    year: number;
+  };
+  product: string;
+  insured: string;
+}
+
+export interface FamilyDetails {
+  spouseName: string;
+}
+
+export interface ContactDetails {
+  phoneNumber: string;
+  phoneCode: string;
+  email: string;
+  homeAddress: string;
+  businessAddress: string;
+}

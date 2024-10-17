@@ -189,5 +189,42 @@ export const insuranceCompanies = [
   "United States Life Ins (Corebridge New York)",
 ];
 
+export const productType = ["IUL", "Term", "Annuity", "Final expenses"];
 
 export const snackBarCloseTime: number = 3000;
+
+export const internationalPhoneCodes = [
+  { country: "Argentina", code: "+54" },
+  { country: "Bahamas", code: "+1-242" },
+  { country: "Barbados", code: "+1-246" },
+  { country: "Belize", code: "+501" },
+  { country: "Bolivia", code: "+591" },
+  { country: "Brazil", code: "+55" },
+  { country: "Chile", code: "+56" },
+  { country: "Colombia", code: "+57" },
+  { country: "Costa Rica", code: "+506" },
+  { country: "Cuba", code: "+53" },
+  { country: "Dominica", code: "+1-767" },
+  { country: "Dominican Republic", code: "+1-809" },
+  { country: "Ecuador", code: "+593" },
+  { country: "El Salvador", code: "+503" },
+  { country: "Grenada", code: "+1-473" },
+  { country: "Guatemala", code: "+502" },
+  { country: "Guyana", code: "+592" },
+  { country: "Haiti", code: "+509" },
+  { country: "Honduras", code: "+504" },
+  { country: "Jamaica", code: "+1-876" },
+  { country: "Mexico", code: "+52" },
+  { country: "Nicaragua", code: "+505" },
+  { country: "Panama", code: "+507" },
+  { country: "Paraguay", code: "+595" },
+  { country: "Peru", code: "+51" },
+  { country: "Saint Kitts and Nevis", code: "+1-869" },
+  { country: "Saint Lucia", code: "+1-758" },
+  { country: "Saint Vincent and the Grenadines", code: "+1-784" },
+  { country: "Suriname", code: "+597" },
+  { country: "Trinidad and Tobago", code: "+1-868" },
+  { country: "United States - Canada", code: "+1" },
+  { country: "Uruguay", code: "+598" },
+  { country: "Venezuela", code: "+58" },
+];
