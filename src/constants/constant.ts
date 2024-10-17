@@ -173,4 +173,21 @@ export const monthsList = [
   "December",
 ];
 
+export const insuranceCompanies = [
+  "American Equity Investment Life Ins Co",
+  "ANICO",
+  "Augustar Financial (IMO)",
+  "Ameritas",
+  "Corebridge Partners Group (Life)",
+  "Corebridge / AIG (Annuity)",
+  "ETHOS",
+  "Forester",
+  "Global Atlantic (Annuity)",
+  "Lincoln Financial and Lincoln National Life",
+  "Mutual of Omaha",
+  "North American Co for Life and Health Ins",
+  "United States Life Ins (Corebridge New York)",
+];
+
+
 export const snackBarCloseTime: number = 3000;

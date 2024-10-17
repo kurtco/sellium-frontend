@@ -8,9 +8,15 @@ import {
   TextField,
   Typography,
   Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import DateSelectField from "../../DateSelectedField";
+import { JobDetailsCardLabels } from "@/constants/labels.enums";
+import { insuranceCompanies } from "@/constants/constant";
 
 interface JobDetailsCardProps {
   jobDetails: {
@@ -47,7 +53,7 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            Job Details
+            {JobDetailsCardLabels.title}
           </Typography>
           <Divider sx={{ marginBottom: 2 }} />
 
@@ -55,7 +61,7 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
             <Grid2 size={12}>
               <TextField
                 fullWidth
-                label="Position"
+                label={JobDetailsCardLabels.positionField}
                 value={jobDetails.position}
                 onChange={(e) =>
                   setJobDetails({ ...jobDetails, position: e.target.value })
@@ -66,7 +72,7 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
 
             <Grid2 size={12}>
               <DateSelectField
-                label="Promotion Date"
+                label={JobDetailsCardLabels.promotionDateField}
                 selectedMonth={jobDetails.promotionDate.month}
                 selectedDay={jobDetails.promotionDate.day}
                 selectedYear={jobDetails.promotionDate.year}
@@ -89,7 +95,7 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
             <Grid2 size={12}>
               <TextField
                 fullWidth
-                label="Personal Code"
+                label={JobDetailsCardLabels.personalCodeField}
                 value={jobDetails.personalCode}
                 variant="outlined"
                 disabled
@@ -98,7 +104,7 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
 
             <Grid2 size={12}>
               <DateSelectField
-                label="Part of Company Since"
+                label={JobDetailsCardLabels.sinceInCompany}
                 selectedMonth={jobDetails.companyDate.month}
                 selectedDay={jobDetails.companyDate.day}
                 selectedYear={jobDetails.companyDate.year}
@@ -119,15 +125,22 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
             </Grid2>
 
             <Grid2 size={12}>
-              <TextField
-                fullWidth
-                label="Appointed"
-                value={jobDetails.appointed}
-                onChange={(e) =>
-                  setJobDetails({ ...jobDetails, appointed: e.target.value })
-                }
-                variant="outlined"
-              />
+              <FormControl fullWidth>
+                <InputLabel>{JobDetailsCardLabels.appointedField}</InputLabel>
+                <Select
+                  value={jobDetails.appointed}
+                  onChange={(e) =>
+                    setJobDetails({ ...jobDetails, appointed: e.target.value })
+                  }
+                  label={JobDetailsCardLabels.appointedField}
+                >
+                  {insuranceCompanies.map((company) => (
+                    <MenuItem key={company} value={company}>
+                      {company}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid2>
           </Grid2>
         </CardContent>

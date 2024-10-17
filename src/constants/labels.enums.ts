@@ -101,6 +101,23 @@ export enum LicensedAndTrainingCardLabels {
   trainingPerformed = "Training Performed",
 }
 
+export enum JobDetailsCardLabels {
+  title = "Job Details",
+  positionField = "Position",
+  promotionDateField = "Promotion Date",
+  personalCodeField = "Personal Code",
+  sinceInCompany = "Part of Company Since",
+  appointedField = "Appointed",
+}
+
+export enum JobDependenciesCardLabels {
+  title = "Dependencies",
+  recruiterField = "Recruiter",
+  recruiterCodeField = "Recruiter Code",
+  leaderField = "Leader",
+  leaderCodeField = "Leader Code",
+}
+
 export enum ProgressCardLabels {
   title = "Progress",
 }

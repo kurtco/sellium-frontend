@@ -9,6 +9,7 @@ import {
   Divider,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
+import { JobDependenciesCardLabels } from "@/constants/labels.enums";
 
 interface JobDependenciesCardProps {
   jobDependencies: {
@@ -28,7 +29,7 @@ const JobDependenciesCard = ({
     <Card variant="outlined">
       <CardContent>
         <Typography variant="h6" gutterBottom>
-          Dependencies
+          {JobDependenciesCardLabels.title}
         </Typography>
         <Divider sx={{ marginBottom: 2 }} />
 
@@ -36,7 +37,7 @@ const JobDependenciesCard = ({
           <Grid2 size={12}>
             <TextField
               fullWidth
-              label="Recruiter"
+              label={JobDependenciesCardLabels.recruiterField}
               value={jobDependencies.recruiter}
               onChange={(e) =>
                 setJobDependencies({
@@ -51,7 +52,7 @@ const JobDependenciesCard = ({
           <Grid2 size={12}>
             <TextField
               fullWidth
-              label="Recruiter Code"
+              label={JobDependenciesCardLabels.recruiterCodeField}
               value={jobDependencies.recruiterCode}
               variant="outlined"
               disabled
@@ -61,7 +62,7 @@ const JobDependenciesCard = ({
           <Grid2 size={12}>
             <TextField
               fullWidth
-              label="Leader"
+              label={JobDependenciesCardLabels.leaderField}
               value={jobDependencies.leader}
               onChange={(e) =>
                 setJobDependencies({
@@ -76,7 +77,7 @@ const JobDependenciesCard = ({
           <Grid2 size={12}>
             <TextField
               fullWidth
-              label="Leader Code"
+              label={JobDependenciesCardLabels.leaderCodeField}
               value={jobDependencies.leaderCode}
               variant="outlined"
               disabled

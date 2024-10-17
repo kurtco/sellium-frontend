@@ -35,7 +35,7 @@ const DateSelectField = ({
 
   return (
     <>
-      <Typography variant="body2" gutterBottom>
+      <Typography variant="body2" color="textSecondary" gutterBottom>
         {label}
       </Typography>
       <Grid2 container spacing={2} alignItems="center">
