@@ -8,6 +8,7 @@ import { presetDarkPalettes, presetPalettes } from "@ant-design/colors";
 import ThemeOption from "./theme";
 import { ThemeMode } from "@/constants/config.enum";
 import { Colors } from "@/interfaces/interfaces";
+import { defaultBlueColor } from "@/constants/constant";
 
 // ==============================|| DEFAULT THEME - PALETTE ||============================== //
 
@@ -109,6 +110,24 @@ export default function Palette(mode: PaletteMode, presetColor: string) {
             "&:hover": {
               backgroundColor:
                 mode === ThemeMode.DARK ? greyPrimary[1] : greyPrimary[2],
+            },
+          },
+        },
+      },
+      MuiRadio: {
+        styleOverrides: {
+          root: {
+            "&.Mui-checked .MuiSvgIcon-root": {
+              color: defaultBlueColor, // Borde azul cuando está seleccionado
+            },
+            "& .MuiSvgIcon-root": {
+              width: "16px",
+              height: "16px",
+              opacity: "0px",
+              color: mode === ThemeMode.DARK ? greyPrimary[6] : greyPrimary[4],
+              border: `1px 0px 0px 0px  solid ${
+                mode === ThemeMode.DARK ? greyPrimary[6] : greyPrimary[4]
+              }`,
             },
           },
         },

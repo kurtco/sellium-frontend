@@ -31,13 +31,15 @@ const JobDependenciesCard = ({
         <Typography variant="h6" gutterBottom>
           {JobDependenciesCardLabels.title}
         </Typography>
-        <Divider sx={{ marginBottom: 2 }} />
+        <Divider sx={{ marginBottom: "22px" }} />
 
         <Grid2 container spacing={2}>
-          <Grid2 size={12}>
+          <Grid2 size={12} sx={{ marginBottom: "22px" }}>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              {JobDependenciesCardLabels.recruiterField}
+            </Typography>
             <TextField
               fullWidth
-              label={JobDependenciesCardLabels.recruiterField}
               value={jobDependencies.recruiter}
               onChange={(e) =>
                 setJobDependencies({
@@ -49,20 +51,24 @@ const JobDependenciesCard = ({
             />
           </Grid2>
 
-          <Grid2 size={12}>
+          <Grid2 size={12} sx={{ marginBottom: "22px" }}>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              {JobDependenciesCardLabels.recruiterCodeField}
+            </Typography>
             <TextField
               fullWidth
-              label={JobDependenciesCardLabels.recruiterCodeField}
               value={jobDependencies.recruiterCode}
               variant="outlined"
               disabled
             />
           </Grid2>
 
-          <Grid2 size={12}>
+          <Grid2 size={12} sx={{ marginBottom: "22px" }}>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              {JobDependenciesCardLabels.leaderField}
+            </Typography>
             <TextField
               fullWidth
-              label={JobDependenciesCardLabels.leaderField}
               value={jobDependencies.leader}
               onChange={(e) =>
                 setJobDependencies({
@@ -74,10 +80,12 @@ const JobDependenciesCard = ({
             />
           </Grid2>
 
-          <Grid2 size={12}>
+          <Grid2 size={12} sx={{ marginBottom: "22px" }}>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              {JobDependenciesCardLabels.leaderCodeField}
+            </Typography>
             <TextField
               fullWidth
-              label={JobDependenciesCardLabels.leaderCodeField}
               value={jobDependencies.leaderCode}
               variant="outlined"
               disabled

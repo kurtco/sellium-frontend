@@ -22,6 +22,7 @@ const JobInformationWrapper = () => {
       year: 0,
     },
     appointed: "",
+    eo: true,
   });
 
   const [jobDependencies, setJobDependencies] = useState({

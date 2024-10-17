@@ -108,6 +108,7 @@ export enum JobDetailsCardLabels {
   personalCodeField = "Personal Code",
   sinceInCompany = "Part of Company Since",
   appointedField = "Appointed",
+  eo = " E&O",
 }
 
 export enum JobDependenciesCardLabels {
@@ -116,6 +117,7 @@ export enum JobDependenciesCardLabels {
   recruiterCodeField = "Recruiter Code",
   leaderField = "Leader",
   leaderCodeField = "Leader Code",
+  eo = "E&O",
 }
 
 export enum ProgressCardLabels {
