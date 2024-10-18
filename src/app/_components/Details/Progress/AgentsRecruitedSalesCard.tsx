@@ -24,21 +24,23 @@ const AgentsRecruitedSalesCard = ({
         <Typography variant="h6" gutterBottom>
           {AgentsRecruitedSalesCardLabels.title}
         </Typography>
-        <Box display="flex" justifyContent="flex-end">
-          <Typography
-            variant="body2"
-            color="primary"
-            justifyContent="flex-end"
-            sx={{ marginBottom: "10px" }}
-          >
-            2 {AgentsRecruitedSalesCardLabels.upgradeToAssociated}
-          </Typography>
-        </Box>
+
         <Grid2 container spacing={2}>
-          <Grid2 size={12}>
-            <Typography variant="body2" gutterBottom>
-              {AgentsRecruitedSalesCardLabels.numberOfAgents}
-            </Typography>
+          <Grid2 size={12} marginTop="22px">
+            <Box display="flex" justifyContent="space-between">
+              <Typography variant="body2" gutterBottom>
+                {AgentsRecruitedSalesCardLabels.numberOfAgents}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="primary"
+                justifyContent="flex-end"
+                sx={{ marginBottom: "10px" }}
+              >
+                2 {AgentsRecruitedSalesCardLabels.upgradeToAssociated}
+              </Typography>
+            </Box>
+
             <TextField
               fullWidth
               value={agentsDetails.numberOfAgents}
@@ -48,7 +50,7 @@ const AgentsRecruitedSalesCard = ({
                   numberOfAgents: Number(e.target.value),
                 })
               }
-              helperText={`1 ${AgentsRecruitedSalesCardLabels.helperText}`}
+              // helperText={`1 ${AgentsRecruitedSalesCardLabels.helperText}`}
             />
           </Grid2>
 
