@@ -35,7 +35,7 @@ const ProgressWrapper = () => {
   };
 
   return (
-    <Card variant="outlined">
+    <>
       <Grid
         container
         spacing={2}
@@ -75,7 +75,7 @@ const ProgressWrapper = () => {
           {LicenseAndTrainingsWrapperLabels.button}
         </Button>
       </Box>
-    </Card>
+    </>
   );
 };
 
