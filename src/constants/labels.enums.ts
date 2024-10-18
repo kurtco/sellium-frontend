@@ -152,3 +152,27 @@ export enum FamilyDetailsCardLabels {
   title = "Family (optional)",
   spouseName = "Spouse Name",
 }
+
+export enum LicenseDetailsCardLabels {
+  title = "License Details",
+  licenseType = "License Type",
+  dateExpires = "Expires",
+  fast = "Fast Star",
+}
+
+export enum LicenseExamCardLabels {
+  title = "License Exam",
+  state = "State",
+  untilExamExpires = "months until the exam expires",
+  presentedDate = "Presented",
+  isApproved = "Approved?",
+}
+
+export enum TrainingsCardLabels {
+  title = "Trainings",
+  orientation1 = "Orientation 1",
+  orientation2 = "Orientation 2",
+  orientation3 = "Orientation 3",
+  orientation4 = "Orientation 4",
+  bootCampOrientation = "Boot Camp",
+}

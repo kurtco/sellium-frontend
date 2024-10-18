@@ -10,6 +10,7 @@ import {
   SummaryCardComponentLabels,
 } from "@/constants/labels.enums";
 import PersonalInformationWrapper from "@/app/_components/Details/PersonalInformation/PersonalInformationWrapper";
+import LicenseAndTrainingsWrapper from "@/app/_components/LicenseAndTrainings/LicenseAndTrainingsWrapper";
 
 const tabsData = [
   { label: SummaryCardComponentLabels.title, content: <SummaryWrapper /> },
@@ -23,7 +24,7 @@ const tabsData = [
   },
   {
     label: LicensedAndTrainingCardLabels.title,
-    content: <div>License & Trainings content here</div>,
+    content: <LicenseAndTrainingsWrapper />,
   },
   {
     label: ProgressCardLabels.title,
