@@ -11,6 +11,7 @@ import {
 } from "@/constants/labels.enums";
 import PersonalInformationWrapper from "@/app/_components/Details/PersonalInformation/PersonalInformationWrapper";
 import LicenseAndTrainingsWrapper from "@/app/_components/LicenseAndTrainings/LicenseAndTrainingsWrapper";
+import ProgressWrapper from "@/app/_components/Details/Progress/ProgressWrapper";
 
 const tabsData = [
   { label: SummaryCardComponentLabels.title, content: <SummaryWrapper /> },
@@ -28,7 +29,7 @@ const tabsData = [
   },
   {
     label: ProgressCardLabels.title,
-    content: <div>Progress content here</div>,
+    content: <ProgressWrapper />,
   },
 ];
 

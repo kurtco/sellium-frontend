@@ -176,3 +176,33 @@ export enum TrainingsCardLabels {
   orientation4 = "Orientation 4",
   bootCampOrientation = "Boot Camp",
 }
+
+export enum LicenseAndTrainingsWrapperLabels {
+  button = "Save",
+}
+
+export enum ProgressWrapperLabels {
+  button = "Save",
+}
+
+export enum AgentsRecruitedSalesCardLabels {
+  title = "Agents Recruited & Sales",
+  policiesSold = "Number of Policies Sold",
+  numberOfAgents = "Number of Agents",
+  helperText = " to Upgrade to Associate",
+  netLicense = "Net License",
+  isACoach = "Is a Coach?",
+  upgradeToAssociated = "to Upgrade to Associate",
+}
+
+export enum AchievementsCardLabels {
+  title = "Achievements",
+  netLicense = "Net License",
+  isACoach = "Is a Coach?",
+}
+
+export enum MonthlyPointsCardLabels {
+  title = "Monthly Points",
+  sales = "Direct and indirect sales",
+  upgradeToAssociated = "to Upgrade to Associate",
+}

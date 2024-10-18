@@ -1,0 +1,76 @@
+import { AgentsRecruitedSalesCardLabels } from "@/constants/labels.enums";
+import { Card, CardContent, TextField, Typography, Box } from "@mui/material";
+import Grid2 from "@mui/material/Grid2";
+
+export interface AgentsDetails {
+  numberOfAgents: number;
+  numberOfPoliciesSold: number;
+  isCoach: boolean;
+  netLicense: boolean;
+}
+
+interface AgentsRecruitedSalesCardProps {
+  agentsDetails: AgentsDetails;
+  setAgentsDetails: (details: AgentsDetails) => void;
+}
+
+const AgentsRecruitedSalesCard = ({
+  agentsDetails,
+  setAgentsDetails,
+}: AgentsRecruitedSalesCardProps) => {
+  return (
+    <Card variant="outlined" sx={{ marginBottom: "22px" }}>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          {AgentsRecruitedSalesCardLabels.title}
+        </Typography>
+        <Box display="flex" justifyContent="flex-end">
+          <Typography
+            variant="body2"
+            color="primary"
+            justifyContent="flex-end"
+            sx={{ marginBottom: "10px" }}
+          >
+            2 {AgentsRecruitedSalesCardLabels.upgradeToAssociated}
+          </Typography>
+        </Box>
+        <Grid2 container spacing={2}>
+          <Grid2 size={12}>
+            <Typography variant="body2" gutterBottom>
+              {AgentsRecruitedSalesCardLabels.numberOfAgents}
+            </Typography>
+            <TextField
+              fullWidth
+              value={agentsDetails.numberOfAgents}
+              onChange={(e) =>
+                setAgentsDetails({
+                  ...agentsDetails,
+                  numberOfAgents: Number(e.target.value),
+                })
+              }
+              helperText={`1 ${AgentsRecruitedSalesCardLabels.helperText}`}
+            />
+          </Grid2>
+
+          <Grid2 size={12}>
+            <Typography variant="body2" gutterBottom>
+              {AgentsRecruitedSalesCardLabels.policiesSold}
+            </Typography>
+            <TextField
+              fullWidth
+              value={agentsDetails.numberOfPoliciesSold}
+              onChange={(e) =>
+                setAgentsDetails({
+                  ...agentsDetails,
+                  numberOfPoliciesSold: Number(e.target.value),
+                })
+              }
+            />
+          </Grid2>
+        </Grid2>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default AgentsRecruitedSalesCard;

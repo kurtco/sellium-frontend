@@ -73,7 +73,11 @@ const PersonalInformationWrapper = () => {
           />
         </Grid>
       </Grid>
-      <Box display="flex" justifyContent="flex-end" sx={{ marginTop: 2 }}>
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        sx={{ marginTop: 2, marginBottom: "20px" }}
+      >
         <Button variant="contained" color="primary" onClick={handleSave}>
           Save
         </Button>

@@ -5,6 +5,7 @@ import { Box, Button } from "@mui/material";
 import LicenseDetailsCard, { LicenseDetails } from "./LicenseDetailsCard";
 import TrainingsCard from "./TrainingsCard";
 import LicenseExamCard from "./LicenseExamCard";
+import { LicenseAndTrainingsWrapperLabels } from "@/constants/labels.enums";
 
 const LicenseAndTrainingsWrapper = () => {
   const [licenseDetails, setLicenseDetails] = useState<LicenseDetails>({
@@ -70,9 +71,13 @@ const LicenseAndTrainingsWrapper = () => {
           <TrainingsCard trainings={trainings} setTrainings={setTrainings} />
         </Grid2>
       </Grid2>
-      <Box display="flex" justifyContent="flex-end" sx={{ marginTop: 2 }}>
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        sx={{ marginTop: 2, marginBottom: "20px" }}
+      >
         <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Save
+          {LicenseAndTrainingsWrapperLabels.button}
         </Button>
       </Box>
     </>
