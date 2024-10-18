@@ -1,10 +1,11 @@
 import { AppBar, Toolbar, Box, Avatar, Typography } from "@mui/material";
 import useConfig from "@/hooks/useConfig";
 import HeaderLogo from "./HeaderLogo";
-import ThemeModeAvatar from "./ThemeModeAvatar";
+import SunIcon from "./SunIcon";
 import { useTheme } from "@mui/material/styles";
 import { ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
+import MoonIcon from "./MoonIcon";
 
 export default function Header() {
   const theme = useTheme();
@@ -47,7 +48,7 @@ export default function Header() {
             onClick={handleToggleMode}
             sx={{ cursor: "pointer" }}
           >
-            <ThemeModeAvatar />
+            {mode === ThemeMode.DARK ? <SunIcon /> : <MoonIcon />}
           </Avatar>
           <Avatar
             alt="User Profile"
