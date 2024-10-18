@@ -61,16 +61,7 @@ const MonthlyPointsCard = ({
             <MenuItem value={2023}>2023</MenuItem>
           </Select>
         </Box>
-        <Box display="flex" justifyContent="flex-end">
-          <Typography
-            variant="body2"
-            color="primary"
-            justifyContent="flex-end"
-            sx={{ marginBottom: "10px" }}
-          >
-            2,892 {MonthlyPointsCardLabels.upgradeToAssociated}
-          </Typography>
-        </Box>
+
         <Divider sx={{ marginBottom: "22px" }} />
 
         <Grid container spacing={2}>
@@ -146,6 +137,20 @@ const MonthlyPointsCard = ({
             </Grid>
           ))}
         </Grid>
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="flex-end"
+          alignItems="flex-end"
+        >
+          <Typography
+            variant="body2"
+            color="primary"
+            sx={{ marginBottom: "10px" }}
+          >
+            2,891 {MonthlyPointsCardLabels.upgradeToAssociated}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );
