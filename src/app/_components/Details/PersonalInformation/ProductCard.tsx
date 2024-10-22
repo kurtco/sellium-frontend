@@ -1,6 +1,6 @@
 import { productType } from "@/constants/constant";
 import { ProductCardLabels } from "@/constants/labels.enums";
-import { PersonalDetails } from "@/interfaces/interfaces";
+import { PersonalInformation } from "@/interfaces/interfaces";
 import {
   Card,
   CardContent,
@@ -16,8 +16,8 @@ import {
 import Grid2 from "@mui/material/Grid2";
 
 interface ProductCardProps {
-  personalDetails: PersonalDetails;
-  setPersonalDetails: React.Dispatch<React.SetStateAction<PersonalDetails>>;
+  personalDetails: PersonalInformation;
+  setPersonalDetails: (details: Partial<PersonalInformation>) => void;
 }
 
 const ProductCard = ({
@@ -64,11 +64,11 @@ const ProductCard = ({
           </Typography>
           <FormControl fullWidth>
             <Select
-              value={personalDetails.product}
+              value={personalDetails.productType || ""}
               onChange={(e) =>
                 setPersonalDetails({
                   ...personalDetails,
-                  product: e.target.value,
+                  productType: e.target.value,
                 })
               }
             >

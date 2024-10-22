@@ -1,27 +1,31 @@
 "use client";
 import React from "react";
 import { Card, CardContent, TextField, Typography, Box } from "@mui/material";
-import Grid2 from "@mui/material/Grid2";
-import DateSelectField from "../../DateSelectedField";
-import { PersonalDetails } from "@/interfaces/interfaces";
+import Grid from "@mui/material/Grid2";
+
+import { PersonalInformation } from "@/interfaces/interfaces";
 import { PersonalDetailsCardLabels } from "@/constants/labels.enums";
+import DateSelectField from "../../DateSelectedField";
+import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
 
 interface PersonalDetailsCardProps {
-  personalDetails: PersonalDetails;
-  setPersonalDetails: React.Dispatch<React.SetStateAction<PersonalDetails>>;
+  personalDetails: PersonalInformation;
+  setPersonalDetails: (details: Partial<PersonalInformation>) => void;
 }
 
 const PersonalDetailsCard = ({
   personalDetails,
   setPersonalDetails,
 }: PersonalDetailsCardProps) => {
-  const handleDateChange = (
-    updatedDate: Partial<{ month: string; day: number; year: number }>
-  ) => {
-    setPersonalDetails((prevDetails) => ({
-      ...prevDetails,
-      birthDate: { ...prevDetails.birthDate, ...updatedDate },
-    }));
+  const { month, day, year } = splitDateString(
+    formatDateToString(personalDetails.dateOfBirth)
+  );
+
+  const handleDateChange = (newDate: string) => {
+    console.log("new date PersonalDetailsCard -   ", newDate);
+    setPersonalDetails({
+      dateOfBirth: newDate,
+    });
   };
 
   return (
@@ -40,8 +44,8 @@ const PersonalDetailsCard = ({
         </Typography>
       </Box>
       <CardContent>
-        <Grid2 container spacing={2}>
-          <Grid2 size={12}>
+        <Grid container spacing={2}>
+          <Grid size={12}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {PersonalDetailsCardLabels.firstName}
             </Typography>
@@ -56,8 +60,8 @@ const PersonalDetailsCard = ({
               }
               variant="outlined"
             />
-          </Grid2>
-          <Grid2 size={12} sx={{ marginBottom: "22px" }}>
+          </Grid>
+          <Grid size={12} sx={{ marginBottom: "22px" }}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {PersonalDetailsCardLabels.lastName}
             </Typography>
@@ -72,23 +76,19 @@ const PersonalDetailsCard = ({
               }
               variant="outlined"
             />
-          </Grid2>
-          <Grid2 size={12} sx={{ marginBottom: "20px" }}>
+          </Grid>
+          <Grid size={12} sx={{ marginBottom: "20px" }}>
             <DateSelectField
               label={PersonalDetailsCardLabels.birthDate}
-              selectedMonth={personalDetails.birthDate.month}
-              selectedDay={personalDetails.birthDate.day}
-              selectedYear={personalDetails.birthDate.year}
-              onMonthChange={(e) => handleDateChange({ month: e.target.value })}
-              onDayChange={(e) =>
-                handleDateChange({ day: Number(e.target.value) })
-              }
-              onYearChange={(e) =>
-                handleDateChange({ year: Number(e.target.value) })
-              }
+              selectedMonth={Number(month)}
+              selectedDay={Number(day)}
+              selectedYear={Number(year)}
+              onDateChange={(e) => {
+                handleDateChange(e);
+              }}
             />
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
   );

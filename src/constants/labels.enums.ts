@@ -185,6 +185,10 @@ export enum ProgressWrapperLabels {
   button = "Save",
 }
 
+export enum PersonalInformationWrapperLabels {
+  button = "Save",
+}
+
 export enum AgentsRecruitedSalesCardLabels {
   title = "Agents Recruited & Sales",
   policiesSold = "Number of Policies Sold",

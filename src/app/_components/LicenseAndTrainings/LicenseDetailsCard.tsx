@@ -16,21 +16,14 @@ import {
 import Grid2 from "@mui/material/Grid2";
 import DateSelectField from "../DateSelectedField";
 import { LicenseDetailsCardLabels } from "@/constants/labels.enums";
+import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
 
 export interface LicenseDetails {
   licenseType: string;
-  expires: {
-    month: string;
-    day: number;
-    year: number;
-  };
+  expires: string;
   fastStar: boolean;
   state: string;
-  presented: {
-    month: string;
-    day: number;
-    year: number;
-  };
+  presented: string;
   approved: boolean;
 }
 
@@ -43,18 +36,21 @@ const LicenseDetailsCard = ({
   licenseDetails,
   setLicenseDetails,
 }: LicenseDetailsCardProps) => {
+  const { month, day, year } = splitDateString(
+    formatDateToString(licenseDetails.expires)
+  );
+
   const handleDateChange = (
     fieldType: keyof LicenseDetails,
-    updatedDate: Partial<{ month: string; day: number; year: number }>
+    updatedDate: string
   ) => {
-    // Check if the fieldType is an object (like `expires` or `presented`) before using the spread operator
     if (
       typeof licenseDetails[fieldType] === "object" &&
       licenseDetails[fieldType] !== null
     ) {
       setLicenseDetails({
         ...licenseDetails,
-        [fieldType]: { ...licenseDetails[fieldType], ...updatedDate },
+        [fieldType]: updatedDate,
       });
     }
   };
@@ -94,18 +90,12 @@ const LicenseDetailsCard = ({
           <Grid2 size={12} sx={{ marginBottom: "22px" }}>
             <DateSelectField
               label={LicenseDetailsCardLabels.dateExpires}
-              selectedMonth={licenseDetails.expires.month}
-              selectedDay={licenseDetails.expires.day}
-              selectedYear={licenseDetails.expires.year}
-              onMonthChange={(e) =>
-                handleDateChange("expires", { month: e.target.value })
-              }
-              onDayChange={(e) =>
-                handleDateChange("expires", { day: Number(e.target.value) })
-              }
-              onYearChange={(e) =>
-                handleDateChange("expires", { year: Number(e.target.value) })
-              }
+              selectedMonth={Number(month)}
+              selectedDay={Number(day)}
+              selectedYear={Number(year)}
+              onDateChange={(e) => {
+                handleDateChange("expires", e);
+              }}
             />
           </Grid2>
 

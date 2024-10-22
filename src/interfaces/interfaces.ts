@@ -129,3 +129,22 @@ export interface ContactDetails {
   homeAddress: string;
   businessAddress: string;
 }
+
+export interface PersonalInformation {
+  firstName: string;
+  lastName: string;
+  dateOfBirth?: string;
+  insured?: string;
+  productType?: string;
+  phoneCode?: string;
+  phoneNumber?: string;
+  email?: string;
+  homeAddress?: string;
+  businessAddress?: string;
+  spouseName?: string;
+}
+
+export interface DetailsState {
+  personalInformation: PersonalInformation;
+  // Future: other objects like JobInformation, LicenseAndTrainings, Progress
+}

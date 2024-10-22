@@ -5,39 +5,67 @@ import { Box, Button } from "@mui/material";
 import PersonalDetailsCard from "./PersonalDetailsCard";
 import ContactDetailsCard from "./ContactDetailsCard";
 import FamilyDetailsCard from "./FamilyDetailsCard";
-import { PersonalDetails } from "@/interfaces/interfaces";
 import ProductCard from "./ProductCard";
+import { useDispatch, useSelector } from "react-redux";
+
+import { AppDispatch, RootState } from "../../../../../store/store";
+import {
+  savePersonalInformation,
+  setShowErrorAlert,
+  setShowSuccessSnackbar,
+} from "../../../../../store/details/PersonalInformationSlice";
+import { PersonalInformation } from "@/interfaces/interfaces";
+import { PersonalInformationWrapperLabels } from "@/constants/labels.enums";
 
 const PersonalInformationWrapper = () => {
-  // Estado para los datos de PersonalDetails y ContactDetails
-  const [personalDetails, setPersonalDetails] = useState<PersonalDetails>({
-    firstName: "Oswely",
-    lastName: "Urbano",
-    birthDate: {
-      month: "September",
-      day: 29,
-      year: 1980,
-    },
-    product: "IUL",
-    insured: "Yes",
-  });
+  const dispatch = useDispatch<AppDispatch>();
 
-  const [contactDetails, setContactDetails] = useState({
-    phoneNumber: "865 423 9581",
-    phoneCode: "+1",
-    email: "oswelyurbano@gmail.com",
-    homeAddress: "299 MILLER RD apt 124, MAULDIN, SC 29662",
-    businessAddress: "299 MILLER RD apt 124, MAULDIN, SC 29662",
-  });
+  // Usar useSelector para obtener el estado de Redux
+  const loading = useSelector(
+    (state: RootState) => state.personalInformation.loading
+  );
+  const showSuccessSnackbar = useSelector(
+    (state: RootState) => state.personalInformation.showSuccessSnackbar
+  );
+  const showErrorAlert = useSelector(
+    (state: RootState) => state.personalInformation.showErrorAlert
+  );
 
-  const [familyDetails, setFamilyDetails] = useState({
-    spouseName: "John Urbano",
-  });
+  // Estado local para manejar los datos del formulario
+  const [personalInformation, setPersonalInformation] =
+    useState<PersonalInformation>({
+      firstName: "",
+      lastName: "",
+      dateOfBirth: "2/14/1982",
+      insured: "",
+      productType: "",
+      phoneCode: "",
+      phoneNumber: "",
+      email: "",
+      homeAddress: "",
+      businessAddress: "",
+      spouseName: "",
+    });
 
-  const handleSave = () => {
-    console.log("Personal Details:", personalDetails);
-    console.log("Contact Details:", contactDetails);
-    console.log("Family Details:", familyDetails);
+  const handleSave = async () => {
+    // Dispatch del thunk para guardar los datos en la API
+    console.log(
+      "data saved comp padre [PersonalInformationWrapper] ---> ",
+      personalInformation
+    );
+    // await dispatch(
+    //   savePersonalInformation(personalInformation as PersonalInformation)
+    // );
+
+    // // Muestra mensajes de éxito o error
+    // if (showSuccessSnackbar) {
+    //   dispatch(setShowSuccessSnackbar(true));
+    //   console.log("Personal Information saved successfully!");
+    // }
+    // if (showErrorAlert) {
+    //   dispatch(setShowErrorAlert(true));
+    //   console.log("Error saving Personal Information");
+    // }
   };
 
   return (
@@ -54,22 +82,30 @@ const PersonalInformationWrapper = () => {
       >
         <Grid>
           <PersonalDetailsCard
-            personalDetails={personalDetails}
-            setPersonalDetails={setPersonalDetails}
+            personalDetails={personalInformation}
+            setPersonalDetails={(data) =>
+              setPersonalInformation({ ...personalInformation, ...data })
+            }
           />
           <ProductCard
-            personalDetails={personalDetails}
-            setPersonalDetails={setPersonalDetails}
+            personalDetails={personalInformation}
+            setPersonalDetails={(data) =>
+              setPersonalInformation({ ...personalInformation, ...data })
+            }
           />
         </Grid>
         <Grid>
           <ContactDetailsCard
-            contactDetails={contactDetails}
-            setContactDetails={setContactDetails}
+            contactDetails={personalInformation}
+            setContactDetails={(data) =>
+              setPersonalInformation({ ...personalInformation, ...data })
+            }
           />
           <FamilyDetailsCard
-            familyDetails={familyDetails}
-            setFamilyDetails={setFamilyDetails}
+            familyDetails={personalInformation}
+            setFamilyDetails={(data) =>
+              setPersonalInformation({ ...personalInformation, ...data })
+            }
           />
         </Grid>
       </Grid>
@@ -78,8 +114,13 @@ const PersonalInformationWrapper = () => {
         justifyContent="flex-end"
         sx={{ marginTop: 2, marginBottom: "20px" }}
       >
-        <Button variant="contained" color="primary" onClick={handleSave}>
-          Save
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+          disabled={loading}
+        >
+          {PersonalInformationWrapperLabels.button}
         </Button>
       </Box>
     </>

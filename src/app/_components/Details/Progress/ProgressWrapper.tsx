@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
-import { Box, Button, Card } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 import { LicenseAndTrainingsWrapperLabels } from "@/constants/labels.enums";
 import MonthlyPointsCard, { MonthlyPoints } from "./MonthlyPointsCard";

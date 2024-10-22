@@ -17,14 +17,11 @@ import Grid2 from "@mui/material/Grid2";
 import DateSelectField from "../DateSelectedField";
 import { US_STATES } from "@/constants/constant";
 import { LicenseExamCardLabels } from "@/constants/labels.enums";
+import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
 
 export interface LicenseExam {
   state: string;
-  presented: {
-    month: string;
-    day: number;
-    year: number;
-  };
+  presented: string;
   approved: boolean;
 }
 
@@ -37,18 +34,18 @@ const LicenseExamCard = ({
   licenseExam,
   setLicenseExam,
 }: LicenseExamCardProps) => {
+  const { month, day, year } = splitDateString(
+    formatDateToString(licenseExam.presented)
+  );
+
   const handleDateChange = (
     fieldType: keyof LicenseExam,
-    updatedDate: Partial<{ month: string; day: number; year: number }>
+    updatedDate: string
   ) => {
-    // Validar si el campo es "presented", que es un objeto
-    if (fieldType === "presented") {
-      setLicenseExam({
-        ...licenseExam,
-        [fieldType]: { ...licenseExam.presented, ...updatedDate },
-      });
-    } else {
-      // Si no es un campo que sea un objeto, lo actualizamos directamente
+    if (
+      typeof licenseExam[fieldType] === "object" &&
+      licenseExam[fieldType] !== null
+    ) {
       setLicenseExam({
         ...licenseExam,
         [fieldType]: updatedDate,
@@ -102,18 +99,12 @@ const LicenseExamCard = ({
 
             <DateSelectField
               label={LicenseExamCardLabels.presentedDate}
-              selectedMonth={licenseExam.presented.month}
-              selectedDay={licenseExam.presented.day}
-              selectedYear={licenseExam.presented.year}
-              onMonthChange={(e) =>
-                handleDateChange("presented", { month: e.target.value })
-              }
-              onDayChange={(e) =>
-                handleDateChange("presented", { day: Number(e.target.value) })
-              }
-              onYearChange={(e) =>
-                handleDateChange("presented", { year: Number(e.target.value) })
-              }
+              selectedMonth={Number(month)}
+              selectedDay={Number(day)}
+              selectedYear={Number(year)}
+              onDateChange={(e) => {
+                handleDateChange("presented", e);
+              }}
             />
           </Grid2>
 

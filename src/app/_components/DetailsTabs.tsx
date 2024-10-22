@@ -33,7 +33,7 @@ const DetailsTabs = ({ tabs, progress }: DetailsTabsProps) => {
     }
   }, [id]);
 
-  const [selectedTab, setSelectedTab] = useState(4);
+  const [selectedTab, setSelectedTab] = useState(1);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);

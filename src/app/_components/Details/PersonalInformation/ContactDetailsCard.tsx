@@ -10,14 +10,14 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import Grid2 from "@mui/material/Grid2";
-import { ContactDetails } from "@/interfaces/interfaces";
+import Grid from "@mui/material/Grid2";
+import { PersonalInformation } from "@/interfaces/interfaces";
 import { ContactDetalilsCardLabels } from "@/constants/labels.enums";
 import { internationalPhoneCodes } from "@/constants/constant";
 
 interface ContactDetailsCardProps {
-  contactDetails: ContactDetails;
-  setContactDetails: React.Dispatch<React.SetStateAction<ContactDetails>>;
+  contactDetails: PersonalInformation;
+  setContactDetails: (details: Partial<PersonalInformation>) => void;
 }
 
 const ContactDetailsCard = ({
@@ -40,8 +40,8 @@ const ContactDetailsCard = ({
         </Typography>
       </Box>
       <CardContent>
-        <Grid2 container spacing={2}>
-          <Grid2 size={{ xs: 12, md: 4 }}>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {ContactDetalilsCardLabels.phoneNumber}
             </Typography>
@@ -63,8 +63,8 @@ const ContactDetailsCard = ({
                 ))}
               </Select>
             </FormControl>
-          </Grid2>
-          <Grid2 size={{ xs: 12, md: 8 }} display="flex" alignItems="flex-end">
+          </Grid>
+          <Grid size={{ xs: 12, md: 8 }} display="flex" alignItems="flex-end">
             <TextField
               fullWidth
               value={contactDetails.phoneNumber}
@@ -76,9 +76,9 @@ const ContactDetailsCard = ({
               }
               variant="outlined"
             />
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={12} sx={{ marginBottom: "22px" }}>
+          <Grid size={12} sx={{ marginBottom: "22px" }}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {ContactDetalilsCardLabels.email}
             </Typography>
@@ -90,8 +90,8 @@ const ContactDetailsCard = ({
               }
               variant="outlined"
             />
-          </Grid2>
-          <Grid2 size={12} sx={{ marginBottom: "22px" }}>
+          </Grid>
+          <Grid size={12} sx={{ marginBottom: "22px" }}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {ContactDetalilsCardLabels.homeAddress}
             </Typography>
@@ -106,8 +106,8 @@ const ContactDetailsCard = ({
               }
               variant="outlined"
             />
-          </Grid2>
-          <Grid2 size={12} sx={{ marginBottom: "10px" }}>
+          </Grid>
+          <Grid size={12} sx={{ marginBottom: "10px" }}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {ContactDetalilsCardLabels.businessAddress}
             </Typography>
@@ -122,8 +122,8 @@ const ContactDetailsCard = ({
               }
               variant="outlined"
             />
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
   );

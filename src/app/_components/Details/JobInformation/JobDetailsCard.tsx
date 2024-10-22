@@ -20,21 +20,14 @@ import Grid2 from "@mui/material/Grid2";
 import DateSelectField from "../../DateSelectedField";
 import { JobDetailsCardLabels } from "@/constants/labels.enums";
 import { insuranceCompanies } from "@/constants/constant";
+import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
 
 interface JobDetailsCardProps {
   jobDetails: {
     position: string;
-    promotionDate: {
-      month: string;
-      day: number;
-      year: number;
-    };
+    promotionDate: string;
     personalCode: string;
-    companyDate: {
-      month: string;
-      day: number;
-      year: number;
-    };
+    companyDate: string;
     appointed: string;
     eo: boolean;
   };
@@ -42,13 +35,24 @@ interface JobDetailsCardProps {
 }
 
 const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
-  const handleDateChange = (
-    fieldType: keyof typeof jobDetails,
-    updatedDate: Partial<{ month: string; day: number; year: number }>
-  ) => {
+  const {
+    month: promoMonth,
+    day: promoDay,
+    year: promoYear,
+  } = splitDateString(formatDateToString(jobDetails.promotionDate));
+
+  const {
+    month: companyMonth,
+    day: companyDay,
+    year: companyYear,
+  } = splitDateString(formatDateToString(jobDetails.companyDate));
+
+  const handleDateChange = (newDate: string) => {
+    console.log("new date JobDetailsCard -   ", newDate);
+
     setJobDetails((prevDetails: any) => ({
       ...prevDetails,
-      [fieldType]: { ...prevDetails[fieldType], ...updatedDate },
+      companyDate: newDate,
     }));
   };
 
@@ -79,22 +83,12 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
             <Grid2 size={12} sx={{ marginBottom: "22px" }}>
               <DateSelectField
                 label={JobDetailsCardLabels.promotionDateField}
-                selectedMonth={jobDetails.promotionDate.month}
-                selectedDay={jobDetails.promotionDate.day}
-                selectedYear={jobDetails.promotionDate.year}
-                onMonthChange={(e) =>
-                  handleDateChange("promotionDate", { month: e.target.value })
-                }
-                onDayChange={(e) =>
-                  handleDateChange("promotionDate", {
-                    day: Number(e.target.value),
-                  })
-                }
-                onYearChange={(e) =>
-                  handleDateChange("promotionDate", {
-                    year: Number(e.target.value),
-                  })
-                }
+                selectedMonth={Number(promoMonth)}
+                selectedDay={Number(promoDay)}
+                selectedYear={Number(promoYear)}
+                onDateChange={(e) => {
+                  handleDateChange(e);
+                }}
               />
             </Grid2>
 
@@ -113,22 +107,12 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
             <Grid2 size={12} sx={{ marginBottom: "22px" }}>
               <DateSelectField
                 label={JobDetailsCardLabels.sinceInCompany}
-                selectedMonth={jobDetails.companyDate.month}
-                selectedDay={jobDetails.companyDate.day}
-                selectedYear={jobDetails.companyDate.year}
-                onMonthChange={(e) =>
-                  handleDateChange("companyDate", { month: e.target.value })
-                }
-                onDayChange={(e) =>
-                  handleDateChange("companyDate", {
-                    day: Number(e.target.value),
-                  })
-                }
-                onYearChange={(e) =>
-                  handleDateChange("companyDate", {
-                    year: Number(e.target.value),
-                  })
-                }
+                selectedMonth={Number(companyMonth)}
+                selectedDay={Number(companyDay)}
+                selectedYear={Number(companyYear)}
+                onDateChange={(e) => {
+                  handleDateChange(e);
+                }}
               />
             </Grid2>
             <Grid2

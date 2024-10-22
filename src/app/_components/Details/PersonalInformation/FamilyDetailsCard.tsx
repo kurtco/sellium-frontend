@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import { Card, CardContent, TextField, Typography, Box } from "@mui/material";
-import Grid2 from "@mui/material/Grid2";
-import { FamilyDetails } from "@/interfaces/interfaces";
+import Grid from "@mui/material/Grid2";
+import { PersonalInformation } from "@/interfaces/interfaces";
 import { FamilyDetailsCardLabels } from "@/constants/labels.enums";
 
 interface FamilyDetailsCardProps {
-  familyDetails: FamilyDetails;
-  setFamilyDetails: (details: FamilyDetails) => void;
+  familyDetails: PersonalInformation;
+  setFamilyDetails: (details: Partial<PersonalInformation>) => void;
 }
 
 const FamilyDetailsCard = ({
@@ -30,7 +30,7 @@ const FamilyDetailsCard = ({
         </Typography>
       </Box>
       <CardContent>
-        <Grid2 size={12} sx={{ marginBottom: "10px" }}>
+        <Grid size={12} sx={{ marginBottom: "10px" }}>
           <Typography variant="body2" color="textSecondary" gutterBottom>
             {FamilyDetailsCardLabels.spouseName}
           </Typography>
@@ -38,11 +38,14 @@ const FamilyDetailsCard = ({
             fullWidth
             value={familyDetails.spouseName}
             onChange={(e) =>
-              setFamilyDetails({ ...familyDetails, spouseName: e.target.value })
+              setFamilyDetails({
+                ...familyDetails,
+                spouseName: e.target.value,
+              })
             }
             variant="outlined"
           />
-        </Grid2>
+        </Grid>
       </CardContent>
     </Card>
   );
