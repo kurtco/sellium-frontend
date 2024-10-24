@@ -12,18 +12,20 @@ import {
   Box,
   Select,
   MenuItem,
+  useTheme,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 
 interface ProductCardProps {
   personalDetails: PersonalInformation;
-  setPersonalDetails: (details: Partial<PersonalInformation>) => void;
+  setPersonalDetails: (details: PersonalInformation) => void;
 }
 
 const ProductCard = ({
   personalDetails,
   setPersonalDetails,
 }: ProductCardProps) => {
+  const theme = useTheme();
   return (
     <Card variant="outlined">
       <Box
@@ -71,6 +73,9 @@ const ProductCard = ({
                   productType: e.target.value,
                 })
               }
+              sx={{
+                color: theme.palette.text.primary,
+              }}
             >
               {productType.map((product) => (
                 <MenuItem key={product} value={product}>

@@ -189,7 +189,12 @@ export const insuranceCompanies = [
   "United States Life Ins (Corebridge New York)",
 ];
 
-export const productType = ["IUL", "Term", "Annuity", "Final expenses"];
+export const productType: string[] = [
+  "IUL",
+  "Term",
+  "Annuity",
+  "Final expenses",
+];
 
 export const snackBarCloseTime: number = 3000;
 

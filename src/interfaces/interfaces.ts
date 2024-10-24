@@ -142,6 +142,32 @@ export interface PersonalInformation {
   homeAddress?: string;
   businessAddress?: string;
   spouseName?: string;
+  position?: string;
+  promotionDate?: string;
+  personalCode?: string;
+  companyDate?: string;
+  appointed?: string;
+  eo?: boolean;
+}
+
+export interface PersonalInformation {
+  firstName: string;
+  lastName: string;
+  dateOfBirth?: string;
+  insured?: string;
+  productType?: string;
+  phoneCode?: string;
+  phoneNumber?: string;
+  email?: string;
+  homeAddress?: string;
+  businessAddress?: string;
+  spouseName?: string;
+  position?: string;
+  promotionDate?: string;
+  personalCode?: string;
+  companyDate?: string;
+  appointed?: string;
+  eo?: boolean;
 }
 
 export interface DetailsState {

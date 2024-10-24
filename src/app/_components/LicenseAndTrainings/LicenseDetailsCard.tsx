@@ -12,6 +12,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  useTheme,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import DateSelectField from "../DateSelectedField";
@@ -36,6 +37,7 @@ const LicenseDetailsCard = ({
   licenseDetails,
   setLicenseDetails,
 }: LicenseDetailsCardProps) => {
+  const theme = useTheme();
   const { month, day, year } = splitDateString(
     formatDateToString(licenseDetails.expires)
   );
@@ -77,6 +79,9 @@ const LicenseDetailsCard = ({
                     licenseType: e.target.value,
                   })
                 }
+                sx={{
+                  color: theme.palette.text.primary,
+                }}
                 variant="outlined"
               >
                 <MenuItem value="License 214">License 214</MenuItem>

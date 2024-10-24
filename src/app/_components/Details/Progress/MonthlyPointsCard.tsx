@@ -9,6 +9,7 @@ import {
   Select,
   Box,
   LinearProgress,
+  useTheme,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
@@ -37,7 +38,7 @@ const MonthlyPointsCard = ({
     );
     setMonthlyPoints(updatedPoints);
   };
-
+  const theme = useTheme();
   return (
     <Card variant="outlined">
       <CardContent>
@@ -55,7 +56,11 @@ const MonthlyPointsCard = ({
           <Select
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
-            sx={{ marginBottom: "22px", maxHeight: "40px" }}
+            sx={{
+              marginBottom: "22px",
+              maxHeight: "40px",
+              color: theme.palette.text.primary,
+            }}
           >
             <MenuItem value={2024}>2024</MenuItem>
             <MenuItem value={2023}>2023</MenuItem>

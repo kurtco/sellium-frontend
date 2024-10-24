@@ -6,6 +6,7 @@ import {
   MenuItem,
   FormControl,
   SelectChangeEvent,
+  useTheme,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import { monthsList } from "@/constants/constant";
@@ -26,6 +27,7 @@ const DateSelectField = ({
   selectedYear,
   onDateChange,
 }: DateSelectFieldProps) => {
+  const theme = useTheme();
   const [localMonth, setLocalMonth] = useState<number | null>(
     selectedMonth ?? null
   );
@@ -97,7 +99,13 @@ const DateSelectField = ({
         {/* Month Select */}
         <Grid2 size={{ xs: 12, sm: 4 }}>
           <FormControl fullWidth>
-            <Select value={displayedMonth || ""} onChange={handleMonthChange}>
+            <Select
+              value={displayedMonth || ""}
+              onChange={handleMonthChange}
+              sx={{
+                color: theme.palette.text.primary,
+              }}
+            >
               {monthsList.map((month) => (
                 <MenuItem key={month} value={month}>
                   {month}
@@ -114,6 +122,9 @@ const DateSelectField = ({
               value={localDay ? localDay.toString() : ""}
               onChange={handleDayChange}
               fullWidth
+              sx={{
+                color: theme.palette.text.primary,
+              }}
             >
               {daysInMonth?.map((day) => (
                 <MenuItem key={day} value={day.toString()}>

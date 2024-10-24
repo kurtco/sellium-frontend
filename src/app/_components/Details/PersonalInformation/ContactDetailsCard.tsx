@@ -9,6 +9,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  useTheme,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { PersonalInformation } from "@/interfaces/interfaces";
@@ -24,6 +25,7 @@ const ContactDetailsCard = ({
   contactDetails,
   setContactDetails,
 }: ContactDetailsCardProps) => {
+  const theme = useTheme();
   return (
     <Card variant="outlined" sx={{ marginBottom: "22px" }}>
       <Box
@@ -54,6 +56,9 @@ const ContactDetailsCard = ({
                     phoneCode: e.target.value,
                   })
                 }
+                sx={{
+                  color: theme.palette.text.primary,
+                }}
                 renderValue={(value) => `${value}`}
               >
                 {internationalPhoneCodes.map((code) => (

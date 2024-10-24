@@ -15,26 +15,22 @@ import {
   RadioGroup,
   Radio,
   FormControlLabel,
+  useTheme,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import DateSelectField from "../../DateSelectedField";
 import { JobDetailsCardLabels } from "@/constants/labels.enums";
 import { insuranceCompanies } from "@/constants/constant";
 import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
+import { PersonalInformation } from "@/interfaces/interfaces";
 
 interface JobDetailsCardProps {
-  jobDetails: {
-    position: string;
-    promotionDate: string;
-    personalCode: string;
-    companyDate: string;
-    appointed: string;
-    eo: boolean;
-  };
+  jobDetails: PersonalInformation;
   setJobDetails: (details: any) => void;
 }
 
 const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
+  const theme = useTheme();
   const {
     month: promoMonth,
     day: promoDay,
@@ -48,8 +44,6 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
   } = splitDateString(formatDateToString(jobDetails.companyDate));
 
   const handleDateChange = (newDate: string) => {
-    console.log("new date JobDetailsCard -   ", newDate);
-
     setJobDetails((prevDetails: any) => ({
       ...prevDetails,
       companyDate: newDate,
@@ -154,6 +148,9 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
                     setJobDetails({ ...jobDetails, appointed: e.target.value })
                   }
                   label={JobDetailsCardLabels.appointedField}
+                  sx={{
+                    color: theme.palette.text.primary,
+                  }}
                 >
                   {insuranceCompanies.map((company) => (
                     <MenuItem key={company} value={company}>

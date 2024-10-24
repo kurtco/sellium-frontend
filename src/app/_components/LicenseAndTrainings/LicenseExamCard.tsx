@@ -12,6 +12,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  useTheme,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import DateSelectField from "../DateSelectedField";
@@ -34,6 +35,7 @@ const LicenseExamCard = ({
   licenseExam,
   setLicenseExam,
 }: LicenseExamCardProps) => {
+  const theme = useTheme();
   const { month, day, year } = splitDateString(
     formatDateToString(licenseExam.presented)
   );
@@ -75,6 +77,9 @@ const LicenseExamCard = ({
                     state: e.target.value,
                   })
                 }
+                sx={{
+                  color: theme.palette.text.primary,
+                }}
               >
                 {US_STATES.map((state) => (
                   <MenuItem key={state} value={state}>
