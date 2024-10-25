@@ -36,7 +36,7 @@ export const savePersonalInformation = createAsyncThunk<
   "details/savePersonalInformation",
   async (personalInfo: PersonalInformation, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/personal-information", {
+      const response = await fetch("/api/users/details/jobInformation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(personalInfo),
@@ -44,7 +44,7 @@ export const savePersonalInformation = createAsyncThunk<
 
       if (!response.ok) {
         const errorData = await response.json();
-        return rejectWithValue(errorData); // Devolvemos el error personalizado
+        return rejectWithValue(errorData);
       }
 
       return (await response.json()) as PersonalInformation;

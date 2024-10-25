@@ -298,6 +298,7 @@ export const detailsDummyData: DetailsState = {
     eo: true,
   },
   personalInformation: {
+    userCode: "A0456",
     firstName: "John",
     lastName: "Doe",
     dateOfBirth: "12-01-1986",

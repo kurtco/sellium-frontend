@@ -6,6 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import { ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 import MoonIcon from "./MoonIcon";
+import Link from "next/link";
 
 export default function Header() {
   const theme = useTheme();
@@ -36,7 +37,11 @@ export default function Header() {
           paddingTop: "16px",
         }}
       >
-        <HeaderLogo />
+        <Link href="/" passHref>
+          <Box sx={{ cursor: "pointer" }}>
+            <HeaderLogo />
+          </Box>
+        </Link>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Avatar
             alt="Light Mode"

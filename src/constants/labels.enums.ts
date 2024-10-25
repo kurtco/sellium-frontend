@@ -32,6 +32,8 @@ export enum LoadingSpinnerLabels {
 export enum SnackBarLabels {
   message = "Agent added successfully",
   error = "Couldn't add the agent. Try again.",
+  personalInformationSuccess = "Agent personal information updated successfully",
+  personalInformationError = "Couldn't Update the agent personal information . Try again.",
 }
 
 export enum DuplicateUserMessageLabels {
@@ -209,4 +211,8 @@ export enum MonthlyPointsCardLabels {
   title = "Monthly Points",
   sales = "Direct and indirect sales",
   upgradeToAssociated = "to Upgrade to Associate",
+}
+
+export enum ValidationText {
+  email = "Please add a valid email",
 }

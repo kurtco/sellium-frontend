@@ -22,7 +22,6 @@ const PersonalDetailsCard = ({
   );
 
   const handleDateChange = (newDate: string) => {
-    console.log("new date PersonalDetailsCard -   ", newDate);
     setPersonalDetails({
       dateOfBirth: newDate,
     });

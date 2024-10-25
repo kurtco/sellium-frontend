@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -15,6 +15,7 @@ import Grid from "@mui/material/Grid2";
 import { PersonalInformation } from "@/interfaces/interfaces";
 import { ContactDetalilsCardLabels } from "@/constants/labels.enums";
 import { internationalPhoneCodes } from "@/constants/constant";
+import { validateEmail } from "@/utils/commonFunctions";
 
 interface ContactDetailsCardProps {
   contactDetails: PersonalInformation;
@@ -26,6 +27,8 @@ const ContactDetailsCard = ({
   setContactDetails,
 }: ContactDetailsCardProps) => {
   const theme = useTheme();
+  const [emailError, setEmailError] = useState("");
+
   return (
     <Card variant="outlined" sx={{ marginBottom: "22px" }}>
       <Box
@@ -90,10 +93,14 @@ const ContactDetailsCard = ({
             <TextField
               fullWidth
               value={contactDetails.email}
-              onChange={(e) =>
-                setContactDetails({ ...contactDetails, email: e.target.value })
-              }
+              onChange={(e) => {
+                const value = e.target.value;
+                setContactDetails({ ...contactDetails, email: value });
+                setEmailError(validateEmail(value));
+              }}
               variant="outlined"
+              error={!!emailError}
+              helperText={emailError}
             />
           </Grid>
           <Grid size={12} sx={{ marginBottom: "22px" }}>

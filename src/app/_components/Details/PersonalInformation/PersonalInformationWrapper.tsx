@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { Box, Button } from "@mui/material";
 import PersonalDetailsCard from "./PersonalDetailsCard";
@@ -15,21 +15,18 @@ import {
   setShowSuccessSnackbar,
 } from "../../../../../store/details/PersonalInformationSlice";
 import { DetailsState } from "@/interfaces/interfaces";
-import { PersonalInformationWrapperLabels } from "@/constants/labels.enums";
+import {
+  PersonalInformationWrapperLabels,
+  SnackBarLabels,
+} from "@/constants/labels.enums";
 import { detailsDummyData } from "@/constants/constant";
+import { validateEmail } from "@/utils/commonFunctions";
+import SnackbarMessage from "../../SnackbarMessage";
 
 const PersonalInformationWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
-
-  // Usar useSelector para obtener el estado de Redux
-  const loading = useSelector(
-    (state: RootState) => state.personalInformation.loading
-  );
-  const showSuccessSnackbar = useSelector(
-    (state: RootState) => state.personalInformation.showSuccessSnackbar
-  );
-  const showErrorAlert = useSelector(
-    (state: RootState) => state.personalInformation.showErrorAlert
+  const { showSuccessSnackbar, error, showErrorAlert, loading } = useSelector(
+    (state: RootState) => state.personalInformation
   );
 
   // Estado local para manejar los datos del formulario
@@ -37,31 +34,33 @@ const PersonalInformationWrapper = () => {
     useState<DetailsState>(detailsDummyData);
 
   const handleSubmit = async () => {
-    try {
-      // Hacer la solicitud al API route de Next.js;
-      const response = await fetch("/api/users/details/jobInformation", {
-        method: "POST",
-        body: JSON.stringify(personalInformation.personalInformation),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Error al guardar la información: ${response.statusText}`
-        );
-      }
-
-      const responseData = await response.json();
-      console.log("Datos guardados con éxito:", responseData);
-
-      // Aquí podrías mostrar una notificación de éxito o hacer algo más con la respuesta.
-    } catch (error) {
-      console.error("Error al guardar la información:", error);
-      // Aquí podrías mostrar una notificación de error.
-    }
+    dispatch(savePersonalInformation(personalInformation.personalInformation));
   };
+
+  const handleCloseSnackbar = useCallback(() => {
+    dispatch(setShowSuccessSnackbar(false));
+    dispatch(setShowErrorAlert(false));
+  }, [dispatch]);
 
   return (
     <>
+      {showSuccessSnackbar && !loading && !showErrorAlert && (
+        <SnackbarMessage
+          message={SnackBarLabels.personalInformationSuccess}
+          open={showSuccessSnackbar}
+          handleClose={handleCloseSnackbar}
+          error={false}
+        />
+      )}
+
+      {!showSuccessSnackbar && !loading && showErrorAlert && (
+        <SnackbarMessage
+          message={error.message}
+          open={showSuccessSnackbar}
+          handleClose={handleCloseSnackbar}
+          error={true}
+        />
+      )}
       <Grid
         container
         spacing={2}
@@ -75,21 +74,26 @@ const PersonalInformationWrapper = () => {
         <Grid>
           <PersonalDetailsCard
             personalDetails={personalInformation.personalInformation}
-            setPersonalDetails={(data) =>
-              setPersonalInformation({ ...personalInformation, ...data })
-            }
+            setPersonalDetails={(data) => {
+              console.log("<PersonalDetailsCard data", data);
+              setPersonalInformation((prevState) => ({
+                ...prevState,
+                personalInformation: {
+                  ...prevState.personalInformation,
+                  ...data,
+                },
+              }));
+            }}
           />
           <ProductCard
             personalDetails={{ ...personalInformation.personalInformation }}
             setPersonalDetails={(data) => {
-              console.log("<ProductCard data", data);
-
-              // Aquí actualizas solo la propiedad anidada `personalInformation.personalInformation`
+              // console.log("<ProductCard data", data);
               setPersonalInformation((prevState) => ({
                 ...prevState,
                 personalInformation: {
-                  ...prevState.personalInformation, // Copiamos todo el contenido actual de `personalInformation`
-                  ...data, // Actualizamos solo las propiedades que han cambiado
+                  ...prevState.personalInformation,
+                  ...data,
                 },
               }));
             }}
@@ -98,15 +102,29 @@ const PersonalInformationWrapper = () => {
         <Grid>
           <ContactDetailsCard
             contactDetails={personalInformation.personalInformation}
-            setContactDetails={(data) =>
-              setPersonalInformation({ ...personalInformation, ...data })
-            }
+            setContactDetails={(data) => {
+              // console.log("<ContactDetailsCard data", data);
+              setPersonalInformation((prevState) => ({
+                ...prevState,
+                personalInformation: {
+                  ...prevState.personalInformation,
+                  ...data,
+                },
+              }));
+            }}
           />
           <FamilyDetailsCard
             familyDetails={personalInformation.personalInformation}
-            setFamilyDetails={(data) =>
-              setPersonalInformation({ ...personalInformation, ...data })
-            }
+            setFamilyDetails={(data) => {
+              // console.log("<FamilyDetailsCard data", data);
+              setPersonalInformation((prevState) => ({
+                ...prevState,
+                personalInformation: {
+                  ...prevState.personalInformation,
+                  ...data,
+                },
+              }));
+            }}
           />
         </Grid>
       </Grid>
@@ -119,7 +137,12 @@ const PersonalInformationWrapper = () => {
           variant="contained"
           color="primary"
           onClick={handleSubmit}
-          disabled={loading}
+          disabled={
+            loading ||
+            !!validateEmail(
+              personalInformation?.personalInformation?.email || ""
+            )
+          }
         >
           {PersonalInformationWrapperLabels.button}
         </Button>

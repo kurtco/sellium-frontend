@@ -116,7 +116,7 @@ const imageSlice = createSlice({
   name: "image",
   initialState,
   reducers: {
-    setshowSuccessSnackbar(state, action: PayloadAction<boolean>) {
+    setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
       state.showSuccessSnackbar = action.payload;
     },
     setShowErrorAlert(state, action: PayloadAction<boolean>) {
@@ -204,6 +204,6 @@ const imageSlice = createSlice({
   },
 });
 
-export const { setshowSuccessSnackbar, resetImageState, setShowErrorAlert } =
+export const { setShowSuccessSnackbar, resetImageState, setShowErrorAlert } =
   imageSlice.actions;
 export default imageSlice.reducer;

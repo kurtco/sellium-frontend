@@ -152,6 +152,7 @@ export interface PersonalInformation {
 }
 
 export interface PersonalInformation {
+  userCode: string;
   firstName: string;
   lastName: string;
   dateOfBirth?: string;

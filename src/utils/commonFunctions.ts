@@ -1,4 +1,5 @@
 import { monthsList } from "@/constants/constant";
+import { ValidationText } from "@/constants/labels.enums";
 import { Recruit } from "@/interfaces/interfaces";
 
 export const calculateCompletion = (obj: Recruit): number => {
@@ -50,4 +51,10 @@ export const getMonthName = (date: Date | null | undefined): string => {
   }
   const monthIndex = date.getMonth(); // Obtiene el índice del mes (0-11)
   return monthsList[monthIndex]; // Devuelve el nombre del mes
+};
+
+export const validateEmail = (email: string) => {
+  if (email === "") return "";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) ? "" : ValidationText.email;
 };
