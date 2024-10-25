@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import { Box, Button } from "@mui/material";
 import PersonalDetailsCard from "./PersonalDetailsCard";
@@ -14,26 +14,35 @@ import {
   setShowErrorAlert,
   setShowSuccessSnackbar,
 } from "../../../../../store/details/PersonalInformationSlice";
-import { DetailsState } from "@/interfaces/interfaces";
+import { PersonalInformation } from "@/interfaces/interfaces";
 import {
   PersonalInformationWrapperLabels,
   SnackBarLabels,
 } from "@/constants/labels.enums";
-import { detailsDummyData } from "@/constants/constant";
 import { validateEmail } from "@/utils/commonFunctions";
 import SnackbarMessage from "../../SnackbarMessage";
 
 const PersonalInformationWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { showSuccessSnackbar, error, showErrorAlert, loading } = useSelector(
-    (state: RootState) => state.personalInformation
-  );
+  const {
+    showSuccessSnackbar,
+    error,
+    showErrorAlert,
+    loading,
+    personalInformation: initialData,
+  } = useSelector((state: RootState) => state.personalInformation);
 
+  // Usar el initialData solo para inicializar el estado
   const [personalInformation, setPersonalInformation] =
-    useState<DetailsState>(detailsDummyData);
+    useState<PersonalInformation>(initialData);
+
+  // Sincronizar el estado cuando el initialData cambie
+  useEffect(() => {
+    setPersonalInformation(initialData);
+  }, [initialData]);
 
   const handleSubmit = async () => {
-    dispatch(savePersonalInformation(personalInformation.personalInformation));
+    dispatch(savePersonalInformation(personalInformation));
   };
 
   const handleCloseSnackbar = useCallback(() => {
@@ -60,6 +69,7 @@ const PersonalInformationWrapper = () => {
           error={true}
         />
       )}
+
       <Grid
         container
         spacing={2}
@@ -72,56 +82,44 @@ const PersonalInformationWrapper = () => {
       >
         <Grid>
           <PersonalDetailsCard
-            personalDetails={personalInformation.personalInformation}
+            personalDetails={personalInformation}
             setPersonalDetails={(data) => {
               console.log("<PersonalDetailsCard data", data);
               setPersonalInformation((prevState) => ({
                 ...prevState,
-                personalInformation: {
-                  ...prevState.personalInformation,
-                  ...data,
-                },
+                ...data,
               }));
             }}
           />
           <ProductCard
-            personalDetails={{ ...personalInformation.personalInformation }}
+            personalDetails={personalInformation}
             setPersonalDetails={(data) => {
-              // console.log("<ProductCard data", data);
+              console.log("<ProductCard data", data);
               setPersonalInformation((prevState) => ({
                 ...prevState,
-                personalInformation: {
-                  ...prevState.personalInformation,
-                  ...data,
-                },
+                ...data,
               }));
             }}
           />
         </Grid>
         <Grid>
           <ContactDetailsCard
-            contactDetails={personalInformation.personalInformation}
+            contactDetails={personalInformation}
             setContactDetails={(data) => {
-              // console.log("<ContactDetailsCard data", data);
+              console.log("<ContactDetailsCard data", data);
               setPersonalInformation((prevState) => ({
                 ...prevState,
-                personalInformation: {
-                  ...prevState.personalInformation,
-                  ...data,
-                },
+                ...data,
               }));
             }}
           />
           <FamilyDetailsCard
-            familyDetails={personalInformation.personalInformation}
+            familyDetails={personalInformation}
             setFamilyDetails={(data) => {
-              // console.log("<FamilyDetailsCard data", data);
+              console.log("<FamilyDetailsCard data", data);
               setPersonalInformation((prevState) => ({
                 ...prevState,
-                personalInformation: {
-                  ...prevState.personalInformation,
-                  ...data,
-                },
+                ...data,
               }));
             }}
           />
@@ -137,10 +135,7 @@ const PersonalInformationWrapper = () => {
           color="primary"
           onClick={handleSubmit}
           disabled={
-            loading ||
-            !!validateEmail(
-              personalInformation?.personalInformation?.email || ""
-            )
+            loading || !!validateEmail(personalInformation?.email || "")
           }
         >
           {PersonalInformationWrapperLabels.button}

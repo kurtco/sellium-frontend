@@ -24,7 +24,7 @@ export const getDaysInMonth = (month: number, year: number): number[] => {
   return daysArray;
 };
 
-// Función para convertir Date a string en formato "MM-DD-YYYY"
+// Función para convertir Date a string en formato "MM/DD/YYYY"
 export const formatDateToString = (
   date: Date | string | null | undefined
 ): string | undefined => {
@@ -33,7 +33,7 @@ export const formatDateToString = (
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
     const year = date.getFullYear();
-    return `${month}-${day}-${year}`;
+    return `${month}/${day}/${year}`; // Ajustado a formato MM/DD/YYYY
   }
   return date;
 };
@@ -41,7 +41,7 @@ export const formatDateToString = (
 // Función para hacer el split del string de fecha y convertirlo en un objeto
 export const splitDateString = (dateString: string | undefined) => {
   if (!dateString) return { month: "", day: "", year: "" };
-  const [month, day, year] = dateString.split("-");
+  const [month, day, year] = dateString.split("/"); // Cambiado el separador a "/"
   return { month, day: Number(day), year: Number(year) };
 };
 

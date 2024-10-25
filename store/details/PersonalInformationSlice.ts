@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { ErrorResponse, PersonalInformation } from "@/interfaces/interfaces";
 import { defaultUpdateUserError } from "@/constants/config.enum";
+import { fetchUserDetails } from "./UserDetailsSlice"; // Importamos la acción
 
-// Initila State
+// Estado inicial
 const initialState: {
   personalInformation: PersonalInformation;
   loading: boolean;
@@ -30,10 +31,11 @@ const initialState: {
   showErrorAlert: false,
 };
 
+// Acción para guardar la información personal
 export const savePersonalInformation = createAsyncThunk<
-  PersonalInformation, // Tipo de datos cuando la promesa se resuelve correctamente
-  PersonalInformation, // Tipo del argumento (archivo) que se pasa a la función
-  { rejectValue: ErrorResponse } // Aquí definimos el tipo que devolveremos en caso de error
+  PersonalInformation,
+  PersonalInformation,
+  { rejectValue: ErrorResponse }
 >(
   "details/savePersonalInformation",
   async (personalInfo: PersonalInformation, { rejectWithValue }) => {
@@ -68,15 +70,12 @@ const detailsSlice = createSlice({
   name: "details",
   initialState,
   reducers: {
-    // Mostrar the success snackbar
     setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
       state.showSuccessSnackbar = action.payload;
     },
-    // show the alert error message
     setShowErrorAlert(state, action: PayloadAction<boolean>) {
       state.showErrorAlert = action.payload;
     },
-    // Reset the state of personalInformation
     resetPersonalInformationState(state) {
       return {
         ...state,
@@ -90,13 +89,12 @@ const detailsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Case pending when the api request is pending or waiting
+      // Guardar información personal
       .addCase(savePersonalInformation.pending, (state) => {
         state.loading = true;
         state.error = { message: "", error: "" };
         state.showSuccessSnackbar = false;
       })
-      // Case fulfilled when the data was saved successfully
       .addCase(
         savePersonalInformation.fulfilled,
         (state, action: PayloadAction<PersonalInformation>) => {
@@ -105,7 +103,6 @@ const detailsSlice = createSlice({
           state.showSuccessSnackbar = true;
         }
       )
-      // Case fulfilled when there was a error
       .addCase(
         savePersonalInformation.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
@@ -119,10 +116,18 @@ const detailsSlice = createSlice({
           state.showSuccessSnackbar = false;
           state.showErrorAlert = true;
         }
-      );
+      )
+      // Sincronizing data  from the UserDetailsTabs reducer  to set here the particular data for personalin formation
+      .addCase(fetchUserDetails.fulfilled, (state, action) => {
+        state.personalInformation = {
+          ...state.personalInformation, // Mantén cualquier estado que ya haya sido modificado
+          ...action.payload.personalInformation, // Actualiza con los datos traídos del servidor
+        };
+      });
   },
 });
 
+// Exportamos las acciones y el reducer
 export const {
   setShowSuccessSnackbar,
   setShowErrorAlert,
