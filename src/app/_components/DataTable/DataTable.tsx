@@ -46,7 +46,7 @@ import DataTableHeaderActions from "./DataTableHeaderActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import SnackbarMessage from "../SnackbarMessage";
-import { setshowSuccessSnackbar } from "../../../../store/imageSlice";
+import { setShowSuccessSnackbar } from "../../../../store/imageSlice";
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -70,7 +70,7 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   );
 
   const handleCloseSnackbar = useCallback(() => {
-    dispatch(setshowSuccessSnackbar(false));
+    dispatch(setShowSuccessSnackbar(false));
   }, [dispatch]);
 
   useEffect(() => {
