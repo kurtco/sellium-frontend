@@ -4,11 +4,10 @@ import { PersonalInformation } from "@/interfaces/interfaces";
 export async function POST(req: Request) {
   try {
     const data: PersonalInformation = await req.json();
-    console.log("API POST - Saving personal information", data);
 
     // Enviamos la solicitud al backend de NestJS
     const response = await fetch(
-      `${process.env.API_HOST}/personal-information/save`,
+      `${process.env.API_HOST}personal-information/save`,
       {
         method: "POST",
         headers: {

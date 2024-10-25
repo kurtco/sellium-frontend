@@ -1,3 +1,4 @@
+import { JobInformation } from "./interfaces";
 export interface DataFromImage {
   recruiterName: string;
   leaderName: string;
@@ -162,6 +163,9 @@ export interface PersonalInformation {
   homeAddress?: string;
   businessAddress?: string;
   spouseName?: string;
+}
+
+export interface JobInformation {
   position?: string;
   promotionDate?: string;
   personalCode?: string;
@@ -172,5 +176,6 @@ export interface PersonalInformation {
 
 export interface DetailsState {
   personalInformation: PersonalInformation;
+  jobInformation: JobInformation;
   // Future: other objects like JobInformation, LicenseAndTrainings, Progress
 }

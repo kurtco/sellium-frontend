@@ -1,4 +1,5 @@
 import { ThemeMode } from "@/constants/config.enum";
+import { DetailsState } from "@/interfaces/interfaces";
 
 export const defaultConfig = {
   container: false,
@@ -286,3 +287,27 @@ export const US_STATES = [
   "Wisconsin",
   "Wyoming",
 ];
+
+export const detailsDummyData: DetailsState = {
+  jobInformation: {
+    position: "Manager",
+    promotionDate: "2022-05-01",
+    personalCode: "JD123",
+    companyDate: "2020-03-15",
+    appointed: "Yes",
+    eo: true,
+  },
+  personalInformation: {
+    firstName: "John",
+    lastName: "Doe",
+    dateOfBirth: "12-01-1986",
+    insured: "Yes",
+    productType: "Term",
+    phoneCode: "+1",
+    phoneNumber: "1234567890",
+    email: "john.doe@example.com",
+    homeAddress: "123 Main St, Springfield, USA",
+    businessAddress: "456 Corporate Blvd, Springfield, USA",
+    spouseName: "Jane Doe",
+  },
+};

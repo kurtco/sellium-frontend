@@ -6,29 +6,10 @@ import JobDependenciesCard from "./JobDependenciesCard";
 import { Box, Button } from "@mui/material";
 import { JobInformationWrapperLabels } from "@/constants/labels.enums";
 import { DetailsState } from "@/interfaces/interfaces";
+import { detailsDummyData } from "@/constants/constant";
 
 const JobInformationWrapper = () => {
-  const [jobDetails, setJobDetails] = useState<DetailsState>({
-    personalInformation: {
-      firstName: "John",
-      lastName: "Doe",
-      dateOfBirth: "12-01-1986",
-      insured: "Yes",
-      productType: "Health Insurance",
-      phoneCode: "+1",
-      phoneNumber: "1234567890",
-      email: "john.doe@example.com",
-      homeAddress: "123 Main St, Springfield, USA",
-      businessAddress: "456 Corporate Blvd, Springfield, USA",
-      spouseName: "Jane Doe",
-      position: "Manager",
-      promotionDate: "2022-05-01",
-      personalCode: "JD123",
-      companyDate: "2020-03-15",
-      appointed: "Yes",
-      eo: true,
-    },
-  });
+  const [jobDetails, setJobDetails] = useState<DetailsState>(detailsDummyData);
 
   const [jobDependencies, setJobDependencies] = useState({
     recruiter: "Francisco Velázquez Rojas",
@@ -75,7 +56,7 @@ const JobInformationWrapper = () => {
       >
         <Grid>
           <JobDetailsCard
-            jobDetails={jobDetails.personalInformation}
+            jobDetails={jobDetails.jobInformation}
             setJobDetails={setJobDetails}
           />
         </Grid>

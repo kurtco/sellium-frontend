@@ -22,10 +22,10 @@ import DateSelectField from "../../DateSelectedField";
 import { JobDetailsCardLabels } from "@/constants/labels.enums";
 import { insuranceCompanies } from "@/constants/constant";
 import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
-import { PersonalInformation } from "@/interfaces/interfaces";
+import { JobInformation } from "@/interfaces/interfaces";
 
 interface JobDetailsCardProps {
-  jobDetails: PersonalInformation;
+  jobDetails: JobInformation;
   setJobDetails: (details: any) => void;
 }
 

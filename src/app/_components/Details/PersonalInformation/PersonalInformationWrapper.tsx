@@ -16,6 +16,7 @@ import {
 } from "../../../../../store/details/PersonalInformationSlice";
 import { DetailsState } from "@/interfaces/interfaces";
 import { PersonalInformationWrapperLabels } from "@/constants/labels.enums";
+import { detailsDummyData } from "@/constants/constant";
 
 const PersonalInformationWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,32 +33,13 @@ const PersonalInformationWrapper = () => {
   );
 
   // Estado local para manejar los datos del formulario
-  const [personalInformation, setPersonalInformation] = useState<DetailsState>({
-    personalInformation: {
-      firstName: "John",
-      lastName: "Doe",
-      dateOfBirth: "12-01-1986",
-      insured: "Yes",
-      productType: "Term",
-      phoneCode: "+1",
-      phoneNumber: "1234567890",
-      email: "john.doe@example.com",
-      homeAddress: "123 Main St, Springfield, USA",
-      businessAddress: "456 Corporate Blvd, Springfield, USA",
-      spouseName: "Jane Doe",
-      position: "Manager",
-      promotionDate: "2022-05-01",
-      personalCode: "JD123",
-      companyDate: "2020-03-15",
-      appointed: "Yes",
-      eo: true,
-    },
-  });
+  const [personalInformation, setPersonalInformation] =
+    useState<DetailsState>(detailsDummyData);
 
   const handleSubmit = async () => {
     try {
-      // Hacer la solicitud al API route de Next.js
-      const response = await fetch("/api/save-personal-information", {
+      // Hacer la solicitud al API route de Next.js;
+      const response = await fetch("/api/users/details/jobInformation", {
         method: "POST",
         body: JSON.stringify(personalInformation.personalInformation),
       });
