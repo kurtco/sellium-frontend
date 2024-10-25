@@ -311,4 +311,6 @@ export const detailsDummyData: DetailsState = {
     businessAddress: "456 Corporate Blvd, Springfield, USA",
     spouseName: "Jane Doe",
   },
+  progress: {},
+  licenseAndTrainings: {},
 };

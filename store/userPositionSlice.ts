@@ -25,7 +25,9 @@ export const updateUserPosition = createAsyncThunk<
       const updatedUser = await response.json();
       return updatedUser;
     } catch (error) {
+      const errorMessage = error as ErrorResponse;
       const errorContent: ErrorResponse = {
+        error: errorMessage.error || defaultUpdateUserError.error,
         message:
           error instanceof Error
             ? error.message

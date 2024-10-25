@@ -29,7 +29,6 @@ const PersonalInformationWrapper = () => {
     (state: RootState) => state.personalInformation
   );
 
-  // Estado local para manejar los datos del formulario
   const [personalInformation, setPersonalInformation] =
     useState<DetailsState>(detailsDummyData);
 

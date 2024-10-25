@@ -175,8 +175,17 @@ export interface JobInformation {
   eo?: boolean;
 }
 
+export interface LicenseAndTrainings {
+  test?: string; // ajustar cuando se tenga la estructura de datoa
+}
+
+export interface Progress {
+  test?: string; // ajustar cuando se tenga la estructura de datoa
+}
+
 export interface DetailsState {
   personalInformation: PersonalInformation;
   jobInformation: JobInformation;
-  // Future: other objects like JobInformation, LicenseAndTrainings, Progress
+  licenseAndTrainings: LicenseAndTrainings;
+  progress: Progress;
 }

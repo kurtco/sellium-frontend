@@ -6,24 +6,26 @@ import { defaultUpdateUserError } from "@/constants/config.enum";
 const initialState: {
   personalInformation: PersonalInformation;
   loading: boolean;
-  error: { message: string };
+  error: ErrorResponse;
   showSuccessSnackbar: boolean;
   showErrorAlert: boolean;
 } = {
   personalInformation: {
+    userCode: "",
     firstName: "",
     lastName: "",
-    dateOfBirth: null,
+    dateOfBirth: "",
     insured: "",
     productType: "",
-    phone: "",
+    phoneCode: "",
+    phoneNumber: "",
     email: "",
     homeAddress: "",
     businessAddress: "",
     spouseName: "",
   },
   loading: false,
-  error: { message: "" },
+  error: { message: "", error: "" },
   showSuccessSnackbar: false,
   showErrorAlert: false,
 };
@@ -79,7 +81,7 @@ const detailsSlice = createSlice({
       return {
         ...state,
         loading: false,
-        error: { message: "" },
+        error: { message: "", error: "" },
         showSuccessSnackbar: false,
         showErrorAlert: false,
         personalInformation: initialState.personalInformation,
@@ -91,7 +93,7 @@ const detailsSlice = createSlice({
       // Case pending when the api request is pending or waiting
       .addCase(savePersonalInformation.pending, (state) => {
         state.loading = true;
-        state.error = { message: "" };
+        state.error = { message: "", error: "" };
         state.showSuccessSnackbar = false;
       })
       // Case fulfilled when the data was saved successfully
@@ -109,6 +111,7 @@ const detailsSlice = createSlice({
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
           state.loading = false;
           state.error = {
+            error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message ||
               "Error al guardar la información personal",
@@ -120,7 +123,6 @@ const detailsSlice = createSlice({
   },
 });
 
-// Exportamos las acciones y el reducer
 export const {
   setShowSuccessSnackbar,
   setShowErrorAlert,
