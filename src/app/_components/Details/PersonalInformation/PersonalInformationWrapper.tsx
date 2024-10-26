@@ -16,11 +16,13 @@ import {
 } from "../../../../../store/details/PersonalInformationSlice";
 import { PersonalInformation } from "@/interfaces/interfaces";
 import {
+  LoadingSpinnerLabels,
   PersonalInformationWrapperLabels,
   SnackBarLabels,
 } from "@/constants/labels.enums";
 import { validateEmail } from "@/utils/commonFunctions";
 import SnackbarMessage from "../../SnackbarMessage";
+import LoadingSpinner from "../../LoadingSpinner";
 
 const PersonalInformationWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,6 +33,10 @@ const PersonalInformationWrapper = () => {
     loading,
     personalInformation: initialData,
   } = useSelector((state: RootState) => state.personalInformation);
+
+  const { loading: gettingDetailsloading } = useSelector(
+    (state: RootState) => state.UserDetailsTabs
+  );
 
   // Usar el initialData solo para inicializar el estado
   const [personalInformation, setPersonalInformation] =
@@ -69,78 +75,83 @@ const PersonalInformationWrapper = () => {
           error={true}
         />
       )}
-
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          padding: 2,
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          gap: "22px",
-        }}
-      >
-        <Grid>
-          <PersonalDetailsCard
-            personalDetails={personalInformation}
-            setPersonalDetails={(data) => {
-              console.log("<PersonalDetailsCard data", data);
-              setPersonalInformation((prevState) => ({
-                ...prevState,
-                ...data,
-              }));
+      {gettingDetailsloading ? (
+        <LoadingSpinner text={LoadingSpinnerLabels.details} />
+      ) : (
+        <>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              padding: 2,
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+              gap: "22px",
             }}
-          />
-          <ProductCard
-            personalDetails={personalInformation}
-            setPersonalDetails={(data) => {
-              console.log("<ProductCard data", data);
-              setPersonalInformation((prevState) => ({
-                ...prevState,
-                ...data,
-              }));
-            }}
-          />
-        </Grid>
-        <Grid>
-          <ContactDetailsCard
-            contactDetails={personalInformation}
-            setContactDetails={(data) => {
-              console.log("<ContactDetailsCard data", data);
-              setPersonalInformation((prevState) => ({
-                ...prevState,
-                ...data,
-              }));
-            }}
-          />
-          <FamilyDetailsCard
-            familyDetails={personalInformation}
-            setFamilyDetails={(data) => {
-              console.log("<FamilyDetailsCard data", data);
-              setPersonalInformation((prevState) => ({
-                ...prevState,
-                ...data,
-              }));
-            }}
-          />
-        </Grid>
-      </Grid>
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        sx={{ marginTop: 2, marginBottom: "20px" }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          disabled={
-            loading || !!validateEmail(personalInformation?.email || "")
-          }
-        >
-          {PersonalInformationWrapperLabels.button}
-        </Button>
-      </Box>
+          >
+            <Grid>
+              <PersonalDetailsCard
+                personalDetails={personalInformation}
+                setPersonalDetails={(data) => {
+                  console.log("<PersonalDetailsCard data", data);
+                  setPersonalInformation((prevState) => ({
+                    ...prevState,
+                    ...data,
+                  }));
+                }}
+              />
+              <ProductCard
+                personalDetails={personalInformation}
+                setPersonalDetails={(data) => {
+                  console.log("<ProductCard data", data);
+                  setPersonalInformation((prevState) => ({
+                    ...prevState,
+                    ...data,
+                  }));
+                }}
+              />
+            </Grid>
+            <Grid>
+              <ContactDetailsCard
+                contactDetails={personalInformation}
+                setContactDetails={(data) => {
+                  console.log("<ContactDetailsCard data", data);
+                  setPersonalInformation((prevState) => ({
+                    ...prevState,
+                    ...data,
+                  }));
+                }}
+              />
+              <FamilyDetailsCard
+                familyDetails={personalInformation}
+                setFamilyDetails={(data) => {
+                  console.log("<FamilyDetailsCard data", data);
+                  setPersonalInformation((prevState) => ({
+                    ...prevState,
+                    ...data,
+                  }));
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            sx={{ marginTop: 2, marginBottom: "20px" }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              disabled={
+                loading || !!validateEmail(personalInformation?.email || "")
+              }
+            >
+              {PersonalInformationWrapperLabels.button}
+            </Button>
+          </Box>
+        </>
+      )}
     </>
   );
 };
