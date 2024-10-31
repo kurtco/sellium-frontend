@@ -58,3 +58,25 @@ export const validateEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email) ? "" : ValidationText.email;
 };
+
+export const isFilled = <T>(value: T): boolean => {
+  return (
+    value !== null &&
+    value !== undefined &&
+    value !== "" &&
+    !(typeof value === "number" && isNaN(value))
+  );
+};
+
+export const calculateProfileCompletion = <T extends object>(
+  data: T | null
+): number => {
+  if (!data) {
+    return 0;
+  }
+  const totalFields = Object.keys(data).length;
+  const filledFields = Object.values(data).filter((value) =>
+    isFilled(value)
+  ).length;
+  return Math.round((filledFields / totalFields) * 100);
+};

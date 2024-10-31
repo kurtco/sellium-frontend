@@ -10,8 +10,6 @@ import {
 } from "@mui/material";
 import { AgentDetailsLabels } from "@/constants/labels.enums";
 import { useParams } from "next/navigation";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
 
 interface TabContent {
   label: string;
@@ -20,17 +18,14 @@ interface TabContent {
 
 interface DetailsTabsProps {
   tabs: TabContent[];
+  profileCompletion: number;
 }
 
-const DetailsTabs = ({ tabs }: DetailsTabsProps) => {
+const DetailsTabs = ({ tabs, profileCompletion }: DetailsTabsProps) => {
   const theme = useTheme();
 
   const params = useParams();
   const id = params?.id;
-
-  const { profileCompletion } = useSelector(
-    (state: RootState) => state.UserDetailsTabs.userDetails
-  );
 
   useEffect(() => {
     if (id) {

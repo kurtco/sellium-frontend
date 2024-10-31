@@ -49,15 +49,15 @@ const ProductCard = ({
           <RadioGroup
             row
             value={personalDetails.insured}
-            onChange={(e) =>
+            onChange={(e) => {
               setPersonalDetails({
                 ...personalDetails,
-                insured: e.target.value,
-              })
-            }
+                insured: Boolean(e.target.value),
+              });
+            }}
           >
-            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-            <FormControlLabel value="No" control={<Radio />} label="No" />
+            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+            <FormControlLabel value={false} control={<Radio />} label="No" />
           </RadioGroup>
         </FormControl>
         <Grid2 size={12} sx={{ marginBottom: "10px", marginTop: "22px" }}>

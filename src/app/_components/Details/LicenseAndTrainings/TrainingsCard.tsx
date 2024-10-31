@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Divider,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -12,30 +11,19 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import { TrainingsCardLabels } from "@/constants/labels.enums";
-
-interface Training {
-  orientation1: string;
-  orientation2: string;
-  orientation3: string;
-  orientation4: string;
-  bootCamp: string;
-}
+import { LicenseAndTrainings } from "@/interfaces/interfaces";
 
 interface TrainingsCardProps {
-  trainings: Training;
-  setTrainings: (trainings: Training) => void;
+  trainings: LicenseAndTrainings;
+  setTrainings: (details: Partial<LicenseAndTrainings>) => void;
 }
 
 const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
-  const handleRadioChange = (field: keyof Training, value: string) => {
-    setTrainings({ ...trainings, [field]: value });
-  };
-
   return (
     <Card variant="outlined">
       <Box
         sx={{
-          marginBottom: 2,
+          marginBottom: "22px",
           borderBottom: 1,
           borderColor: "divider",
           borderRadius: 1,
@@ -47,22 +35,24 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
         </Typography>
       </Box>
       <CardContent>
-        <Divider sx={{ marginBottom: "22px" }} />
-
         <Grid2 container spacing={2}>
           <Grid2 size={12}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {TrainingsCardLabels.orientation1}
             </Typography>
+
             <RadioGroup
               row
               value={trainings.orientation1}
               onChange={(e) =>
-                handleRadioChange("orientation1", e.target.value)
+                setTrainings({
+                  ...trainings,
+                  orientation1: Boolean(e.target.value),
+                })
               }
             >
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
+              <FormControlLabel value={true} control={<Radio />} label="Yes" />
+              <FormControlLabel value={false} control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
 
@@ -70,15 +60,19 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {TrainingsCardLabels.orientation2}
             </Typography>
+
             <RadioGroup
               row
               value={trainings.orientation2}
               onChange={(e) =>
-                handleRadioChange("orientation2", e.target.value)
+                setTrainings({
+                  ...trainings,
+                  orientation2: Boolean(e.target.value),
+                })
               }
             >
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
+              <FormControlLabel value={true} control={<Radio />} label="Yes" />
+              <FormControlLabel value={false} control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
 
@@ -86,15 +80,19 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {TrainingsCardLabels.orientation3}
             </Typography>
+
             <RadioGroup
               row
               value={trainings.orientation3}
               onChange={(e) =>
-                handleRadioChange("orientation3", e.target.value)
+                setTrainings({
+                  ...trainings,
+                  orientation3: Boolean(e.target.value),
+                })
               }
             >
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
+              <FormControlLabel value={true} control={<Radio />} label="Yes" />
+              <FormControlLabel value={false} control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
 
@@ -106,11 +104,14 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
               row
               value={trainings.orientation4}
               onChange={(e) =>
-                handleRadioChange("orientation4", e.target.value)
+                setTrainings({
+                  ...trainings,
+                  orientation4: Boolean(e.target.value),
+                })
               }
             >
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
+              <FormControlLabel value={true} control={<Radio />} label="Yes" />
+              <FormControlLabel value={false} control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
 
@@ -121,10 +122,15 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
             <RadioGroup
               row
               value={trainings.bootCamp}
-              onChange={(e) => handleRadioChange("bootCamp", e.target.value)}
+              onChange={(e) =>
+                setTrainings({
+                  ...trainings,
+                  bootCamp: Boolean(e.target.value),
+                })
+              }
             >
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
+              <FormControlLabel value={true} control={<Radio />} label="Yes" />
+              <FormControlLabel value={false} control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
         </Grid2>

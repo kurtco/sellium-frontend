@@ -153,18 +153,17 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
                 row
                 value={jobDetails.eo}
                 onChange={(e) => {
-                  const selection: boolean = e.target.value === "true";
-                  setJobDetails({ ...jobDetails, eo: selection });
+                  setJobDetails({ ...jobDetails, eo: Boolean(e.target.value) });
                 }}
                 style={{ marginBottom: "22px" }} // Espaciado entre el título y los radios
               >
                 <FormControlLabel
-                  value="true" // Cambiado a "true"
+                  value={true} // Cambiado a "true"
                   control={<Radio sx={{ borderRadius: "1px" }} />}
                   label="Yes"
                 />
                 <FormControlLabel
-                  value="false" // Cambiado a "false"
+                  value={false} // Cambiado a "false"
                   control={<Radio sx={{ borderRadius: "1px" }} />}
                   label="No"
                 />

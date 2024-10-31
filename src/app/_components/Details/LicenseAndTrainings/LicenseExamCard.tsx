@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Divider,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -15,20 +14,16 @@ import {
   useTheme,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
-import DateSelectField from "../DateSelectedField";
+
 import { US_STATES } from "@/constants/constant";
 import { LicenseExamCardLabels } from "@/constants/labels.enums";
 import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
-
-export interface LicenseExam {
-  state: string;
-  presented: string;
-  approved: boolean;
-}
+import { LicenseAndTrainings } from "@/interfaces/interfaces";
+import DateSelectField from "../../DateSelectedField";
 
 interface LicenseExamCardProps {
-  licenseExam: LicenseExam;
-  setLicenseExam: (exam: LicenseExam) => void;
+  licenseExam: LicenseAndTrainings;
+  setLicenseExam: (details: Partial<LicenseAndTrainings>) => void;
 }
 
 const LicenseExamCard = ({
@@ -40,26 +35,17 @@ const LicenseExamCard = ({
     formatDateToString(licenseExam.presented)
   );
 
-  const handleDateChange = (
-    fieldType: keyof LicenseExam,
-    updatedDate: string
-  ) => {
-    if (
-      typeof licenseExam[fieldType] === "object" &&
-      licenseExam[fieldType] !== null
-    ) {
-      setLicenseExam({
-        ...licenseExam,
-        [fieldType]: updatedDate,
-      });
-    }
+  const handleDateChange = (newDate: string) => {
+    setLicenseExam({
+      presented: newDate,
+    });
   };
 
   return (
     <Card variant="outlined">
       <Box
         sx={{
-          marginBottom: 2,
+          marginBottom: "22px",
           borderBottom: 1,
           borderColor: "divider",
           borderRadius: 1,
@@ -71,8 +57,6 @@ const LicenseExamCard = ({
         </Typography>
       </Box>
       <CardContent>
-        <Divider sx={{ marginBottom: "22px" }} />
-
         <Grid2 container spacing={2}>
           <Grid2 size={12} sx={{ marginBottom: "22px" }}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
@@ -118,7 +102,7 @@ const LicenseExamCard = ({
               selectedDay={Number(day)}
               selectedYear={Number(year)}
               onDateChange={(e) => {
-                handleDateChange("presented", e);
+                handleDateChange(e);
               }}
             />
           </Grid2>
@@ -139,16 +123,24 @@ const LicenseExamCard = ({
               </Typography>
               <RadioGroup
                 row
-                value={licenseExam.approved ? "Yes" : "No"}
+                value={licenseExam.approved}
                 onChange={(e) =>
                   setLicenseExam({
                     ...licenseExam,
-                    approved: e.target.value === "Yes",
+                    approved: Boolean(e.target.value),
                   })
                 }
               >
-                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="No" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="No"
+                />
               </RadioGroup>
             </FormControl>
           </Grid2>

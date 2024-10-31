@@ -27,7 +27,7 @@ const initialState: {
     personalCode: "",
     partOfCompanySince: "",
     appointed: "",
-    eo: false,
+    eo: null,
   },
   user: {
     id: 0,

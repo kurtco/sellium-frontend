@@ -1,29 +1,50 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { ErrorResponse, PersonalInformation } from "@/interfaces/interfaces";
-import { defaultUpdateUserError } from "@/constants/config.enum";
+import {
+  ErrorResponse,
+  LicenseAndTrainings,
+  Users,
+} from "@/interfaces/interfaces";
+import {
+  defaultUpdateLicenseAndTrainingsError,
+  defaultUpdateUserError,
+} from "@/constants/config.enum";
 import { fetchUserDetails } from "./UserDetailsSlice"; // Importamos la acción
 
-// Estado inicial
+// Estado inicial para LicenseAndTrainings
 const initialState: {
-  personalInformation: PersonalInformation;
+  licenseAndTrainings: LicenseAndTrainings;
+  user: Users;
   loading: boolean;
   error: ErrorResponse;
   showSuccessSnackbar: boolean;
   showErrorAlert: boolean;
 } = {
-  personalInformation: {
+  licenseAndTrainings: {
     userCode: "",
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
+    licenseType: "",
+    expires: "",
 
-    productType: "",
-    phoneCode: "",
-    phoneNumber: "",
+    state: "",
+    presented: "",
+  },
+  user: {
+    id: 0,
+    recruiterName: "",
+    leaderName: "",
+    leaderCode: "",
+    userName: "",
+    position: "",
+    recruiterCode: "",
+    userCode: "",
+    startDate: "",
+    birthDate: "",
+    phone: "",
     email: "",
     homeAddress: "",
     businessAddress: "",
     spouseName: "",
+    recruiter: {} as Users,
+    recruits: [],
   },
   loading: false,
   error: { message: "", error: "" },
@@ -31,19 +52,19 @@ const initialState: {
   showErrorAlert: false,
 };
 
-// Acción para guardar la información personal
-export const savePersonalInformation = createAsyncThunk<
-  PersonalInformation,
-  PersonalInformation,
-  { rejectValue: ErrorResponse }
+// Acción para guardar la información de licencias y entrenamientos
+export const saveLicenseAndTrainings = createAsyncThunk<
+  LicenseAndTrainings, // Tipo de respuesta
+  LicenseAndTrainings, // Tipo de parámetros
+  { rejectValue: ErrorResponse } // Tipo en caso de error
 >(
-  "details/savePersonalInformation",
-  async (personalInfo: PersonalInformation, { rejectWithValue }) => {
+  "details/saveLicenseAndTrainings",
+  async (licenseData: LicenseAndTrainings, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/users/details/personalInformation", {
+      const response = await fetch("/api/users/details/licenseAndTrainings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(personalInfo),
+        body: JSON.stringify(licenseData),
       });
 
       if (!response.ok) {
@@ -51,13 +72,14 @@ export const savePersonalInformation = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
-      return (await response.json()) as PersonalInformation;
+      return (await response.json()) as LicenseAndTrainings;
     } catch (error) {
       const errorMessage = error as ErrorResponse;
       const errorContent: ErrorResponse = {
         statusCode: errorMessage.statusCode || 404,
         error: errorMessage.error || defaultUpdateUserError.error,
-        message: errorMessage.message || defaultUpdateUserError.message,
+        message:
+          errorMessage.message || defaultUpdateLicenseAndTrainingsError.message,
         userCode: errorMessage.userCode || "",
         data: errorMessage.data || null,
       };
@@ -66,8 +88,8 @@ export const savePersonalInformation = createAsyncThunk<
   }
 );
 
-const detailsSlice = createSlice({
-  name: "details",
+const licenseAndTrainingsSlice = createSlice({
+  name: "licenseAndTrainings",
   initialState,
   reducers: {
     setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
@@ -76,52 +98,55 @@ const detailsSlice = createSlice({
     setShowErrorAlert(state, action: PayloadAction<boolean>) {
       state.showErrorAlert = action.payload;
     },
-    resetPersonalInformationState(state) {
+    resetLicenseAndTrainingsState(state) {
       return {
         ...state,
         loading: false,
         error: { message: "", error: "" },
         showSuccessSnackbar: false,
         showErrorAlert: false,
-        personalInformation: initialState.personalInformation,
+        licenseAndTrainings: initialState.licenseAndTrainings,
       };
     },
   },
   extraReducers: (builder) => {
     builder
-      // Guardar información personal
-      .addCase(savePersonalInformation.pending, (state) => {
+      .addCase(saveLicenseAndTrainings.pending, (state) => {
         state.loading = true;
         state.error = { message: "", error: "" };
         state.showSuccessSnackbar = false;
       })
       .addCase(
-        savePersonalInformation.fulfilled,
-        (state, action: PayloadAction<PersonalInformation>) => {
+        saveLicenseAndTrainings.fulfilled,
+        (state, action: PayloadAction<LicenseAndTrainings>) => {
           state.loading = false;
-          state.personalInformation = action.payload;
+          state.licenseAndTrainings = action.payload;
           state.showSuccessSnackbar = true;
         }
       )
       .addCase(
-        savePersonalInformation.rejected,
+        saveLicenseAndTrainings.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
           state.loading = false;
           state.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message ||
-              "Error al guardar la información personal",
+              defaultUpdateLicenseAndTrainingsError.message,
           };
           state.showSuccessSnackbar = false;
           state.showErrorAlert = true;
         }
       )
-      // Sincronizing data  from the UserDetailsTabs reducer  to set here the particular data for personal information
+      // Sincronizando datos del UserDetails Tabs reducer para licenseAndTrainings
       .addCase(fetchUserDetails.fulfilled, (state, action) => {
-        state.personalInformation = {
-          ...state.personalInformation, // Mantén cualquier estado que ya haya sido modificado
-          ...action.payload.personalInformation, // Actualiza con los datos traídos del servidor
+        state.licenseAndTrainings = {
+          ...state.licenseAndTrainings,
+          ...action.payload.licenseAndTrainings,
+        };
+        state.user = {
+          ...state.user,
+          ...action.payload.user,
         };
       });
   },
@@ -131,7 +156,7 @@ const detailsSlice = createSlice({
 export const {
   setShowSuccessSnackbar,
   setShowErrorAlert,
-  resetPersonalInformationState,
-} = detailsSlice.actions;
+  resetLicenseAndTrainingsState,
+} = licenseAndTrainingsSlice.actions;
 
-export default detailsSlice.reducer;
+export default licenseAndTrainingsSlice.reducer;

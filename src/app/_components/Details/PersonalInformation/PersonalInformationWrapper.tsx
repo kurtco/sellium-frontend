@@ -39,7 +39,7 @@ const PersonalInformationWrapper = () => {
   } = useSelector((state: RootState) => state.personalInformation);
 
   const { loading: gettingDetailsloading } = useSelector(
-    (state: RootState) => state.UserDetailsTabs
+    (state: RootState) => state.userDetailsTabs
   );
 
   // Usar el initialData solo para inicializar el estado

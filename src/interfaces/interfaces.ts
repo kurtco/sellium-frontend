@@ -105,19 +105,6 @@ export interface ErrorResponse<T = unknown> {
   userCode?: string;
   data?: T;
 }
-
-export interface PersonalDetails {
-  firstName: string;
-  lastName: string;
-  birthDate: {
-    month: string;
-    day: number;
-    year: number;
-  };
-  product: string;
-  insured: string;
-}
-
 export interface FamilyDetails {
   spouseName: string;
 }
@@ -131,10 +118,11 @@ export interface ContactDetails {
 }
 
 export interface PersonalInformation {
+  userCode: string;
   firstName: string;
   lastName: string;
   dateOfBirth?: string;
-  insured?: string;
+  insured?: boolean;
   productType?: string;
   phoneCode?: string;
   phoneNumber?: string;
@@ -148,21 +136,6 @@ export interface PersonalInformation {
   companyDate?: string;
   appointed?: string;
   eo?: boolean;
-}
-
-export interface PersonalInformation {
-  userCode: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth?: string;
-  insured?: string;
-  productType?: string;
-  phoneCode?: string;
-  phoneNumber?: string;
-  email?: string;
-  homeAddress?: string;
-  businessAddress?: string;
-  spouseName?: string;
 }
 
 export interface JobInformation {
@@ -179,7 +152,18 @@ export interface JobInformation {
 }
 
 export interface LicenseAndTrainings {
-  test?: string; // ajustar cuando se tenga la estructura de datoa
+  userCode: string;
+  licenseType: string;
+  expires: string;
+  fastStar?: boolean;
+  state: string;
+  presented: string;
+  approved?: boolean;
+  orientation1?: boolean;
+  orientation2?: boolean;
+  orientation3?: boolean;
+  orientation4?: boolean;
+  bootCamp?: boolean;
 }
 
 export interface Progress {
@@ -187,7 +171,6 @@ export interface Progress {
 }
 
 export interface DetailsState {
-  profileCompletion: number;
   personalInformation: PersonalInformation;
   jobInformation: JobInformation;
   licenseAndTrainings: LicenseAndTrainings;

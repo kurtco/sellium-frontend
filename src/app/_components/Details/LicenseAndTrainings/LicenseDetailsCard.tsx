@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Divider,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -16,22 +15,14 @@ import {
   Box,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
-import DateSelectField from "../DateSelectedField";
 import { LicenseDetailsCardLabels } from "@/constants/labels.enums";
 import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
-
-export interface LicenseDetails {
-  licenseType: string;
-  expires: string;
-  fastStar: boolean;
-  state: string;
-  presented: string;
-  approved: boolean;
-}
+import DateSelectField from "../../DateSelectedField";
+import { LicenseAndTrainings } from "@/interfaces/interfaces";
 
 interface LicenseDetailsCardProps {
-  licenseDetails: LicenseDetails;
-  setLicenseDetails: (details: LicenseDetails) => void;
+  licenseDetails: LicenseAndTrainings;
+  setLicenseDetails: (details: Partial<LicenseAndTrainings>) => void;
 }
 
 const LicenseDetailsCard = ({
@@ -43,26 +34,17 @@ const LicenseDetailsCard = ({
     formatDateToString(licenseDetails.expires)
   );
 
-  const handleDateChange = (
-    fieldType: keyof LicenseDetails,
-    updatedDate: string
-  ) => {
-    if (
-      typeof licenseDetails[fieldType] === "object" &&
-      licenseDetails[fieldType] !== null
-    ) {
-      setLicenseDetails({
-        ...licenseDetails,
-        [fieldType]: updatedDate,
-      });
-    }
+  const handleDateChange = (newDate: string) => {
+    setLicenseDetails({
+      expires: newDate,
+    });
   };
 
   return (
     <Card variant="outlined" sx={{ marginBottom: "22px" }}>
       <Box
         sx={{
-          marginBottom: 2,
+          marginBottom: "22px",
           borderBottom: 1,
           borderColor: "divider",
           borderRadius: 1,
@@ -74,8 +56,6 @@ const LicenseDetailsCard = ({
         </Typography>
       </Box>
       <CardContent>
-        <Divider sx={{ marginBottom: "22px" }} />
-
         <Grid2 container spacing={2}>
           <Grid2 size={12} sx={{ marginBottom: "22px" }}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
@@ -110,7 +90,7 @@ const LicenseDetailsCard = ({
               selectedDay={Number(day)}
               selectedYear={Number(year)}
               onDateChange={(e) => {
-                handleDateChange("expires", e);
+                handleDateChange(e);
               }}
             />
           </Grid2>
@@ -122,16 +102,24 @@ const LicenseDetailsCard = ({
               </Typography>
               <RadioGroup
                 row
-                value={licenseDetails.fastStar ? "Yes" : "No"}
-                onChange={(e) =>
+                value={licenseDetails.fastStar}
+                onChange={(e) => {
                   setLicenseDetails({
                     ...licenseDetails,
-                    fastStar: e.target.value === "Yes",
-                  })
-                }
+                    fastStar: Boolean(e.target.value),
+                  });
+                }}
               >
-                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="No" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="No"
+                />
               </RadioGroup>
             </FormControl>
           </Grid2>
