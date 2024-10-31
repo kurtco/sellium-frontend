@@ -187,6 +187,7 @@ export interface Progress {
 }
 
 export interface DetailsState {
+  profileCompletion: number;
   personalInformation: PersonalInformation;
   jobInformation: JobInformation;
   licenseAndTrainings: LicenseAndTrainings;

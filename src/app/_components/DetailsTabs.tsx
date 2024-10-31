@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { AgentDetailsLabels } from "@/constants/labels.enums";
 import { useParams } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
 
 interface TabContent {
   label: string;
@@ -18,14 +20,17 @@ interface TabContent {
 
 interface DetailsTabsProps {
   tabs: TabContent[];
-  progress: number;
 }
 
-const DetailsTabs = ({ tabs, progress }: DetailsTabsProps) => {
+const DetailsTabs = ({ tabs }: DetailsTabsProps) => {
   const theme = useTheme();
 
   const params = useParams();
   const id = params?.id;
+
+  const { profileCompletion } = useSelector(
+    (state: RootState) => state.UserDetailsTabs.userDetails
+  );
 
   useEffect(() => {
     if (id) {
@@ -70,13 +75,12 @@ const DetailsTabs = ({ tabs, progress }: DetailsTabsProps) => {
           </Typography>
           <LinearProgress
             variant="determinate"
-            value={progress}
+            value={profileCompletion || 0}
             sx={{ width: 80, marginRight: 1 }}
           />
-          <Typography
-            variant="body2"
-            color="textSecondary"
-          >{`${progress}%`}</Typography>
+          <Typography variant="body2" color="textSecondary">{`${
+            profileCompletion || 0
+          }%`}</Typography>
         </Box>
       </Box>
 

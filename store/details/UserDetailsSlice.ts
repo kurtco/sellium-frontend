@@ -42,6 +42,7 @@ export const fetchUserDetails = createAsyncThunk<
 // Estado inicial
 const initialState: {
   userDetails: {
+    profileCompletion: number;
     personalInformation: PersonalInformation | null;
     jobInformation: JobInformation | null;
     licenseAndTrainings: LicenseAndTrainings | null;
@@ -52,6 +53,7 @@ const initialState: {
   showErrorAlert: boolean;
 } = {
   userDetails: {
+    profileCompletion: 0,
     personalInformation: null,
     jobInformation: null,
     licenseAndTrainings: null,
@@ -96,6 +98,7 @@ const userDetailsSlice = createSlice({
         (state, action: PayloadAction<DetailsState>) => {
           state.loading = false;
           state.userDetails = {
+            profileCompletion: action.payload.profileCompletion,
             personalInformation: action.payload.personalInformation,
             jobInformation: action.payload.jobInformation,
             licenseAndTrainings: action.payload.licenseAndTrainings,
