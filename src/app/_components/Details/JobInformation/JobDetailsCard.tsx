@@ -7,7 +7,6 @@ import {
   CardContent,
   TextField,
   Typography,
-  Divider,
   FormControl,
   InputLabel,
   Select,
@@ -20,7 +19,7 @@ import {
 import Grid2 from "@mui/material/Grid2";
 import DateSelectField from "../../DateSelectedField";
 import { JobDetailsCardLabels } from "@/constants/labels.enums";
-import { insuranceCompanies } from "@/constants/constant";
+import { insuranceCompanies, positionsSelect } from "@/constants/constant";
 import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
 import { JobInformation } from "@/interfaces/interfaces";
 
@@ -41,37 +40,64 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
     month: companyMonth,
     day: companyDay,
     year: companyYear,
-  } = splitDateString(formatDateToString(jobDetails.companyDate));
+  } = splitDateString(formatDateToString(jobDetails.partOfCompanySince));
 
-  const handleDateChange = (newDate: string) => {
-    setJobDetails((prevDetails: any) => ({
-      ...prevDetails,
-      companyDate: newDate,
-    }));
+  const handlePromitionDateChange = (newDate: string) => {
+    setJobDetails({
+      ...jobDetails,
+      promotionDate: newDate,
+    });
+  };
+
+  const handleSinceInCompanyDateChange = (newDate: string) => {
+    setJobDetails({
+      ...jobDetails,
+      partOfCompanySince: newDate,
+    });
   };
 
   return (
     <Box>
       <Card variant="outlined">
-        <CardContent>
+        <Box
+          sx={{
+            marginBottom: 2,
+            borderBottom: 1,
+            borderColor: "divider",
+            borderRadius: 1,
+            padding: "16px 0px 16px 20px ",
+          }}
+        >
           <Typography variant="h6" gutterBottom>
             {JobDetailsCardLabels.title}
           </Typography>
-          <Divider sx={{ marginBottom: "22px" }} />
-
+        </Box>
+        <CardContent>
           <Grid2 container spacing={2}>
             <Grid2 size={12} sx={{ marginBottom: "22px" }}>
               <Typography variant="body2" color="textSecondary" gutterBottom>
                 {JobDetailsCardLabels.positionField}
               </Typography>
-              <TextField
-                fullWidth
-                value={jobDetails.position}
-                onChange={(e) =>
-                  setJobDetails({ ...jobDetails, position: e.target.value })
-                }
-                variant="outlined"
-              />
+              <FormControl fullWidth>
+                <Select
+                  value={jobDetails?.position}
+                  onChange={(e) =>
+                    setJobDetails({
+                      ...jobDetails,
+                      position: e.target.value,
+                    })
+                  }
+                  sx={{
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  {positionsSelect.map((position) => (
+                    <MenuItem key={position} value={position}>
+                      {position}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid2>
 
             <Grid2 size={12} sx={{ marginBottom: "22px" }}>
@@ -81,7 +107,7 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
                 selectedDay={Number(promoDay)}
                 selectedYear={Number(promoYear)}
                 onDateChange={(e) => {
-                  handleDateChange(e);
+                  handlePromitionDateChange(e);
                 }}
               />
             </Grid2>
@@ -94,7 +120,12 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
                 fullWidth
                 value={jobDetails.personalCode}
                 variant="outlined"
-                disabled
+                onChange={(e) =>
+                  setJobDetails({
+                    ...jobDetails,
+                    personalCode: e.target.value,
+                  })
+                }
               />
             </Grid2>
 
@@ -105,7 +136,7 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
                 selectedDay={Number(companyDay)}
                 selectedYear={Number(companyYear)}
                 onDateChange={(e) => {
-                  handleDateChange(e);
+                  handleSinceInCompanyDateChange(e);
                 }}
               />
             </Grid2>
@@ -121,18 +152,19 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
               <RadioGroup
                 row
                 value={jobDetails.eo}
-                onChange={(e) =>
-                  setJobDetails({ ...jobDetails, eo: e.target.value })
-                }
+                onChange={(e) => {
+                  const selection: boolean = e.target.value === "true";
+                  setJobDetails({ ...jobDetails, eo: selection });
+                }}
                 style={{ marginBottom: "22px" }} // Espaciado entre el título y los radios
               >
                 <FormControlLabel
-                  value="Yes"
+                  value="true" // Cambiado a "true"
                   control={<Radio sx={{ borderRadius: "1px" }} />}
                   label="Yes"
                 />
                 <FormControlLabel
-                  value="No"
+                  value="false" // Cambiado a "false"
                   control={<Radio sx={{ borderRadius: "1px" }} />}
                   label="No"
                 />

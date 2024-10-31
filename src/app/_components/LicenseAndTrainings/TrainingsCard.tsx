@@ -8,6 +8,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Box,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import { TrainingsCardLabels } from "@/constants/labels.enums";
@@ -32,10 +33,20 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
 
   return (
     <Card variant="outlined">
-      <CardContent>
+      <Box
+        sx={{
+          marginBottom: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          borderRadius: 1,
+          padding: "16px 0px 16px 20px ",
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           {TrainingsCardLabels.title}
         </Typography>
+      </Box>
+      <CardContent>
         <Divider sx={{ marginBottom: "22px" }} />
 
         <Grid2 container spacing={2}>

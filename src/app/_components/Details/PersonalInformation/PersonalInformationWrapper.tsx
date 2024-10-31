@@ -23,9 +23,13 @@ import {
 import { validateEmail } from "@/utils/commonFunctions";
 import SnackbarMessage from "../../SnackbarMessage";
 import LoadingSpinner from "../../LoadingSpinner";
+import { dummyUserCode } from "@/constants/constant";
 
 const PersonalInformationWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
+
+  const [formLoading, setFormLoading] = useState(true);
+
   const {
     showSuccessSnackbar,
     error,
@@ -45,9 +49,16 @@ const PersonalInformationWrapper = () => {
   // Sincronizar el estado cuando el initialData cambie
   useEffect(() => {
     setPersonalInformation(initialData);
+    setFormLoading(true);
+
+    const timer = setTimeout(() => {
+      setFormLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
   }, [initialData]);
 
   const handleSubmit = async () => {
+    personalInformation.userCode = dummyUserCode;
     dispatch(savePersonalInformation(personalInformation));
   };
 
@@ -69,13 +80,13 @@ const PersonalInformationWrapper = () => {
 
       {!showSuccessSnackbar && !loading && showErrorAlert && (
         <SnackbarMessage
-          message={error.message}
+          message={error.message || SnackBarLabels.personalInformationError}
           open={showSuccessSnackbar}
           handleClose={handleCloseSnackbar}
           error={true}
         />
       )}
-      {gettingDetailsloading ? (
+      {gettingDetailsloading || formLoading ? (
         <LoadingSpinner text={LoadingSpinnerLabels.details} />
       ) : (
         <>
@@ -93,7 +104,6 @@ const PersonalInformationWrapper = () => {
               <PersonalDetailsCard
                 personalDetails={personalInformation}
                 setPersonalDetails={(data) => {
-                  console.log("<PersonalDetailsCard data", data);
                   setPersonalInformation((prevState) => ({
                     ...prevState,
                     ...data,
@@ -103,7 +113,6 @@ const PersonalInformationWrapper = () => {
               <ProductCard
                 personalDetails={personalInformation}
                 setPersonalDetails={(data) => {
-                  console.log("<ProductCard data", data);
                   setPersonalInformation((prevState) => ({
                     ...prevState,
                     ...data,
@@ -115,7 +124,6 @@ const PersonalInformationWrapper = () => {
               <ContactDetailsCard
                 contactDetails={personalInformation}
                 setContactDetails={(data) => {
-                  console.log("<ContactDetailsCard data", data);
                   setPersonalInformation((prevState) => ({
                     ...prevState,
                     ...data,
@@ -125,7 +133,6 @@ const PersonalInformationWrapper = () => {
               <FamilyDetailsCard
                 familyDetails={personalInformation}
                 setFamilyDetails={(data) => {
-                  console.log("<FamilyDetailsCard data", data);
                   setPersonalInformation((prevState) => ({
                     ...prevState,
                     ...data,

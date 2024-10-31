@@ -1,81 +1,159 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import JobDetailsCard from "./JobDetailsCard";
 import JobDependenciesCard from "./JobDependenciesCard";
 import { Box, Button } from "@mui/material";
-import { JobInformationWrapperLabels } from "@/constants/labels.enums";
-import { DetailsState } from "@/interfaces/interfaces";
-import { detailsDummyData } from "@/constants/constant";
+import {
+  JobInformationWrapperLabels,
+  LoadingSpinnerLabels,
+  SnackBarLabels,
+} from "@/constants/labels.enums";
+import { JobInformation, Users } from "@/interfaces/interfaces";
+import { dummyUserCode } from "@/constants/constant";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../store/store";
+import {
+  saveJobInformation,
+  setShowErrorAlert,
+  setShowSuccessSnackbar,
+} from "../../../../../store/details/JobInformationSlice";
+import SnackbarMessage from "../../SnackbarMessage";
+import LoadingSpinner from "../../LoadingSpinner";
 
 const JobInformationWrapper = () => {
-  const [jobDetails, setJobDetails] = useState<DetailsState>(detailsDummyData);
+  const dispatch = useDispatch<AppDispatch>();
+  const [formLoading, setFormLoading] = useState(true);
 
-  const [jobDependencies, setJobDependencies] = useState({
-    recruiter: "Francisco Velázquez Rojas",
-    recruiterCode: "A0563",
-    leader: "Marcel & Isa Macias",
-    leaderCode: "GFI09",
-  });
+  const {
+    showSuccessSnackbar,
+    error,
+    showErrorAlert,
+    loading,
+    jobInformation: initialData,
+    user,
+  } = useSelector((state: RootState) => state.jobInformation);
+
+  const { loading: gettingDetailsloading } = useSelector(
+    (state: RootState) => state.UserDetailsTabs
+  );
+
+  // Usar el initialData solo para inicializar el estado
+  const [jobInformation, setJobInformation] =
+    useState<JobInformation>(initialData);
+
+  const [jobDependencies, setJobDependencies] = useState<Users | null>(user);
+
+  // Sincronizar el estado cuando el initialData cambie
+  useEffect(() => {
+    if (!initialData.position && user?.position) {
+      setJobInformation((prevState) => ({
+        ...prevState,
+        position: user.position || prevState.position,
+      }));
+    }
+    setFormLoading(true);
+
+    const timer = setTimeout(() => {
+      setFormLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [initialData, user]);
 
   const handleSubmit = async () => {
-    try {
-      // Hacer la solicitud al API route de Next.js
-      const response = await fetch("/api/save-personal-information", {
-        method: "POST",
-        body: JSON.stringify(jobDetails.personalInformation),
-      });
+    const dataToSave = {
+      //to  save into user DB table
+      recruiter: jobDependencies?.recruiter,
+      recruiterCode: jobDependencies?.recruiterCode,
+      leaderName: jobDependencies?.leaderName,
+      userCode: dummyUserCode,
+      position: jobInformation?.position,
 
-      if (!response.ok) {
-        throw new Error(
-          `Error al guardar la información: ${response.statusText}`
-        );
-      }
+      //to  save into job_information DB table
+      promotionDate: jobInformation.promotionDate,
+      personalCode: jobInformation.personalCode,
+      partOfCompanySince: jobInformation.partOfCompanySince,
+      eo: jobInformation.eo,
+      appointed: jobInformation.appointed,
+    } as JobInformation;
 
-      const responseData = await response.json();
-      console.log("Datos guardados con éxito:", responseData);
-
-      // Aquí podrías mostrar una notificación de éxito o hacer algo más con la respuesta.
-    } catch (error) {
-      console.error("Error al guardar la información:", error);
-      // Aquí podrías mostrar una notificación de error.
-    }
+    dispatch(saveJobInformation(dataToSave));
   };
+
+  const handleCloseSnackbar = useCallback(() => {
+    dispatch(setShowSuccessSnackbar(false));
+    dispatch(setShowErrorAlert(false));
+  }, [dispatch]);
 
   return (
     <>
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          padding: 2,
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1fr 2fr" },
-          gap: "22px",
-        }}
-      >
-        <Grid>
-          <JobDetailsCard
-            jobDetails={jobDetails.jobInformation}
-            setJobDetails={setJobDetails}
-          />
-        </Grid>
-        <Grid>
-          <JobDependenciesCard
-            jobDependencies={jobDependencies}
-            setJobDependencies={setJobDependencies}
-          />
-        </Grid>
-      </Grid>
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        sx={{ marginTop: 2, marginBottom: "20px" }}
-      >
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          {JobInformationWrapperLabels.button}
-        </Button>
-      </Box>
+      {showSuccessSnackbar && !loading && !showErrorAlert && (
+        <SnackbarMessage
+          message={SnackBarLabels.jobInformationSuccess}
+          open={showSuccessSnackbar}
+          handleClose={handleCloseSnackbar}
+          error={false}
+        />
+      )}
+
+      {!showSuccessSnackbar && !loading && showErrorAlert && (
+        <SnackbarMessage
+          message={error.message || SnackBarLabels.jobInformationError}
+          open={showSuccessSnackbar}
+          handleClose={handleCloseSnackbar}
+          error={true}
+        />
+      )}
+      {gettingDetailsloading || formLoading ? (
+        <LoadingSpinner text={LoadingSpinnerLabels.details} />
+      ) : (
+        <>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              padding: 2,
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "1fr 2fr" },
+              gap: "22px",
+            }}
+          >
+            <Grid>
+              <JobDetailsCard
+                jobDetails={jobInformation}
+                setJobDetails={(data) => {
+                  console.log("<JobDetailsCard data", data);
+                  setJobInformation((prevState) => ({
+                    ...prevState,
+                    ...data,
+                  }));
+                }}
+              />
+            </Grid>
+            <Grid>
+              <JobDependenciesCard
+                jobDependencies={user}
+                setJobDependencies={(data) => {
+                  console.log("<JobDependenciesCard data", data);
+                  setJobDependencies((prevState) => ({
+                    ...prevState,
+                    ...data,
+                  }));
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            sx={{ marginTop: 2, marginBottom: "20px" }}
+          >
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
+              {JobInformationWrapperLabels.button}
+            </Button>
+          </Box>
+        </>
+      )}
     </>
   );
 };

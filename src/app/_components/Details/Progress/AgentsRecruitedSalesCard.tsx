@@ -20,11 +20,20 @@ const AgentsRecruitedSalesCard = ({
 }: AgentsRecruitedSalesCardProps) => {
   return (
     <Card variant="outlined" sx={{ marginBottom: "22px" }}>
-      <CardContent>
+      <Box
+        sx={{
+          marginBottom: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          borderRadius: 1,
+          padding: "16px 0px 16px 20px ",
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           {AgentsRecruitedSalesCardLabels.title}
         </Typography>
-
+      </Box>
+      <CardContent>
         <Grid2 container spacing={2}>
           <Grid2 size={12} marginTop="22px">
             <Box display="flex" justifyContent="space-between">

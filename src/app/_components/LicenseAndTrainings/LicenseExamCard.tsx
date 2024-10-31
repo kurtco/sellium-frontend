@@ -57,10 +57,20 @@ const LicenseExamCard = ({
 
   return (
     <Card variant="outlined">
-      <CardContent>
+      <Box
+        sx={{
+          marginBottom: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          borderRadius: 1,
+          padding: "16px 0px 16px 20px ",
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           {LicenseExamCardLabels.title}
         </Typography>
+      </Box>
+      <CardContent>
         <Divider sx={{ marginBottom: "22px" }} />
 
         <Grid2 container spacing={2}>

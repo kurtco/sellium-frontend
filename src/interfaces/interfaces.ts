@@ -1,4 +1,3 @@
-import { JobInformation } from "./interfaces";
 export interface DataFromImage {
   recruiterName: string;
   leaderName: string;
@@ -167,12 +166,16 @@ export interface PersonalInformation {
 }
 
 export interface JobInformation {
+  userCode: string;
   position?: string;
   promotionDate?: string;
   personalCode?: string;
-  companyDate?: string;
-  appointed?: string;
+  partOfCompanySince?: string;
   eo?: boolean;
+  appointed?: string;
+  recruiter?: string;
+  recuiterCode?: string;
+  leader?: string;
 }
 
 export interface LicenseAndTrainings {
@@ -188,4 +191,5 @@ export interface DetailsState {
   jobInformation: JobInformation;
   licenseAndTrainings: LicenseAndTrainings;
   progress: Progress;
+  user: Users | null;
 }

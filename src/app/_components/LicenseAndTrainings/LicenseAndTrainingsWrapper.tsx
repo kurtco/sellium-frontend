@@ -10,18 +10,10 @@ import { LicenseAndTrainingsWrapperLabels } from "@/constants/labels.enums";
 const LicenseAndTrainingsWrapper = () => {
   const [licenseDetails, setLicenseDetails] = useState<LicenseDetails>({
     licenseType: "License 214",
-    expires: {
-      month: "",
-      day: 0,
-      year: 0,
-    },
+    expires: "01/22/2030",
     fastStar: false,
     state: "",
-    presented: {
-      month: "",
-      day: 0,
-      year: 0,
-    },
+    presented: "11/22/2002",
     approved: false,
   });
 

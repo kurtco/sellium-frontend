@@ -1,29 +1,52 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { ErrorResponse, PersonalInformation } from "@/interfaces/interfaces";
-import { defaultUpdateUserError } from "@/constants/config.enum";
+import {
+  ErrorResponse,
+  JobInformation,
+  Recruiter,
+  Users,
+} from "@/interfaces/interfaces";
+import {
+  defaultUpdateJobInformationError,
+  defaultUpdateUserError,
+} from "@/constants/config.enum";
 import { fetchUserDetails } from "./UserDetailsSlice"; // Importamos la acción
 
-// Estado inicial
+// initial state of job info. data
 const initialState: {
-  personalInformation: PersonalInformation;
+  jobInformation: JobInformation;
+  user: Users;
   loading: boolean;
   error: ErrorResponse;
   showSuccessSnackbar: boolean;
   showErrorAlert: boolean;
 } = {
-  personalInformation: {
+  jobInformation: {
     userCode: "",
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    insured: "",
-    productType: "",
-    phoneCode: "",
-    phoneNumber: "",
+    position: "",
+    promotionDate: "",
+    personalCode: "",
+    partOfCompanySince: "",
+    appointed: "",
+    eo: false,
+  },
+  user: {
+    id: 0,
+    recruiterName: "",
+    leaderName: "",
+    leaderCode: "",
+    userName: "",
+    position: "",
+    recruiterCode: "",
+    userCode: "",
+    startDate: "",
+    birthDate: "",
+    phone: "",
     email: "",
     homeAddress: "",
     businessAddress: "",
     spouseName: "",
+    recruiter: {} as Recruiter,
+    recruits: [],
   },
   loading: false,
   error: { message: "", error: "" },
@@ -31,19 +54,18 @@ const initialState: {
   showErrorAlert: false,
 };
 
-// Acción para guardar la información personal
-export const savePersonalInformation = createAsyncThunk<
-  PersonalInformation,
-  PersonalInformation,
-  { rejectValue: ErrorResponse }
+export const saveJobInformation = createAsyncThunk<
+  JobInformation, // response type
+  JobInformation, // paramerts type
+  { rejectValue: ErrorResponse } // error case type
 >(
-  "details/savePersonalInformation",
-  async (personalInfo: PersonalInformation, { rejectWithValue }) => {
+  "details/saveJobInformation",
+  async (jobInfo: JobInformation, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/users/details/personalInformation", {
+      const response = await fetch("/api/users/details/jobInformation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(personalInfo),
+        body: JSON.stringify(jobInfo),
       });
 
       if (!response.ok) {
@@ -51,7 +73,7 @@ export const savePersonalInformation = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
-      return (await response.json()) as PersonalInformation;
+      return (await response.json()) as JobInformation;
     } catch (error) {
       const errorMessage = error as ErrorResponse;
       const errorContent: ErrorResponse = {
@@ -66,8 +88,8 @@ export const savePersonalInformation = createAsyncThunk<
   }
 );
 
-const detailsSlice = createSlice({
-  name: "details",
+const jobInformationSlice = createSlice({
+  name: "jobInformation",
   initialState,
   reducers: {
     setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
@@ -76,62 +98,65 @@ const detailsSlice = createSlice({
     setShowErrorAlert(state, action: PayloadAction<boolean>) {
       state.showErrorAlert = action.payload;
     },
-    resetPersonalInformationState(state) {
+    resetJobInformationState(state) {
       return {
         ...state,
         loading: false,
         error: { message: "", error: "" },
         showSuccessSnackbar: false,
         showErrorAlert: false,
-        personalInformation: initialState.personalInformation,
+        jobInformation: initialState.jobInformation,
       };
     },
   },
   extraReducers: (builder) => {
     builder
-      // Guardar información personal
-      .addCase(savePersonalInformation.pending, (state) => {
+      .addCase(saveJobInformation.pending, (state) => {
         state.loading = true;
         state.error = { message: "", error: "" };
         state.showSuccessSnackbar = false;
       })
       .addCase(
-        savePersonalInformation.fulfilled,
-        (state, action: PayloadAction<PersonalInformation>) => {
+        saveJobInformation.fulfilled,
+        (state, action: PayloadAction<JobInformation>) => {
           state.loading = false;
-          state.personalInformation = action.payload;
+          state.jobInformation = action.payload;
           state.showSuccessSnackbar = true;
         }
       )
       .addCase(
-        savePersonalInformation.rejected,
+        saveJobInformation.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
           state.loading = false;
           state.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message ||
-              "Error al guardar la información personal",
+              defaultUpdateJobInformationError.message,
           };
           state.showSuccessSnackbar = false;
           state.showErrorAlert = true;
         }
       )
-      // Sincronizing data  from the UserDetailsTabs reducer  to set here the particular data for personal information
+      //Synchronizing data from UserDetails Tabs reducer for job Information
       .addCase(fetchUserDetails.fulfilled, (state, action) => {
-        state.personalInformation = {
-          ...state.personalInformation, // Mantén cualquier estado que ya haya sido modificado
-          ...action.payload.personalInformation, // Actualiza con los datos traídos del servidor
+        state.jobInformation = {
+          ...state.jobInformation,
+          ...action.payload.jobInformation,
+        };
+        state.user = {
+          ...state.user,
+          ...action.payload.user,
         };
       });
   },
 });
 
-// Exportamos las acciones y el reducer
+// export the actions and the reducer
 export const {
   setShowSuccessSnackbar,
   setShowErrorAlert,
-  resetPersonalInformationState,
-} = detailsSlice.actions;
+  resetJobInformationState,
+} = jobInformationSlice.actions;
 
-export default detailsSlice.reducer;
+export default jobInformationSlice.reducer;

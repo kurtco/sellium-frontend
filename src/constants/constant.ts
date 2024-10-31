@@ -1,5 +1,4 @@
 import { ThemeMode } from "@/constants/config.enum";
-import { DetailsState } from "@/interfaces/interfaces";
 
 export const defaultConfig = {
   container: false,
@@ -15,6 +14,7 @@ export const defaultConfig = {
 export default defaultConfig;
 
 export const defaultBlueColor: string = "#166EE0";
+export const dummyUserCode: string = "A0563";
 
 export const dummyDataTable = [
   {
@@ -288,29 +288,11 @@ export const US_STATES = [
   "Wyoming",
 ];
 
-export const detailsDummyData: DetailsState = {
-  jobInformation: {
-    position: "Manager",
-    promotionDate: "2022-05-01",
-    personalCode: "JD123",
-    companyDate: "2020-03-15",
-    appointed: "Yes",
-    eo: true,
-  },
-  personalInformation: {
-    userCode: "A0456",
-    firstName: "John",
-    lastName: "Doe",
-    dateOfBirth: "12-01-1986",
-    insured: "Yes",
-    productType: "Term",
-    phoneCode: "+1",
-    phoneNumber: "1234567890",
-    email: "john.doe@example.com",
-    homeAddress: "123 Main St, Springfield, USA",
-    businessAddress: "456 Corporate Blvd, Springfield, USA",
-    spouseName: "Jane Doe",
-  },
-  progress: {},
-  licenseAndTrainings: {},
-};
+export const positionsSelect = [
+  "Representative Licensed",
+  "Representative Student",
+  "Senior Associate",
+  "Marketing Director",
+  "Executive Marketing Director",
+  "Broker",
+];

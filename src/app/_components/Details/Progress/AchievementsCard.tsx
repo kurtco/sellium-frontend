@@ -1,6 +1,7 @@
 "use client";
 import { AchievementsCardLabels } from "@/constants/labels.enums";
 import {
+  Box,
   Card,
   CardContent,
   FormControlLabel,
@@ -26,8 +27,20 @@ const AchievementsCard = ({
 }: AchievementsCardProps) => {
   return (
     <Card variant="outlined">
+      <Box
+        sx={{
+          marginBottom: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          borderRadius: 1,
+          padding: "16px 0px 16px 20px ",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          {AchievementsCardLabels.title}
+        </Typography>
+      </Box>
       <CardContent>
-        <Typography variant="h6">{AchievementsCardLabels.title}</Typography>
         <Grid2 container spacing={2}>
           {/* Is a Coach */}
           <Grid2 size={12}>

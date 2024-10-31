@@ -1,23 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
-import {
-  Card,
-  CardContent,
-  TextField,
-  Typography,
-  Divider,
-} from "@mui/material";
+import { Card, CardContent, TextField, Typography, Box } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import { JobDependenciesCardLabels } from "@/constants/labels.enums";
+import { Users } from "@/interfaces/interfaces";
 
 interface JobDependenciesCardProps {
-  jobDependencies: {
-    recruiter: string;
-    recruiterCode: string;
-    leader: string;
-    leaderCode: string;
-  };
+  jobDependencies: Users | null;
   setJobDependencies: (details: any) => void;
 }
 
@@ -27,12 +17,20 @@ const JobDependenciesCard = ({
 }: JobDependenciesCardProps) => {
   return (
     <Card variant="outlined">
-      <CardContent>
+      <Box
+        sx={{
+          marginBottom: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          borderRadius: 1,
+          padding: "16px 0px 16px 20px ",
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           {JobDependenciesCardLabels.title}
         </Typography>
-        <Divider sx={{ marginBottom: "22px" }} />
-
+      </Box>
+      <CardContent>
         <Grid2 container spacing={2}>
           <Grid2 size={12} sx={{ marginBottom: "22px" }}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
@@ -40,7 +38,7 @@ const JobDependenciesCard = ({
             </Typography>
             <TextField
               fullWidth
-              value={jobDependencies.recruiter}
+              value={jobDependencies?.recruiterName}
               onChange={(e) =>
                 setJobDependencies({
                   ...jobDependencies,
@@ -57,9 +55,14 @@ const JobDependenciesCard = ({
             </Typography>
             <TextField
               fullWidth
-              value={jobDependencies.recruiterCode}
+              value={jobDependencies?.recruiterCode}
               variant="outlined"
-              disabled
+              onChange={(e) =>
+                setJobDependencies({
+                  ...jobDependencies,
+                  recruiterCode: e.target.value,
+                })
+              }
             />
           </Grid2>
 
@@ -69,7 +72,7 @@ const JobDependenciesCard = ({
             </Typography>
             <TextField
               fullWidth
-              value={jobDependencies.leader}
+              value={jobDependencies?.leaderName}
               onChange={(e) =>
                 setJobDependencies({
                   ...jobDependencies,
@@ -86,7 +89,7 @@ const JobDependenciesCard = ({
             </Typography>
             <TextField
               fullWidth
-              value={jobDependencies.leaderCode}
+              value={jobDependencies?.leaderCode}
               variant="outlined"
               disabled
             />

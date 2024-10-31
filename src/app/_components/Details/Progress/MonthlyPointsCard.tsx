@@ -41,13 +41,22 @@ const MonthlyPointsCard = ({
   const theme = useTheme();
   return (
     <Card variant="outlined">
+      <Box
+        sx={{
+          marginBottom: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          borderRadius: 1,
+          padding: "16px 0px 16px 20px ",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          {MonthlyPointsCardLabels.title}
+        </Typography>
+      </Box>
       <CardContent>
         <Box display="flex" justifyContent="space-between" marginBottom="16px">
           <Box gap={"16px"}>
-            <Typography variant="h6" gutterBottom>
-              {MonthlyPointsCardLabels.title}
-            </Typography>
-
             <Typography variant="body2" color="textSecondary" gutterBottom>
               {MonthlyPointsCardLabels.sales}
             </Typography>
