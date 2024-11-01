@@ -127,17 +127,17 @@ const LicenseExamCard = ({
                 onChange={(e) =>
                   setLicenseExam({
                     ...licenseExam,
-                    approved: Boolean(e.target.value),
+                    approved: e.target.value === "true",
                   })
                 }
               >
                 <FormControlLabel
-                  value={true}
+                  value="true"
                   control={<Radio />}
                   label="Yes"
                 />
                 <FormControlLabel
-                  value={false}
+                  value="false"
                   control={<Radio />}
                   label="No"
                 />

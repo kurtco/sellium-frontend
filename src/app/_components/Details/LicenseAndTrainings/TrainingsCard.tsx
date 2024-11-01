@@ -47,12 +47,12 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
               onChange={(e) =>
                 setTrainings({
                   ...trainings,
-                  orientation1: Boolean(e.target.value),
+                  orientation1: e.target.value === "true",
                 })
               }
             >
-              <FormControlLabel value={true} control={<Radio />} label="Yes" />
-              <FormControlLabel value={false} control={<Radio />} label="No" />
+              <FormControlLabel value="true" control={<Radio />} label="Yes" />
+              <FormControlLabel value="false" control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
 
@@ -67,12 +67,12 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
               onChange={(e) =>
                 setTrainings({
                   ...trainings,
-                  orientation2: Boolean(e.target.value),
+                  orientation2: e.target.value === "true",
                 })
               }
             >
-              <FormControlLabel value={true} control={<Radio />} label="Yes" />
-              <FormControlLabel value={false} control={<Radio />} label="No" />
+              <FormControlLabel value="true" control={<Radio />} label="Yes" />
+              <FormControlLabel value="false" control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
 
@@ -87,12 +87,12 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
               onChange={(e) =>
                 setTrainings({
                   ...trainings,
-                  orientation3: Boolean(e.target.value),
+                  orientation3: e.target.value === "true",
                 })
               }
             >
-              <FormControlLabel value={true} control={<Radio />} label="Yes" />
-              <FormControlLabel value={false} control={<Radio />} label="No" />
+              <FormControlLabel value="true" control={<Radio />} label="Yes" />
+              <FormControlLabel value="false" control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
 
@@ -106,12 +106,12 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
               onChange={(e) =>
                 setTrainings({
                   ...trainings,
-                  orientation4: Boolean(e.target.value),
+                  orientation4: e.target.value === "true",
                 })
               }
             >
-              <FormControlLabel value={true} control={<Radio />} label="Yes" />
-              <FormControlLabel value={false} control={<Radio />} label="No" />
+              <FormControlLabel value="true" control={<Radio />} label="Yes" />
+              <FormControlLabel value="false" control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
 
@@ -125,12 +125,12 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
               onChange={(e) =>
                 setTrainings({
                   ...trainings,
-                  bootCamp: Boolean(e.target.value),
+                  bootCamp: e.target.value === "true",
                 })
               }
             >
-              <FormControlLabel value={true} control={<Radio />} label="Yes" />
-              <FormControlLabel value={false} control={<Radio />} label="No" />
+              <FormControlLabel value="true" control={<Radio />} label="Yes" />
+              <FormControlLabel value="false" control={<Radio />} label="No" />
             </RadioGroup>
           </Grid2>
         </Grid2>

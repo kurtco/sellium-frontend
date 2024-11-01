@@ -7,14 +7,21 @@ import { JobDependenciesCardLabels } from "@/constants/labels.enums";
 import { Users } from "@/interfaces/interfaces";
 
 interface JobDependenciesCardProps {
-  jobDependencies: Users | null;
-  setJobDependencies: (details: any) => void;
+  jobDependencies: Users;
+  setJobDependencies: (details: Partial<Users>) => void;
 }
 
 const JobDependenciesCard = ({
   jobDependencies,
   setJobDependencies,
 }: JobDependenciesCardProps) => {
+  const handleFieldChange = (field: keyof Users, value: string) => {
+    setJobDependencies({
+      ...jobDependencies,
+      [field]: value,
+    });
+  };
+
   return (
     <Card variant="outlined">
       <Box
@@ -38,14 +45,12 @@ const JobDependenciesCard = ({
             </Typography>
             <TextField
               fullWidth
-              value={jobDependencies?.recruiterName}
+              value={jobDependencies.recruiterName || ""}
               onChange={(e) =>
-                setJobDependencies({
-                  ...jobDependencies,
-                  recruiter: e.target.value,
-                })
+                handleFieldChange("recruiterName", e.target.value)
               }
               variant="outlined"
+              disabled
             />
           </Grid2>
 
@@ -55,14 +60,12 @@ const JobDependenciesCard = ({
             </Typography>
             <TextField
               fullWidth
-              value={jobDependencies?.recruiterCode}
-              variant="outlined"
+              value={jobDependencies.recruiterCode || ""}
               onChange={(e) =>
-                setJobDependencies({
-                  ...jobDependencies,
-                  recruiterCode: e.target.value,
-                })
+                handleFieldChange("recruiterCode", e.target.value)
               }
+              variant="outlined"
+              disabled
             />
           </Grid2>
 
@@ -72,14 +75,10 @@ const JobDependenciesCard = ({
             </Typography>
             <TextField
               fullWidth
-              value={jobDependencies?.leaderName}
-              onChange={(e) =>
-                setJobDependencies({
-                  ...jobDependencies,
-                  leader: e.target.value,
-                })
-              }
+              value={jobDependencies.leaderName || ""}
+              onChange={(e) => handleFieldChange("leaderName", e.target.value)}
               variant="outlined"
+              disabled
             />
           </Grid2>
 
@@ -89,7 +88,7 @@ const JobDependenciesCard = ({
             </Typography>
             <TextField
               fullWidth
-              value={jobDependencies?.leaderCode}
+              value={jobDependencies.leaderCode || ""}
               variant="outlined"
               disabled
             />

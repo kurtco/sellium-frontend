@@ -38,13 +38,10 @@ const JobInformationWrapper = () => {
     (state: RootState) => state.userDetailsTabs
   );
 
-  // Usar el initialData solo para inicializar el estado
   const [jobInformation, setJobInformation] =
     useState<JobInformation>(initialData);
+  const [jobDependencies, setJobDependencies] = useState<Users>(user);
 
-  const [jobDependencies, setJobDependencies] = useState<Users | null>(user);
-
-  // Sincronizar el estado cuando el initialData cambie
   useEffect(() => {
     if (!initialData.position && user?.position) {
       setJobInformation((prevState) => ({
@@ -52,8 +49,10 @@ const JobInformationWrapper = () => {
         position: user.position || prevState.position,
       }));
     }
-    setFormLoading(true);
 
+    setJobDependencies(user);
+
+    setFormLoading(true);
     const timer = setTimeout(() => {
       setFormLoading(false);
     }, 500);
@@ -62,14 +61,11 @@ const JobInformationWrapper = () => {
 
   const handleSubmit = async () => {
     const dataToSave = {
-      //to  save into user DB table
-      recruiter: jobDependencies?.recruiter,
+      recruiter: jobDependencies?.recruiterName,
       recruiterCode: jobDependencies?.recruiterCode,
       leaderName: jobDependencies?.leaderName,
       userCode: dummyUserCode,
       position: jobInformation?.position,
-
-      //to  save into job_information DB table
       promotionDate: jobInformation.promotionDate,
       personalCode: jobInformation.personalCode,
       partOfCompanySince: jobInformation.partOfCompanySince,
@@ -132,9 +128,8 @@ const JobInformationWrapper = () => {
             </Grid>
             <Grid>
               <JobDependenciesCard
-                jobDependencies={user}
+                jobDependencies={jobDependencies}
                 setJobDependencies={(data) => {
-                  console.log("<JobDependenciesCard data", data);
                   setJobDependencies((prevState) => ({
                     ...prevState,
                     ...data,

@@ -106,17 +106,17 @@ const LicenseDetailsCard = ({
                 onChange={(e) => {
                   setLicenseDetails({
                     ...licenseDetails,
-                    fastStar: Boolean(e.target.value),
+                    fastStar: e.target.value === "true",
                   });
                 }}
               >
                 <FormControlLabel
-                  value={true}
+                  value="true"
                   control={<Radio />}
                   label="Yes"
                 />
                 <FormControlLabel
-                  value={false}
+                  value="false"
                   control={<Radio />}
                   label="No"
                 />
