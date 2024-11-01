@@ -37,6 +37,8 @@ export enum SnackBarLabels {
   personalInformationError = "Couldn't Update the agent personal information . Try again.",
   jobInformationSuccess = "Agent job information updated successfully",
   jobInformationError = "Couldn't Update the agent job information . Try again.",
+  licenseAndTrainingSuccess = "Agent  license and training  updated successfully",
+  licenseAndTrainingError = "Couldn't Update the agent license and training information . Try again.",
 }
 
 export enum DuplicateUserMessageLabels {
