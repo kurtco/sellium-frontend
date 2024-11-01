@@ -7,11 +7,9 @@ import {
   JobInformationCardLabels,
   LicensedAndTrainingCardLabels,
   PersonalInformationCardLabels,
-  ProgressCardLabels,
   SummaryCardComponentLabels,
 } from "@/constants/labels.enums";
 import PersonalInformationWrapper from "@/app/_components/Details/PersonalInformation/PersonalInformationWrapper";
-import ProgressWrapper from "@/app/_components/Details/Progress/ProgressWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { fetchUserDetails } from "../../../../store/details/UserDetailsSlice";
@@ -35,10 +33,10 @@ const tabsData = [
     label: LicensedAndTrainingCardLabels.title,
     content: <LicenseAndTrainingsWrapper />,
   },
-  {
-    label: ProgressCardLabels.title,
-    content: <ProgressWrapper />,
-  },
+  // {
+  //   label: ProgressCardLabels.title,
+  //   content: <ProgressWrapper />,
+  // },
 ];
 
 // Example usage with each data type

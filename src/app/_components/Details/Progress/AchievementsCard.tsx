@@ -1,5 +1,6 @@
 "use client";
 import { AchievementsCardLabels } from "@/constants/labels.enums";
+import { Progress } from "@/interfaces/interfaces";
 import {
   Box,
   Card,
@@ -11,14 +12,9 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 
-export interface Achievements {
-  isCoach: boolean;
-  netLicense: boolean;
-}
-
 interface AchievementsCardProps {
-  achievements: Achievements;
-  setAchievements: (achievements: Achievements) => void;
+  achievements: Progress;
+  setAchievements: (achievements: Progress) => void;
 }
 
 const AchievementsCard = ({

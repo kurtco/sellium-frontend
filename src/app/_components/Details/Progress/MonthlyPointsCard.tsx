@@ -1,4 +1,5 @@
 import { MonthlyPointsCardLabels } from "@/constants/labels.enums";
+import { MonthlyPoints } from "@/interfaces/interfaces";
 import {
   Card,
   CardContent,
@@ -13,12 +14,6 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-export interface MonthlyPoints {
-  month: string;
-  points: number;
-  percentage: number;
-}
-
 interface MonthlyPointsCardProps {
   monthlyPoints: MonthlyPoints[];
   setMonthlyPoints: (points: MonthlyPoints[]) => void;
@@ -32,13 +27,19 @@ const MonthlyPointsCard = ({
   year,
   setYear,
 }: MonthlyPointsCardProps) => {
-  const handlePointsChange = (index: number, value: number) => {
+  const theme = useTheme();
+
+  const handlePointsChange = (
+    index: number,
+    field: keyof MonthlyPoints,
+    value: number
+  ) => {
     const updatedPoints = monthlyPoints.map((point, idx) =>
-      idx === index ? { ...point, points: value } : point
+      idx === index ? { ...point, [field]: value } : point
     );
     setMonthlyPoints(updatedPoints);
   };
-  const theme = useTheme();
+
   return (
     <Card variant="outlined">
       <Box
@@ -56,11 +57,9 @@ const MonthlyPointsCard = ({
       </Box>
       <CardContent>
         <Box display="flex" justifyContent="space-between" marginBottom="16px">
-          <Box gap={"16px"}>
-            <Typography variant="body2" color="textSecondary" gutterBottom>
-              {MonthlyPointsCardLabels.sales}
-            </Typography>
-          </Box>
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            {MonthlyPointsCardLabels.sales}
+          </Typography>
 
           <Select
             value={year}
@@ -112,7 +111,7 @@ const MonthlyPointsCard = ({
                 <TextField
                   value={point.points}
                   onChange={(e) =>
-                    handlePointsChange(index, Number(e.target.value))
+                    handlePointsChange(index, "points", Number(e.target.value))
                   }
                   variant="outlined"
                   sx={{
@@ -120,7 +119,6 @@ const MonthlyPointsCard = ({
                     marginRight: "22px",
                     maxHeight: "40px",
                     maxWidth: "107px",
-                    paddingTop: 0,
                   }}
                   slotProps={{
                     input: {

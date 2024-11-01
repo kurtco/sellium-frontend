@@ -94,6 +94,12 @@ export interface Colors {
   [key: string]: string[];
 }
 
+export interface MonthlyPoints {
+  month: string;
+  points: number;
+  percentage: number;
+}
+
 export interface FileWithPreview extends File {
   preview: string;
 }
@@ -167,7 +173,37 @@ export interface LicenseAndTrainings {
 }
 
 export interface Progress {
-  test?: string; // ajustar cuando se tenga la estructura de datoa
+  userCode: string;
+  year?: number;
+  [key: string]: number | string | boolean | undefined;
+  januaryPoints?: number;
+  januaryPercentage?: number;
+  februaryPoints?: number;
+  februaryPercentage?: number;
+  marchPoints?: number;
+  marchPercentage?: number;
+  aprilPoints?: number;
+  aprilPercentage?: number;
+  mayPoints?: number;
+  mayPercentage?: number;
+  junePoints?: number;
+  junePercentage?: number;
+  julyPoints?: number;
+  julyPercentage?: number;
+  augustPoints?: number;
+  augustPercentage?: number;
+  septemberPoints?: number;
+  septemberPercentage?: number;
+  octoberPoints?: number;
+  octoberPercentage?: number;
+  novemberPoints?: number;
+  novemberPercentage?: number;
+  decemberPoints?: number;
+  decemberPercentage?: number;
+  numberOfAgents?: number;
+  numberOfPoliciesSold?: number;
+  isCoach?: boolean;
+  netLicense?: boolean;
 }
 
 export interface DetailsState {
@@ -177,3 +213,17 @@ export interface DetailsState {
   progress: Progress;
   user: Users | null;
 }
+
+export type Months =
+  | "january"
+  | "february"
+  | "march"
+  | "april"
+  | "may"
+  | "june"
+  | "july"
+  | "august"
+  | "september"
+  | "october"
+  | "november"
+  | "december";

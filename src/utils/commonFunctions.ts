@@ -1,6 +1,6 @@
 import { monthsList } from "@/constants/constant";
 import { ValidationText } from "@/constants/labels.enums";
-import { Recruit } from "@/interfaces/interfaces";
+import { MonthlyPoints, Progress, Recruit } from "@/interfaces/interfaces";
 
 export const calculateCompletion = (obj: Recruit): number => {
   const totalFields = Object.keys(obj).length;
@@ -79,4 +79,72 @@ export const calculateProfileCompletion = <T extends object>(
     isFilled(value)
   ).length;
   return Math.round((filledFields / totalFields) * 100);
+};
+
+export const createMonthlyPointsArray = (
+  progress: Progress
+): MonthlyPoints[] => {
+  const arr = [
+    {
+      month: "January",
+      points: progress.januaryPoints || 0,
+      percentage: progress.januaryPercentage || 0,
+    },
+    {
+      month: "February",
+      points: progress.februaryPoints || 0,
+      percentage: progress.februaryPercentage || 0,
+    },
+    {
+      month: "March",
+      points: progress.marchPoints || 0,
+      percentage: progress.marchPercentage || 0,
+    },
+    {
+      month: "April",
+      points: progress.aprilPoints || 0,
+      percentage: progress.aprilPercentage || 0,
+    },
+    {
+      month: "May",
+      points: progress.mayPoints || 0,
+      percentage: progress.mayPercentage || 0,
+    },
+    {
+      month: "June",
+      points: progress.junePoints || 0,
+      percentage: progress.junePercentage || 0,
+    },
+    {
+      month: "July",
+      points: progress.julyPoints || 0,
+      percentage: progress.julyPercentage || 0,
+    },
+    {
+      month: "August",
+      points: progress.augustPoints || 12,
+      percentage: progress.augustPercentage || 0,
+    },
+    {
+      month: "September",
+      points: progress.septemberPoints || 0,
+      percentage: progress.septemberPercentage || 0,
+    },
+    {
+      month: "October",
+      points: progress.octoberPoints || 0,
+      percentage: progress.octoberPercentage || 0,
+    },
+    {
+      month: "November",
+      points: progress.novemberPoints || 0,
+      percentage: progress.novemberPercentage || 0,
+    },
+    {
+      month: "December",
+      points: progress.decemberPoints || 0,
+      percentage: progress.decemberPercentage || 0,
+    },
+  ];
+  return arr;
 };

@@ -1,17 +1,11 @@
 import { AgentsRecruitedSalesCardLabels } from "@/constants/labels.enums";
+import { Progress } from "@/interfaces/interfaces";
 import { Card, CardContent, TextField, Typography, Box } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 
-export interface AgentsDetails {
-  numberOfAgents: number;
-  numberOfPoliciesSold: number;
-  isCoach: boolean;
-  netLicense: boolean;
-}
-
 interface AgentsRecruitedSalesCardProps {
-  agentsDetails: AgentsDetails;
-  setAgentsDetails: (details: AgentsDetails) => void;
+  agentsDetails: Progress;
+  setAgentsDetails: (details: Progress) => void;
 }
 
 const AgentsRecruitedSalesCard = ({

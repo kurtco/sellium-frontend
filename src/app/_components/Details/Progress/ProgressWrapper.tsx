@@ -4,34 +4,44 @@ import Grid from "@mui/material/Grid2";
 import { Box, Button } from "@mui/material";
 
 import { LicenseAndTrainingsWrapperLabels } from "@/constants/labels.enums";
-import MonthlyPointsCard, { MonthlyPoints } from "./MonthlyPointsCard";
+import MonthlyPointsCard from "./MonthlyPointsCard";
 import AgentsRecruitedSalesCard from "./AgentsRecruitedSalesCard";
 import AchievementsCard from "./AchievementsCard";
+import { AppDispatch, RootState } from "../../../../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { MonthlyPoints, Progress } from "@/interfaces/interfaces";
+import { dummyUserCode } from "@/constants/constant";
+import { saveProgress } from "../../../../../store/details/progressSlice";
+import { createMonthlyPointsArray } from "@/utils/commonFunctions";
 
 const ProgressWrapper = () => {
-  const [monthlyPoints, setMonthlyPoints] = useState<MonthlyPoints[]>([
-    { month: "January", points: 12120, percentage: 12 },
-    { month: "February", points: 21000, percentage: 21 },
-  ]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { progress: initialData } = useSelector(
+    (state: RootState) => state.progress
+  );
 
-  const [year, setYear] = useState<number>(2024);
+  const [progressData, setProgressData] = useState<Progress>(initialData);
+  const [progressYearSelected, setprogressYearSelected] = useState<number>(
+    initialData.year || new Date().getFullYear()
+  );
 
-  const [agentsDetails, setAgentsDetails] = useState({
-    numberOfAgents: 2,
-    numberOfPoliciesSold: 3,
-    isCoach: true,
-    netLicense: true,
-  });
+  const handleMonthlyPointsChange = (updatedMonthlyPoints: MonthlyPoints[]) => {
+    setProgressData((prevState) => {
+      const newState: Progress = { ...prevState };
+      updatedMonthlyPoints.forEach((point) => {
+        const month = point.month.toLowerCase();
 
-  const [achievements, setAchievements] = useState({
-    isCoach: true,
-    netLicense: true,
-  });
+        newState[`${month}Points` as keyof Progress] = point.points;
+        newState[`${month}Percentage` as keyof Progress] = point.percentage;
+      });
+      return newState;
+    });
+  };
 
   const handleSubmit = () => {
-    console.log("Monthly Points:", monthlyPoints);
-    console.log("Agents Details:", agentsDetails);
-    console.log("Achievements:", achievements);
+    progressData.userCode = dummyUserCode;
+    console.log("Submit progress data:", progressData);
+    dispatch(saveProgress(progressData));
   };
 
   return (
@@ -48,21 +58,31 @@ const ProgressWrapper = () => {
       >
         <Grid>
           <MonthlyPointsCard
-            monthlyPoints={monthlyPoints}
-            setMonthlyPoints={setMonthlyPoints}
-            year={year}
-            setYear={setYear}
+            monthlyPoints={createMonthlyPointsArray(progressData)}
+            setMonthlyPoints={handleMonthlyPointsChange}
+            setYear={setprogressYearSelected}
+            year={progressYearSelected}
           />
         </Grid>
 
         <Grid>
           <AgentsRecruitedSalesCard
-            agentsDetails={agentsDetails}
-            setAgentsDetails={setAgentsDetails}
+            agentsDetails={progressData}
+            setAgentsDetails={(data) => {
+              setProgressData((prevState) => ({
+                ...prevState,
+                ...data,
+              }));
+            }}
           />
           <AchievementsCard
-            achievements={achievements}
-            setAchievements={setAchievements}
+            achievements={progressData}
+            setAchievements={(data) => {
+              setProgressData((prevState) => ({
+                ...prevState,
+                ...data,
+              }));
+            }}
           />
         </Grid>
       </Grid>

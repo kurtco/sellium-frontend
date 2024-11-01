@@ -45,3 +45,8 @@ export enum defaultUpdateLicenseAndTrainingsError {
   message = "There was a issue updating the license and Training details, please try again!",
   error = "Internal Server Error",
 }
+
+export enum defaultUpdateProgressError {
+  message = "There was a issue updating the progress details, please try again!",
+  error = "Internal Server Error",
+}
