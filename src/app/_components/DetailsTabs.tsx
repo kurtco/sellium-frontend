@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Tabs,
   Tab,
@@ -10,6 +10,13 @@ import {
 } from "@mui/material";
 import { AgentDetailsLabels } from "@/constants/labels.enums";
 import { useParams } from "next/navigation";
+import { fetchUserDetails } from "../../../store/details/UserDetailsSlice";
+import { AppDispatch } from "../../../store/store";
+import { useDispatch } from "react-redux";
+import { setShowSuccessSnackbar as showPersonalInfoSnackbar } from "../../../store/details/PersonalInformationSlice";
+import { setShowSuccessSnackbar as showJobInfoSnackbar } from "../../../store/details/JobInformationSlice";
+import { setShowSuccessSnackbar as showLicenseSnackbar } from "../../../store/details/LicenseAndTrainingsSlice";
+import { setShowSuccessSnackbar as showProgressSnackbar } from "../../../store/details/progressSlice";
 
 interface TabContent {
   label: string;
@@ -23,20 +30,19 @@ interface DetailsTabsProps {
 
 const DetailsTabs = ({ tabs, profileCompletion }: DetailsTabsProps) => {
   const theme = useTheme();
-
+  const dispatch = useDispatch<AppDispatch>();
   const params = useParams();
-  const id = params?.id;
-
-  useEffect(() => {
-    if (id) {
-      console.log(`Fetching details for agent with ID: ${id}`);
-    }
-  }, [id]);
+  const id = params?.id as string;
 
   const [selectedTab, setSelectedTab] = useState(1);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
+    dispatch(fetchUserDetails(id));
+    dispatch(showPersonalInfoSnackbar(false));
+    dispatch(showJobInfoSnackbar(false));
+    dispatch(showLicenseSnackbar(false));
+    dispatch(showProgressSnackbar(false));
   };
 
   return (

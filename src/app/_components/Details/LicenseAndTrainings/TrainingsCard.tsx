@@ -43,7 +43,7 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
 
             <RadioGroup
               row
-              value={trainings.orientation1}
+              value={trainings.orientation1 ? "true" : "false"}
               onChange={(e) =>
                 setTrainings({
                   ...trainings,
@@ -63,7 +63,7 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
 
             <RadioGroup
               row
-              value={trainings.orientation2}
+              value={trainings.orientation2 ? "true" : "false"}
               onChange={(e) =>
                 setTrainings({
                   ...trainings,
@@ -83,7 +83,7 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
 
             <RadioGroup
               row
-              value={trainings.orientation3}
+              value={trainings.orientation3 ? "true" : "false"}
               onChange={(e) =>
                 setTrainings({
                   ...trainings,
@@ -98,7 +98,7 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
 
           <Grid2 size={12}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
-              {TrainingsCardLabels.orientation4}
+              {TrainingsCardLabels.orientation4 ? "true" : "false"}
             </Typography>
             <RadioGroup
               row
@@ -121,7 +121,7 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
             </Typography>
             <RadioGroup
               row
-              value={trainings.bootCamp}
+              value={trainings.bootCamp ? "true" : "false"}
               onChange={(e) =>
                 setTrainings({
                   ...trainings,

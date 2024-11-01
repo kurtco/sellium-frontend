@@ -52,7 +52,7 @@ const ContactDetailsCard = ({
             </Typography>
             <FormControl fullWidth>
               <Select
-                value={contactDetails.phoneCode}
+                value={contactDetails.phoneCode || ""}
                 onChange={(e) =>
                   setContactDetails({
                     ...contactDetails,
@@ -62,7 +62,14 @@ const ContactDetailsCard = ({
                 sx={{
                   color: theme.palette.text.primary,
                 }}
-                renderValue={(value) => `${value}`}
+                renderValue={(value) => {
+                  const selectedCode = internationalPhoneCodes.find(
+                    (code) => code.code === value
+                  );
+                  return selectedCode
+                    ? `${selectedCode.code} (${selectedCode.country})`
+                    : ContactDetalilsCardLabels.defaultPhoneCodeMessage;
+                }}
               >
                 {internationalPhoneCodes.map((code) => (
                   <MenuItem key={code.code} value={code.code}>

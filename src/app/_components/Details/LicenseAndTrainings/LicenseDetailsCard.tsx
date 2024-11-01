@@ -102,7 +102,7 @@ const LicenseDetailsCard = ({
               </Typography>
               <RadioGroup
                 row
-                value={licenseDetails.fastStar}
+                value={licenseDetails.fastStar ? "true" : "false"}
                 onChange={(e) => {
                   setLicenseDetails({
                     ...licenseDetails,

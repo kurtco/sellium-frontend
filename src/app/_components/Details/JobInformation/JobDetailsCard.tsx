@@ -151,7 +151,7 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
               </Typography>
               <RadioGroup
                 row
-                value={jobDetails.eo}
+                value={jobDetails.eo ? "true" : "false"}
                 onChange={(e) => {
                   setJobDetails({
                     ...jobDetails,

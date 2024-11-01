@@ -123,7 +123,7 @@ const LicenseExamCard = ({
               </Typography>
               <RadioGroup
                 row
-                value={licenseExam.approved}
+                value={licenseExam.approved ? "true" : "false"}
                 onChange={(e) =>
                   setLicenseExam({
                     ...licenseExam,

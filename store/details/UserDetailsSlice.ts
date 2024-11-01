@@ -50,6 +50,7 @@ const initialState: {
   loading: boolean;
   error: ErrorResponse;
   showErrorAlert: boolean;
+  isFetched: boolean;
 } = {
   userDetails: {
     personalInformation: null,
@@ -63,6 +64,7 @@ const initialState: {
     message: "",
   },
   showErrorAlert: false,
+  isFetched: false,
 };
 
 // Slice para manejar el estado de los detalles del usuario
@@ -72,6 +74,9 @@ const userDetailsSlice = createSlice({
   reducers: {
     setShowErrorAlert(state, action: PayloadAction<boolean>) {
       state.showErrorAlert = action.payload;
+    },
+    resetIsFetched(state) {
+      state.isFetched = false;
     },
 
     resetUserDetailsState(state) {
@@ -101,6 +106,7 @@ const userDetailsSlice = createSlice({
             licenseAndTrainings: action.payload.licenseAndTrainings,
             progress: action.payload.progress,
           };
+          state.isFetched = true;
         }
       )
 
@@ -118,7 +124,7 @@ const userDetailsSlice = createSlice({
   },
 });
 
-export const { setShowErrorAlert, resetUserDetailsState } =
+export const { setShowErrorAlert, resetUserDetailsState, resetIsFetched } =
   userDetailsSlice.actions;
 
 export default userDetailsSlice.reducer;

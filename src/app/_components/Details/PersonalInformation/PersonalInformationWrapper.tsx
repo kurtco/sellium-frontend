@@ -1,5 +1,6 @@
 "use client";
 import React, { useCallback, useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import Grid from "@mui/material/Grid2";
 import { Box, Button } from "@mui/material";
 import PersonalDetailsCard from "./PersonalDetailsCard";
@@ -23,12 +24,11 @@ import {
 import { validateEmail } from "@/utils/commonFunctions";
 import SnackbarMessage from "../../SnackbarMessage";
 import LoadingSpinner from "../../LoadingSpinner";
-import { dummyUserCode } from "@/constants/constant";
 
 const PersonalInformationWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
-
-  const [formLoading, setFormLoading] = useState(true);
+  const params = useParams();
+  const userCode = params.id as string;
 
   const {
     showSuccessSnackbar,
@@ -49,17 +49,14 @@ const PersonalInformationWrapper = () => {
   // Sincronizar el estado cuando el initialData cambie
   useEffect(() => {
     setPersonalInformation(initialData);
-    setFormLoading(true);
-
-    const timer = setTimeout(() => {
-      setFormLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
   }, [initialData]);
 
   const handleSubmit = async () => {
-    personalInformation.userCode = dummyUserCode;
-    dispatch(savePersonalInformation(personalInformation));
+    const updatedPersonalInformation = {
+      ...personalInformation,
+      userCode: userCode,
+    };
+    dispatch(savePersonalInformation(updatedPersonalInformation));
   };
 
   const handleCloseSnackbar = useCallback(() => {
@@ -86,7 +83,7 @@ const PersonalInformationWrapper = () => {
           error={true}
         />
       )}
-      {gettingDetailsloading || formLoading ? (
+      {gettingDetailsloading || loading ? (
         <LoadingSpinner text={LoadingSpinnerLabels.details} />
       ) : (
         <>

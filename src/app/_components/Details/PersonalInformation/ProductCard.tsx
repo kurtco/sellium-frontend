@@ -48,7 +48,7 @@ const ProductCard = ({
           </Typography>
           <RadioGroup
             row
-            value={personalDetails.insured}
+            value={personalDetails.insured ? "true" : "false"} // Convertir el valor booleano a string
             onChange={(e) => {
               setPersonalDetails({
                 ...personalDetails,

@@ -10,12 +10,16 @@ import AchievementsCard from "./AchievementsCard";
 import { AppDispatch, RootState } from "../../../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { MonthlyPoints, Progress } from "@/interfaces/interfaces";
-import { dummyUserCode } from "@/constants/constant";
+
 import { saveProgress } from "../../../../../store/details/progressSlice";
 import { createMonthlyPointsArray } from "@/utils/commonFunctions";
+import { useParams } from "next/navigation";
 
 const ProgressWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const params = useParams();
+  const userCode = params.id as string;
+
   const { progress: initialData } = useSelector(
     (state: RootState) => state.progress
   );
@@ -39,9 +43,12 @@ const ProgressWrapper = () => {
   };
 
   const handleSubmit = () => {
-    progressData.userCode = dummyUserCode;
-    console.log("Submit progress data:", progressData);
-    dispatch(saveProgress(progressData));
+    const updatedProgress = {
+      ...progressData,
+      userCode: userCode,
+    };
+
+    dispatch(saveProgress(updatedProgress));
   };
 
   return (

@@ -18,7 +18,6 @@ import LicenseAndTrainingsWrapper from "@/app/_components/Details/LicenseAndTrai
 import { calculateProfileCompletion } from "@/utils/commonFunctions";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
-
 const tabsData = [
   { label: SummaryCardComponentLabels.title, content: <SummaryWrapper /> },
   {
@@ -44,6 +43,11 @@ const tabsData = [
 const AgentDetails = () => {
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams();
+  const userCode = params.id as string;
+
+  const { isFetched } = useSelector(
+    (state: RootState) => state.userDetailsTabs
+  );
 
   const { licenseAndTraining, personalInformation, jobInformation } =
     useSelector((state: RootState) => state);
@@ -79,13 +83,18 @@ const AgentDetails = () => {
   ]);
 
   useEffect(() => {
-    const userCode = params.id as string;
-    console.log("userCode fron url", userCode);
-
-    if (userCode) {
+    // if (
+    //   personalInformationSuccess ||
+    //   jobInformationSuccess ||
+    //   licenseAndTrainingSuccess
+    // ) {
+    //   dispatch(resetIsFetched());
+    //   return;
+    // }
+    if (!isFetched && userCode) {
       dispatch(fetchUserDetails(userCode));
     }
-  }, [dispatch, params.id]);
+  }, [dispatch, userCode, isFetched]);
 
   return (
     <DetailsTabs tabs={tabsData} profileCompletion={overallProfileCompletion} />

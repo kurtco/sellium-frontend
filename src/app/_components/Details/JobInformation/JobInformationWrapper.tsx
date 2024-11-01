@@ -10,7 +10,6 @@ import {
   SnackBarLabels,
 } from "@/constants/labels.enums";
 import { JobInformation, Users } from "@/interfaces/interfaces";
-import { dummyUserCode } from "@/constants/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../store/store";
 import {
@@ -20,10 +19,12 @@ import {
 } from "../../../../../store/details/JobInformationSlice";
 import SnackbarMessage from "../../SnackbarMessage";
 import LoadingSpinner from "../../LoadingSpinner";
+import { useParams } from "next/navigation";
 
 const JobInformationWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [formLoading, setFormLoading] = useState(true);
+  const params = useParams();
+  const userCode = params.id as string;
 
   const {
     showSuccessSnackbar,
@@ -51,12 +52,6 @@ const JobInformationWrapper = () => {
     }
 
     setJobDependencies(user);
-
-    setFormLoading(true);
-    const timer = setTimeout(() => {
-      setFormLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
   }, [initialData, user]);
 
   const handleSubmit = async () => {
@@ -64,7 +59,7 @@ const JobInformationWrapper = () => {
       recruiter: jobDependencies?.recruiterName,
       recruiterCode: jobDependencies?.recruiterCode,
       leaderName: jobDependencies?.leaderName,
-      userCode: dummyUserCode,
+      userCode: userCode,
       position: jobInformation?.position,
       promotionDate: jobInformation.promotionDate,
       personalCode: jobInformation.personalCode,
@@ -100,7 +95,7 @@ const JobInformationWrapper = () => {
           error={true}
         />
       )}
-      {gettingDetailsloading || formLoading ? (
+      {gettingDetailsloading || loading ? (
         <LoadingSpinner text={LoadingSpinnerLabels.details} />
       ) : (
         <>

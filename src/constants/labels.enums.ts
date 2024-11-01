@@ -153,6 +153,7 @@ export enum ContactDetalilsCardLabels {
   email = "Email",
   homeAddress = "Home Address",
   businessAddress = "Business Address",
+  defaultPhoneCodeMessage = "Select country code",
 }
 
 export enum FamilyDetailsCardLabels {

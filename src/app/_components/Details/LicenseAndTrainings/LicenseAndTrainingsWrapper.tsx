@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Grid2 from "@mui/material/Grid2";
 import { Box, Button } from "@mui/material";
 import LicenseDetailsCard from "./LicenseDetailsCard";
@@ -18,13 +18,16 @@ import {
   setShowErrorAlert,
   setShowSuccessSnackbar,
 } from "../../../../../store/details/LicenseAndTrainingsSlice";
-import { dummyUserCode } from "@/constants/constant";
+
 import SnackbarMessage from "../../SnackbarMessage";
 import LoadingSpinner from "../../LoadingSpinner";
+import { useParams } from "next/navigation";
 
 const LicenseAndTrainingsWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [formLoading, setFormLoading] = useState(true);
+
+  const params = useParams();
+  const userCode = params.id as string;
 
   const {
     showSuccessSnackbar,
@@ -34,29 +37,26 @@ const LicenseAndTrainingsWrapper = () => {
     licenseAndTrainings: initialData,
   } = useSelector((state: RootState) => state.licenseAndTraining);
 
+  const { loading: gettingDetailsloading } = useSelector(
+    (state: RootState) => state.userDetailsTabs
+  );
+
   // Usar el initialData solo para inicializar el estado
   const [licenseAndTrainings, setLicenseAndTrainings] =
     useState<LicenseAndTrainings>(initialData);
 
   const handleSubmit = async () => {
-    licenseAndTrainings.userCode = dummyUserCode;
-    dispatch(saveLicenseAndTrainings(licenseAndTrainings));
+    const updatedLicenseAndTrainings = {
+      ...licenseAndTrainings,
+      userCode: userCode,
+    };
+    dispatch(saveLicenseAndTrainings(updatedLicenseAndTrainings));
   };
 
   const handleCloseSnackbar = useCallback(() => {
     dispatch(setShowSuccessSnackbar(false));
     dispatch(setShowErrorAlert(false));
   }, [dispatch]);
-
-  useEffect(() => {
-    setFormLoading(true);
-
-    const timer = setTimeout(() => {
-      setFormLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <>
@@ -78,7 +78,7 @@ const LicenseAndTrainingsWrapper = () => {
         />
       )}
 
-      {loading || formLoading ? (
+      {gettingDetailsloading || loading ? (
         <LoadingSpinner text={LoadingSpinnerLabels.details} />
       ) : (
         <>
