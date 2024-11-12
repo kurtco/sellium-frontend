@@ -98,7 +98,7 @@ const TrainingsCard = ({ trainings, setTrainings }: TrainingsCardProps) => {
 
           <Grid2 size={12}>
             <Typography variant="body2" color="textSecondary" gutterBottom>
-              {TrainingsCardLabels.orientation4 ? "true" : "false"}
+              {TrainingsCardLabels.orientation4}
             </Typography>
             <RadioGroup
               row

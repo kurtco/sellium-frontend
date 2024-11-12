@@ -46,7 +46,7 @@ const initialState: {
 
 // Action to save or update Progress data
 export const saveProgress = createAsyncThunk<
-  Progress, // Response type
+  { message: string; data: Progress }, // response type
   Progress, // Parameters type
   { rejectValue: ErrorResponse } // Error type
 >(
@@ -64,7 +64,10 @@ export const saveProgress = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
-      return (await response.json()) as Progress;
+      return (await response.json()) as {
+        message: string;
+        data: Progress;
+      };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
       const errorContent: ErrorResponse = {
@@ -109,9 +112,9 @@ const progressSlice = createSlice({
       })
       .addCase(
         saveProgress.fulfilled,
-        (state, action: PayloadAction<Progress>) => {
+        (state, action: PayloadAction<{ message: string; data: Progress }>) => {
           state.loading = false;
-          state.progress = action.payload;
+          state.progress = action.payload.data as Progress;
           state.showSuccessSnackbar = true;
         }
       )

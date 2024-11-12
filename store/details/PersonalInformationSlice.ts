@@ -33,7 +33,7 @@ const initialState: {
 
 // Acción para guardar la información personal
 export const savePersonalInformation = createAsyncThunk<
-  PersonalInformation,
+  { message: string; data: PersonalInformation },
   PersonalInformation,
   { rejectValue: ErrorResponse }
 >(
@@ -51,7 +51,10 @@ export const savePersonalInformation = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
-      return (await response.json()) as PersonalInformation;
+      return (await response.json()) as {
+        message: string;
+        data: PersonalInformation;
+      };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
       const errorContent: ErrorResponse = {
@@ -97,9 +100,14 @@ const detailsSlice = createSlice({
       })
       .addCase(
         savePersonalInformation.fulfilled,
-        (state, action: PayloadAction<PersonalInformation>) => {
+
+        (
+          state,
+          action: PayloadAction<{ message: string; data: PersonalInformation }>
+        ) => {
           state.loading = false;
-          state.personalInformation = action.payload;
+          state.personalInformation = action.payload
+            .data as PersonalInformation;
           state.showSuccessSnackbar = true;
         }
       )

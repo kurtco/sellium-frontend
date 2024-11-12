@@ -27,7 +27,7 @@ const initialState: {
     personalCode: "",
     partOfCompanySince: "",
     appointed: "",
-    eo: null,
+    eo: undefined,
   },
   user: {
     id: 0,
@@ -55,7 +55,7 @@ const initialState: {
 };
 
 export const saveJobInformation = createAsyncThunk<
-  JobInformation, // response type
+  { message: string; data: JobInformation }, // response type
   JobInformation, // paramerts type
   { rejectValue: ErrorResponse } // error case type
 >(
@@ -73,7 +73,10 @@ export const saveJobInformation = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
-      return (await response.json()) as JobInformation;
+      return (await response.json()) as {
+        message: string;
+        data: JobInformation;
+      };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
       const errorContent: ErrorResponse = {
@@ -118,9 +121,12 @@ const jobInformationSlice = createSlice({
       })
       .addCase(
         saveJobInformation.fulfilled,
-        (state, action: PayloadAction<JobInformation>) => {
+        (
+          state,
+          action: PayloadAction<{ message: string; data: JobInformation }>
+        ) => {
           state.loading = false;
-          state.jobInformation = action.payload;
+          state.jobInformation = action.payload.data as JobInformation;
           state.showSuccessSnackbar = true;
         }
       )

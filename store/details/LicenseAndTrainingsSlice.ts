@@ -52,10 +52,9 @@ const initialState: {
   showErrorAlert: false,
 };
 
-// Acción para guardar la información de licencias y entrenamientos
 export const saveLicenseAndTrainings = createAsyncThunk<
-  LicenseAndTrainings, // Tipo de respuesta
-  LicenseAndTrainings, // Tipo de parámetros
+  { message: string; data: LicenseAndTrainings },
+  LicenseAndTrainings, // Tipo de entrada
   { rejectValue: ErrorResponse } // Tipo en caso de error
 >(
   "details/saveLicenseAndTrainings",
@@ -72,7 +71,11 @@ export const saveLicenseAndTrainings = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
-      return (await response.json()) as LicenseAndTrainings;
+      // La respuesta debe ser de la forma { message: string; data: unknown }
+      return (await response.json()) as {
+        message: string;
+        data: LicenseAndTrainings;
+      };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
       const errorContent: ErrorResponse = {
@@ -118,12 +121,17 @@ const licenseAndTrainingsSlice = createSlice({
       })
       .addCase(
         saveLicenseAndTrainings.fulfilled,
-        (state, action: PayloadAction<LicenseAndTrainings>) => {
+        (
+          state,
+          action: PayloadAction<{ message: string; data: LicenseAndTrainings }>
+        ) => {
           state.loading = false;
-          state.licenseAndTrainings = action.payload;
+          state.licenseAndTrainings = action.payload
+            .data as LicenseAndTrainings;
           state.showSuccessSnackbar = true;
         }
       )
+
       .addCase(
         saveLicenseAndTrainings.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Grid2 from "@mui/material/Grid2";
 import { Box, Button } from "@mui/material";
 import LicenseDetailsCard from "./LicenseDetailsCard";
@@ -45,11 +45,16 @@ const LicenseAndTrainingsWrapper = () => {
   const [licenseAndTrainings, setLicenseAndTrainings] =
     useState<LicenseAndTrainings>(initialData);
 
+  useEffect(() => {
+    setLicenseAndTrainings(initialData);
+  }, [initialData]);
+
   const handleSubmit = async () => {
     const updatedLicenseAndTrainings = {
       ...licenseAndTrainings,
       userCode: userCode,
     };
+
     dispatch(saveLicenseAndTrainings(updatedLicenseAndTrainings));
   };
 
