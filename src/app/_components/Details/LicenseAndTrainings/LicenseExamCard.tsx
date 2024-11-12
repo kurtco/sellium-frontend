@@ -17,7 +17,11 @@ import Grid2 from "@mui/material/Grid2";
 
 import { US_STATES } from "@/constants/constant";
 import { LicenseExamCardLabels } from "@/constants/labels.enums";
-import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
+import {
+  calculateTimeRemaining,
+  formatDateToString,
+  splitDateString,
+} from "@/utils/commonFunctions";
 import { LicenseAndTrainings } from "@/interfaces/interfaces";
 import DateSelectField from "../../DateSelectedField";
 
@@ -92,7 +96,7 @@ const LicenseExamCard = ({
                 justifyContent="flex-end"
                 sx={{ marginBottom: "10px" }}
               >
-                2 {LicenseExamCardLabels.untilExamExpires}
+                {calculateTimeRemaining(licenseExam.expires)}
               </Typography>
             </Box>
 

@@ -157,3 +157,34 @@ export function getInitials(userName: string): string {
   const initials = validWords.slice(0, 2).map((word) => word[0].toUpperCase());
   return initials.join("");
 }
+
+export function calculateTimeRemaining(targetDate: string): string {
+  const currentDate = new Date();
+  const target = new Date(targetDate);
+
+  // Validar que la fecha objetivo sea válida
+  if (isNaN(target.getTime())) {
+    return "Invalid date format";
+  }
+
+  // Calcular la diferencia en milisegundos
+  const timeDifference = target.getTime() - currentDate.getTime();
+
+  // Si la fecha ya pasó
+  if (timeDifference < 0) {
+    return "Date has passed";
+  }
+
+  // Convertir la diferencia en días
+  const daysRemaining = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+  // Calcular meses y días restantes
+  const months = Math.floor(daysRemaining / 30);
+  const days = daysRemaining % 30;
+
+  if (months > 1) {
+    return `${months} months remaining`;
+  } else {
+    return `${days} days remaining`;
+  }
+}

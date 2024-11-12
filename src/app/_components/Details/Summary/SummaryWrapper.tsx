@@ -11,8 +11,13 @@ const SummaryWrapper = () => {
   const { loading: gettingDetailsloading, userDetails } = useSelector(
     (state: RootState) => state.userDetailsTabs
   );
-  const { jobInformation, personalInformation, licenseAndTraining } =
-    useSelector((state: RootState) => state);
+
+  const { personalInformation, jobInformation, licenseAndTrainings } =
+    useSelector((state: RootState) => ({
+      personalInformation: state.personalInformation.personalInformation,
+      jobInformation: state.jobInformation.jobInformation,
+      licenseAndTrainings: state.licenseAndTraining.licenseAndTrainings,
+    }));
 
   return (
     <>
@@ -34,9 +39,9 @@ const SummaryWrapper = () => {
           </Grid>
           <Grid>
             <DetailedInformation
-              personalDetails={personalInformation.personalInformation}
-              jobDetails={jobInformation.jobInformation}
-              licenseDetails={licenseAndTraining.licenseAndTrainings}
+              personalDetails={personalInformation}
+              jobDetails={jobInformation}
+              licenseDetails={licenseAndTrainings}
             />
           </Grid>
         </Grid>

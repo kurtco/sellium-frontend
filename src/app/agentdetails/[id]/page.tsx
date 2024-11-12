@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useMemo } from "react";
 import SummaryWrapper from "@/app/_components/Details/Summary/SummaryWrapper";
 import DetailsTabs from "@/app/_components/DetailsTabs";
 import JobInformationWrapper from "@/app/_components/Details/JobInformation/JobInformationWrapper";
@@ -17,17 +18,14 @@ import { useParams } from "next/navigation";
 import LicenseAndTrainingsWrapper from "@/app/_components/Details/LicenseAndTrainings/LicenseAndTrainingsWrapper";
 import { calculateProfileCompletion } from "@/utils/commonFunctions";
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
+// Tab configuration
 const tabsData = [
   { label: SummaryCardComponentLabels.title, content: <SummaryWrapper /> },
   {
     label: PersonalInformationCardLabels.title,
     content: <PersonalInformationWrapper />,
   },
-  {
-    label: JobInformationCardLabels.title,
-    content: <JobInformationWrapper />,
-  },
+  { label: JobInformationCardLabels.title, content: <JobInformationWrapper /> },
   {
     label: LicensedAndTrainingCardLabels.title,
     content: <LicenseAndTrainingsWrapper />,
@@ -38,59 +36,37 @@ const tabsData = [
   // },
 ];
 
-// Example usage with each data type
-
 const AgentDetails = () => {
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams();
   const userCode = params.id as string;
 
-  const { isFetched } = useSelector(
-    (state: RootState) => state.userDetailsTabs
-  );
+  // Consolidated selector for all required state slices
+  const {
+    isFetched,
+    personalInformation,
+    jobInformation,
+    licenseAndTrainings,
+  } = useSelector((state: RootState) => ({
+    isFetched: state.userDetailsTabs.isFetched,
+    personalInformation: state.personalInformation.personalInformation,
+    jobInformation: state.jobInformation.jobInformation,
+    licenseAndTrainings: state.licenseAndTraining.licenseAndTrainings,
+  }));
 
-  const { licenseAndTraining, personalInformation, jobInformation } =
-    useSelector((state: RootState) => state);
-  // const progress = useSelector(
-  //   (state: RootState) => state.userDetailsTabs.progress
-  // );
+  // Memoized calculation for overall profile completion
+  const overallProfileCompletion = useMemo(() => {
+    const personalCompletion = calculateProfileCompletion(personalInformation);
+    const jobCompletion = calculateProfileCompletion(jobInformation);
+    const licenseCompletion = calculateProfileCompletion(licenseAndTrainings);
 
-  const [overallProfileCompletion, setOverallProfileCompletion] = useState(0);
+    return Math.round(
+      (personalCompletion + jobCompletion + licenseCompletion) / 3
+    );
+  }, [personalInformation, jobInformation, licenseAndTrainings]);
 
-  // Calcular el completion de cada sección y actualizar `overallProfileCompletion`
+  // Fetch user details if not already fetched
   useEffect(() => {
-    const personalInformationCompletion = calculateProfileCompletion(
-      personalInformation.personalInformation
-    );
-    const jobInformationCompletion = calculateProfileCompletion(
-      jobInformation.jobInformation
-    );
-    const licenseAndTrainingsCompletion = calculateProfileCompletion(
-      licenseAndTraining.licenseAndTrainings
-    );
-
-    const calculatedOverallCompletion = Math.round(
-      (personalInformationCompletion +
-        jobInformationCompletion +
-        licenseAndTrainingsCompletion) /
-        3
-    );
-    setOverallProfileCompletion(calculatedOverallCompletion);
-  }, [
-    personalInformation.personalInformation,
-    jobInformation.jobInformation,
-    licenseAndTraining.licenseAndTrainings,
-  ]);
-
-  useEffect(() => {
-    // if (
-    //   personalInformationSuccess ||
-    //   jobInformationSuccess ||
-    //   licenseAndTrainingSuccess
-    // ) {
-    //   dispatch(resetIsFetched());
-    //   return;
-    // }
     if (!isFetched && userCode) {
       dispatch(fetchUserDetails(userCode));
     }
