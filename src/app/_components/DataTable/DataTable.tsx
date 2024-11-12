@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // material-ui
 import Box from "@mui/material/Box";
@@ -23,24 +24,16 @@ import {
   getSortedRowModel,
   flexRender,
   ColumnDef,
-  CellContext,
 } from "@tanstack/react-table";
 
-import {
-  CsvHeader,
-  Recruit,
-  RecruiterTableData,
-  Users,
-} from "../../../interfaces/interfaces";
+import { CsvHeader, RecruiterTableData } from "../../../interfaces/interfaces";
 import {
   AgentsDataTableHeaders,
   SnackBarLabels,
 } from "@/constants/labels.enums";
-import { calculateCompletion } from "@/utils/commonFunctions";
 import MainCard from "../MainCard";
 import ScrollX from "../ScrollX";
 import TablePagination from "../TablePagination";
-import LinearWithLabel from "../LinearWithLabel";
 import { useTheme } from "@mui/material/styles";
 import DataTableHeaderActions from "./DataTableHeaderActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,6 +57,12 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
   // console.log("datatable", data);
   const theme = useTheme();
   const dispatch = useDispatch<AppDispatch>();
+
+  const router = useRouter(); // Usar el hook useRouter para la navegación
+
+  const handleRowClick = (userCode: string) => {
+    router.push(`/agentdetails/${userCode}`); // Redirigir a la URL correspondiente
+  };
 
   const { dataFromImage, error, showSuccessSnackbar } = useSelector(
     (state: RootState) => state.image
@@ -215,7 +214,16 @@ const ReactTable = ({ data, columns, top }: ReactTableStructure) => {
               </TableHead>
               <TableBody>
                 {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    onClick={() => handleRowClick(row.original.userCode)}
+                    sx={{
+                      cursor: "pointer",
+                      "&:hover": {
+                        backgroundColor: theme.palette.action.hover,
+                      },
+                    }}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
@@ -263,17 +271,8 @@ export default function PaginationTable() {
   const fetchRecruiterData = async () => {
     try {
       const response = await fetch("/api/users/recruiter/A0456");
-      const result: Users = await response.json();
-
-      const mappedData = result.recruits.map((item: Recruit) => ({
-        name: item.userName,
-        position: item.position,
-        phoneNumber: item.phone,
-        email: item.email,
-        profileProgress: calculateCompletion(item),
-      }));
-
-      setData(mappedData);
+      const result: RecruiterTableData[] = await response.json();
+      setData(result);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -285,18 +284,19 @@ export default function PaginationTable() {
 
   const columns = useMemo<ColumnDef<RecruiterTableData>[]>(
     () => [
-      { header: AgentsDataTableHeaders.NAME, accessorKey: "name" },
+      { header: AgentsDataTableHeaders.NAME, accessorKey: "userName" },
+      { header: AgentsDataTableHeaders.USERCODE, accessorKey: "userCode" },
       { header: AgentsDataTableHeaders.POSITION, accessorKey: "position" },
-      { header: AgentsDataTableHeaders.PHONE, accessorKey: "phoneNumber" },
+      { header: AgentsDataTableHeaders.PHONE, accessorKey: "phone" },
       { header: AgentsDataTableHeaders.EMAIL, accessorKey: "email" },
-      {
-        header: AgentsDataTableHeaders.PROFILECOMPLETION,
-        accessorKey: "profileProgress",
-        cell: (cell: CellContext<RecruiterTableData, unknown>) => {
-          const value = cell.getValue() as number;
-          return <LinearWithLabel value={value} sx={{ minWidth: 75 }} />;
-        },
-      },
+      // {
+      //   header: AgentsDataTableHeaders.PROFILECOMPLETION,
+      //   accessorKey: "profileProgress",
+      //   cell: (cell: CellContext<RecruiterTableData, unknown>) => {
+      //     const value = cell.getValue() as number;
+      //     return <LinearWithLabel value={value} sx={{ minWidth: 75 }} />;
+      //   },
+      // },
     ],
     []
   );

@@ -7,6 +7,7 @@ export enum AgentsDataTableHeaders {
   NAME = "Name",
   POSITION = "Position",
   PHONE = "Phone Number",
+  USERCODE = "User Code",
   EMAIL = "Email",
   PROFILECOMPLETION = "Profile Completion",
 }
