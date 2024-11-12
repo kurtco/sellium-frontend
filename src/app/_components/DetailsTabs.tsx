@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   Tabs,
   Tab,
@@ -17,6 +17,7 @@ import { setShowSuccessSnackbar as showPersonalInfoSnackbar } from "../../../sto
 import { setShowSuccessSnackbar as showJobInfoSnackbar } from "../../../store/details/JobInformationSlice";
 import { setShowSuccessSnackbar as showLicenseSnackbar } from "../../../store/details/LicenseAndTrainingsSlice";
 import { setShowSuccessSnackbar as showProgressSnackbar } from "../../../store/details/progressSlice";
+import { useTabContext } from "@/context/TabContext";
 
 interface TabContent {
   label: string;
@@ -33,8 +34,7 @@ const DetailsTabs = ({ tabs, profileCompletion }: DetailsTabsProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams();
   const id = params?.id as string;
-
-  const [selectedTab, setSelectedTab] = useState(1);
+  const { setSelectedTab, selectedTab } = useTabContext();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);

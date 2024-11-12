@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { PersonalInformationCardLabels } from "@/constants/labels.enums";
 import { PersonalInformation } from "@/interfaces/interfaces";
+import { useTabContext } from "@/context/TabContext";
 
 interface PersonalInformationCardProps {
   personalDetails: PersonalInformation;
@@ -19,6 +20,13 @@ interface PersonalInformationCardProps {
 const PersonalInformationCard = ({
   personalDetails,
 }: PersonalInformationCardProps) => {
+  const { setSelectedTab } = useTabContext();
+
+  const handleEditClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setSelectedTab(1);
+  };
+
   return (
     <Card variant="outlined" sx={{ marginBottom: 2 }}>
       <CardContent>
@@ -26,7 +34,7 @@ const PersonalInformationCard = ({
           <Typography variant="h6">
             {PersonalInformationCardLabels.title}
           </Typography>
-          <Link href="#" variant="body2">
+          <Link href="#" variant="body2" onClick={handleEditClick}>
             {PersonalInformationCardLabels.edit}
           </Link>
         </Box>

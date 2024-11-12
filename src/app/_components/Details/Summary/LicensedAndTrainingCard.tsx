@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { useTabContext } from "@/context/TabContext";
 
 interface LicensedAndTrainingCardProps {
   licenseDetails: LicenseAndTrainings;
@@ -20,6 +21,13 @@ interface LicensedAndTrainingCardProps {
 const LicensedAndTrainingCard = ({
   licenseDetails,
 }: LicensedAndTrainingCardProps) => {
+  const { setSelectedTab } = useTabContext();
+
+  const handleEditClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setSelectedTab(3);
+  };
+
   const convertToOrientationArray = (data: LicenseAndTrainings): string[] => {
     if (!data) {
       return [""];
@@ -50,7 +58,7 @@ const LicensedAndTrainingCard = ({
           <Typography variant="h6">
             {LicensedAndTrainingCardLabels.title}
           </Typography>
-          <Link href="#" variant="body2">
+          <Link href="#" variant="body2" onClick={handleEditClick}>
             {LicensedAndTrainingCardLabels.edit}
           </Link>
         </Box>

@@ -9,12 +9,19 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { useTabContext } from "@/context/TabContext";
 
 interface JobInformationCardProps {
   jobDetails: JobInformation;
 }
 
 const JobInformationCard = ({ jobDetails }: JobInformationCardProps) => {
+  const { setSelectedTab } = useTabContext();
+  const handleEditClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setSelectedTab(2);
+  };
+
   return (
     <Card variant="outlined" sx={{ marginBottom: 2 }}>
       <CardContent>
@@ -27,7 +34,7 @@ const JobInformationCard = ({ jobDetails }: JobInformationCardProps) => {
           gap={2}
         >
           <Typography variant="h6">{JobInformationCardLabels.title}</Typography>
-          <Link href="#" variant="body2">
+          <Link href="#" variant="body2" onClick={handleEditClick}>
             {JobInformationCardLabels.edit}
           </Link>
         </Box>

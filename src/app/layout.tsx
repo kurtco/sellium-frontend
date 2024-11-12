@@ -10,6 +10,7 @@ import useConfig from "@/hooks/useConfig";
 import defaultConfig from "@/constants/constant";
 import { Provider } from "react-redux";
 import { store } from "../../store/store";
+import { TabProvider } from "@/context/TabContext";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -21,7 +22,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body>
         <Provider store={store}>
           <ConfigProvider>
-            <ThemeWrapper>{children}</ThemeWrapper>
+            <ThemeWrapper>
+              <TabProvider>{children}</TabProvider>
+            </ThemeWrapper>
           </ConfigProvider>
         </Provider>
       </body>
