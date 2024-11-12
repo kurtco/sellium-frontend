@@ -6,6 +6,7 @@ import {
   LicenseAndTrainings,
   PersonalInformation,
   Progress,
+  Users,
 } from "@/interfaces/interfaces";
 import { defaultUpdateUserError } from "@/constants/config.enum";
 
@@ -46,6 +47,7 @@ const initialState: {
     jobInformation: JobInformation | null;
     licenseAndTrainings: LicenseAndTrainings | null;
     progress: Progress | null;
+    user: Users | null;
   };
   loading: boolean;
   error: ErrorResponse;
@@ -57,6 +59,7 @@ const initialState: {
     jobInformation: null,
     licenseAndTrainings: null,
     progress: null,
+    user: null,
   },
   loading: false,
   error: {
@@ -105,6 +108,7 @@ const userDetailsSlice = createSlice({
             jobInformation: action.payload.jobInformation,
             licenseAndTrainings: action.payload.licenseAndTrainings,
             progress: action.payload.progress,
+            user: action.payload.user,
           };
           state.isFetched = true;
         }

@@ -1,4 +1,8 @@
-import { LicensedAndTrainingCardLabels } from "@/constants/labels.enums";
+import {
+  LicensedAndTrainingCardLabels,
+  TrainingsCardLabels,
+} from "@/constants/labels.enums";
+import { LicenseAndTrainings } from "@/interfaces/interfaces";
 import {
   Box,
   Card,
@@ -9,17 +13,39 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-const LicensedAndTrainingCard = () => {
+interface LicensedAndTrainingCardProps {
+  licenseDetails: LicenseAndTrainings;
+}
+
+const LicensedAndTrainingCard = ({
+  licenseDetails,
+}: LicensedAndTrainingCardProps) => {
+  const convertToOrientationArray = (data: LicenseAndTrainings): string[] => {
+    if (!data) {
+      return [""];
+    }
+    const result: string[] = [];
+
+    if (data.orientation1) result.push(TrainingsCardLabels.orientation1);
+    if (data.orientation2) result.push(TrainingsCardLabels.orientation2);
+    if (data.orientation3) result.push(TrainingsCardLabels.orientation3);
+    if (data.orientation4) result.push(TrainingsCardLabels.orientation4);
+    if (data.bootCamp) result.push(TrainingsCardLabels.bootCampOrientation);
+
+    return result;
+  };
+
+  const orientationArray = convertToOrientationArray(licenseDetails);
   return (
     <Card variant="outlined">
       <CardContent>
         <Box
           display="flex"
-          flexDirection={{ xs: "column", md: "row" }} // Responsive layout for mobile and larger screens
+          flexDirection={{ xs: "column", md: "row" }}
           justifyContent="space-between"
           alignItems="center"
           textAlign={{ xs: "center", md: "left" }}
-          gap={2} // Gap for spacing in mobile view
+          gap={2}
         >
           <Typography variant="h6">
             {LicensedAndTrainingCardLabels.title}
@@ -32,49 +58,52 @@ const LicensedAndTrainingCard = () => {
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
-              {LicensedAndTrainingCardLabels.licenseIssue}
+              {LicensedAndTrainingCardLabels.licenseType}
             </Typography>
-            <Typography>License 214</Typography>
+            <Typography>{licenseDetails.licenseType}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {LicensedAndTrainingCardLabels.licenseExpires}
             </Typography>
-            <Typography>November 14, 2024</Typography>
+            <Typography>{licenseDetails.expires}</Typography>
           </Grid>
         </Grid>
         <Divider sx={{ my: 2 }} />{" "}
-        {/* Divider adicional para separar las secciones */}
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {LicensedAndTrainingCardLabels.fastStart}
             </Typography>
-            <Typography>Yes</Typography>
+            <Typography>{licenseDetails.fastStar ? "Yes" : "No"}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {LicensedAndTrainingCardLabels.stateOfExam}
             </Typography>
-            <Typography>Florida</Typography>
+            <Typography>{licenseDetails.state}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {LicensedAndTrainingCardLabels.examPresented}
             </Typography>
-            <Typography>November 14, 2023</Typography>
+            <Typography>{licenseDetails.presented}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {LicensedAndTrainingCardLabels.examApproved}
             </Typography>
-            <Typography>Yes</Typography>
+            <Typography>{licenseDetails.approved ? "Yes" : "No"}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 12 }}>
             <Typography variant="body2" color="textSecondary">
               {LicensedAndTrainingCardLabels.trainingPerformed}
             </Typography>
-            <Typography>Orientation 1, 2, 3, 4 and Boot Camp</Typography>
+            <Typography>
+              {orientationArray.length > 0
+                ? orientationArray.join(", ")
+                : LicensedAndTrainingCardLabels.noTrainings}
+            </Typography>
           </Grid>
         </Grid>
       </CardContent>

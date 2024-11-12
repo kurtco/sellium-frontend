@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Grid from "@mui/material/Grid2";
 import {
   Card,
   CardContent,
@@ -8,15 +7,17 @@ import {
   Typography,
   Divider,
   Box,
-  LinearProgress,
-  Link,
   useTheme,
-  Chip,
 } from "@mui/material";
+import { Users } from "@/interfaces/interfaces";
+import { getInitials } from "@/utils/commonFunctions";
 import { SummaryCardComponentLabels } from "@/constants/labels.enums";
-import { defaultBlueColor, monthsList } from "@/constants/constant";
 
-const SummaryCard = () => {
+type SummaryCardProps = {
+  userDetails: Users | null;
+  // progressDetails: Progress;
+};
+const SummaryCard = ({ userDetails }: SummaryCardProps) => {
   const theme = useTheme();
 
   return (
@@ -32,20 +33,17 @@ const SummaryCard = () => {
               marginBottom: "20px",
             }}
           >
-            OU
+            {getInitials(userDetails?.userName || "")}
           </Avatar>
           <Box textAlign={{ xs: "center", md: "left" }} flex={1}>
-            <Typography variant="h6">Oswely Urbano</Typography>
-            <Typography variant="body2" color="textSecondary">
-              Representative Licensed
-            </Typography>
+            <Typography variant="h6">{userDetails?.userName || ""}</Typography>
+            <Typography variant="body2" color="textSecondary"></Typography>
             <Typography variant="subtitle1" sx={{ mt: 1, textAlign: "center" }}>
-              A0260
+              {userDetails?.userCode || ""}
             </Typography>
           </Box>
         </Box>
         <Divider sx={{ my: 2 }} />
-
         {/* Leader and Recruiter Information */}
         <Box
           display="flex"
@@ -54,24 +52,32 @@ const SummaryCard = () => {
           mb={2}
         >
           <Box flex={1} textAlign={{ xs: "center", md: "left" }}>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="textSecondary" mb={1}>
               {SummaryCardComponentLabels.leader}
             </Typography>
-            <Typography variant="body2">Marcel & Isa Macias</Typography>
-            <Typography variant="subtitle1">GFI09</Typography>
+            <Typography variant="body2">
+              {userDetails?.leaderName || ""}
+            </Typography>
+            <Typography variant="subtitle1">
+              {userDetails?.leaderCode || ""}
+            </Typography>
           </Box>
           <Box flex={1} textAlign={{ xs: "center", md: "left" }}>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="textSecondary" mb={1}>
               {SummaryCardComponentLabels.recruiter}
             </Typography>
-            <Typography variant="body2">Francisco Velázquez Rojas</Typography>
-            <Typography variant="subtitle1">A0563</Typography>
+            <Typography variant="body2">
+              {userDetails?.recruiterName || ""}
+            </Typography>
+            <Typography variant="subtitle1">
+              {userDetails?.recruiterCode || ""}
+            </Typography>
           </Box>
         </Box>
       </CardContent>
 
       {/* Agents Recruited & Sales */}
-      <CardContent>
+      {/* <CardContent>
         <Box
           display="flex"
           justifyContent="space-between"
@@ -117,10 +123,10 @@ const SummaryCard = () => {
             <Typography variant="body2" color="primary"></Typography>
           </Grid>
         </Grid>
-      </CardContent>
+      </CardContent> */}
 
       {/* Monthly Points */}
-      <CardContent>
+      {/* <CardContent>
         <Box
           display="flex"
           justifyContent="space-between"
@@ -189,7 +195,7 @@ const SummaryCard = () => {
             }}
           />
         </Grid>
-      </CardContent>
+      </CardContent> */}
     </Card>
   );
 };

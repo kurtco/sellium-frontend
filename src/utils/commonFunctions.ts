@@ -148,3 +148,12 @@ export const createMonthlyPointsArray = (
   ];
   return arr;
 };
+
+export function getInitials(userName: string): string {
+  if (!userName) return "";
+
+  const words = userName.split(" ");
+  const validWords = words.filter((word) => word.trim() !== "");
+  const initials = validWords.slice(0, 2).map((word) => word[0].toUpperCase());
+  return initials.join("");
+}

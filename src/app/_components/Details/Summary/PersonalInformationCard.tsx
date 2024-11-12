@@ -10,8 +10,15 @@ import {
   Divider,
 } from "@mui/material";
 import { PersonalInformationCardLabels } from "@/constants/labels.enums";
+import { PersonalInformation } from "@/interfaces/interfaces";
 
-const PersonalInformationCard = () => {
+interface PersonalInformationCardProps {
+  personalDetails: PersonalInformation;
+}
+
+const PersonalInformationCard = ({
+  personalDetails,
+}: PersonalInformationCardProps) => {
   return (
     <Card variant="outlined" sx={{ marginBottom: 2 }}>
       <CardContent>
@@ -29,49 +36,49 @@ const PersonalInformationCard = () => {
             <Typography variant="body2" color="textSecondary">
               {PersonalInformationCardLabels.fullName}
             </Typography>
-            <Typography>Oswely Urbano</Typography>
+            <Typography>{`${personalDetails.firstName} ${personalDetails.lastName}`}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {PersonalInformationCardLabels.birthDate}
             </Typography>
-            <Typography>09/29/1980</Typography>
+            <Typography>{personalDetails.dateOfBirth}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {PersonalInformationCardLabels.phoneNumber}
             </Typography>
-            <Typography>+1 865 423 9581</Typography>
+            <Typography>{`${personalDetails.phoneCode} ${personalDetails.phoneNumber}`}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {PersonalInformationCardLabels.email}
             </Typography>
-            <Typography>oswelyurbano@gmail.com</Typography>
+            <Typography>{personalDetails.email}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {PersonalInformationCardLabels.homeAddress}
             </Typography>
-            <Typography>299 MILLER RD apt 124, MAULDIN, SC 29662</Typography>
+            <Typography>{personalDetails.homeAddress}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {PersonalInformationCardLabels.businessAddress}
             </Typography>
-            <Typography>299 MILLER RD apt 124, MAULDIN, SC 29662</Typography>
+            <Typography>{personalDetails.businessAddress}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {PersonalInformationCardLabels.areYouInsured}
             </Typography>
-            <Typography>Yes</Typography>
+            <Typography>{personalDetails.insured ? "Yes" : "No"}</Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="textSecondary">
               {PersonalInformationCardLabels.productType}
             </Typography>
-            <Typography>IUL</Typography>
+            <Typography>{personalDetails.productType}</Typography>
           </Grid>
         </Grid>
       </CardContent>

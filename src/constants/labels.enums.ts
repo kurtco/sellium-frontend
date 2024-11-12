@@ -99,13 +99,14 @@ export enum JobInformationCardLabels {
 export enum LicensedAndTrainingCardLabels {
   title = "License & Trainings",
   edit = "Edit",
-  licenseIssue = "License",
+  licenseType = "License",
   licenseExpires = "License Expires",
   fastStart = "Fast Start",
   stateOfExam = "State of Exam",
   examPresented = "Exam Presented",
   examApproved = "Exam Approved?",
   trainingPerformed = "Training Performed",
+  noTrainings = "No training performed",
 }
 
 export enum JobDetailsCardLabels {
