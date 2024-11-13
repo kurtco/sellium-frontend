@@ -14,7 +14,7 @@ import PersonalInformationWrapper from "@/app/_components/Details/PersonalInform
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { fetchUserDetails } from "../../../../store/details/UserDetailsSlice";
-import { useParams } from "next/navigation";
+import { useParams, notFound as showNotFoundPage } from "next/navigation";
 import LicenseAndTrainingsWrapper from "@/app/_components/Details/LicenseAndTrainings/LicenseAndTrainingsWrapper";
 import { calculateProfileCompletion } from "@/utils/commonFunctions";
 
@@ -44,11 +44,13 @@ const AgentDetails = () => {
   // Consolidated selector for all required state slices
   const {
     isFetched,
+    notFound,
     personalInformation,
     jobInformation,
     licenseAndTrainings,
   } = useSelector((state: RootState) => ({
     isFetched: state.userDetailsTabs.isFetched,
+    notFound: state.userDetailsTabs.notFound,
     personalInformation: state.personalInformation.personalInformation,
     jobInformation: state.jobInformation.jobInformation,
     licenseAndTrainings: state.licenseAndTraining.licenseAndTrainings,
@@ -65,12 +67,15 @@ const AgentDetails = () => {
     );
   }, [personalInformation, jobInformation, licenseAndTrainings]);
 
-  // Fetch user details if not already fetched
   useEffect(() => {
+    if (notFound) {
+      showNotFoundPage();
+      return;
+    }
     if (!isFetched && userCode) {
       dispatch(fetchUserDetails(userCode));
     }
-  }, [dispatch, userCode, isFetched]);
+  }, [dispatch, userCode, isFetched, notFound]);
 
   return (
     <DetailsTabs tabs={tabsData} profileCompletion={overallProfileCompletion} />

@@ -224,3 +224,9 @@ export enum MonthlyPointsCardLabels {
 export enum ValidationText {
   email = "Please add a valid email",
 }
+
+export enum NoFoundLabels {
+  title = "No agents yet",
+  message = "It looks like you haven’t added any agents yet. You’ll be able to view and manage them here once added.",
+  button = " Add Agent",
+}

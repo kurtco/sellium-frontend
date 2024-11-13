@@ -53,6 +53,7 @@ const initialState: {
   error: ErrorResponse;
   showErrorAlert: boolean;
   isFetched: boolean;
+  notFound: boolean;
 } = {
   userDetails: {
     personalInformation: null,
@@ -68,6 +69,7 @@ const initialState: {
   },
   showErrorAlert: false,
   isFetched: false,
+  notFound: false,
 };
 
 // Slice para manejar el estado de los detalles del usuario
@@ -89,6 +91,7 @@ const userDetailsSlice = createSlice({
         error: { message: "", error: "" },
         showErrorAlert: false,
         userDetails: initialState.userDetails,
+        notFound: false,
       };
     },
   },
@@ -98,6 +101,7 @@ const userDetailsSlice = createSlice({
         state.loading = true;
         state.error = { message: "", error: "" };
         state.showErrorAlert = false;
+        state.notFound = false;
       })
       .addCase(
         fetchUserDetails.fulfilled,
@@ -111,6 +115,7 @@ const userDetailsSlice = createSlice({
             user: action.payload.user,
           };
           state.isFetched = true;
+          state.notFound = false;
         }
       )
 
@@ -123,6 +128,7 @@ const userDetailsSlice = createSlice({
             message: action.payload?.message || defaultUpdateUserError.message,
           };
           state.showErrorAlert = true;
+          state.notFound = action.payload?.statusCode === 404;
         }
       );
   },
