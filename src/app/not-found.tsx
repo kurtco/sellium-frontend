@@ -33,11 +33,14 @@ export default function NotFound() {
       >
         {NoFoundLabels.title}
       </Typography>
+      <Typography variant="body1" sx={{ color: theme.palette.text.secondary }}>
+        {NoFoundLabels.message}
+      </Typography>
       <Typography
         variant="body1"
         sx={{ marginBottom: 4, color: theme.palette.text.secondary }}
       >
-        {NoFoundLabels.message}
+        {NoFoundLabels.message2}
       </Typography>
       <Button
         variant="contained"
@@ -46,6 +49,7 @@ export default function NotFound() {
           padding: "10px 20px",
           backgroundColor: theme.palette.primary.main,
           color: theme.palette.primary.contrastText,
+          textTransform: "none",
           "&:hover": {
             backgroundColor: theme.palette.primary.dark,
           },

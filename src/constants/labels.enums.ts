@@ -227,6 +227,7 @@ export enum ValidationText {
 
 export enum NoFoundLabels {
   title = "No agents yet",
-  message = "It looks like you haven’t added any agents yet. You’ll be able to view and manage them here once added.",
-  button = " Add Agent",
+  message = "It looks like you haven’t added any agents yet.",
+  message2 = "You’ll be able to view and manage them here once added.",
+  button = "Add Agent",
 }
