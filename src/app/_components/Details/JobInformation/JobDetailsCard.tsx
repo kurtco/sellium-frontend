@@ -21,14 +21,21 @@ import DateSelectField from "../../DateSelectedField";
 import { JobDetailsCardLabels } from "@/constants/labels.enums";
 import { insuranceCompanies, positionsSelect } from "@/constants/constant";
 import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
-import { JobInformation } from "@/interfaces/interfaces";
+import { JobInformation, Users } from "@/interfaces/interfaces";
 
 interface JobDetailsCardProps {
   jobDetails: JobInformation;
+  jobDependencies: Users;
   setJobDetails: (details: any) => void;
+  setJobDependencies: (details: any) => void;
 }
 
-const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
+const JobDetailsCard = ({
+  jobDependencies,
+  jobDetails,
+  setJobDetails,
+  setJobDependencies,
+}: JobDetailsCardProps) => {
   const theme = useTheme();
   const {
     month: promoMonth,
@@ -80,9 +87,9 @@ const JobDetailsCard = ({ jobDetails, setJobDetails }: JobDetailsCardProps) => {
               </Typography>
               <FormControl fullWidth>
                 <Select
-                  value={jobDetails?.position}
+                  value={jobDependencies?.position}
                   onChange={(e) =>
-                    setJobDetails({
+                    setJobDependencies({
                       ...jobDetails,
                       position: e.target.value,
                     })

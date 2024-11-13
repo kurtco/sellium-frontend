@@ -60,7 +60,7 @@ const JobInformationWrapper = () => {
       recruiterCode: jobDependencies?.recruiterCode,
       leaderName: jobDependencies?.leaderName,
       userCode: userCode,
-      position: jobInformation?.position,
+      position: jobDependencies?.position,
       promotionDate: jobInformation.promotionDate,
       personalCode: jobInformation.personalCode,
       partOfCompanySince: jobInformation.partOfCompanySince,
@@ -112,8 +112,14 @@ const JobInformationWrapper = () => {
             <Grid>
               <JobDetailsCard
                 jobDetails={jobInformation}
+                jobDependencies={jobDependencies}
+                setJobDependencies={(data) => {
+                  setJobDependencies((prevState) => ({
+                    ...prevState,
+                    ...data,
+                  }));
+                }}
                 setJobDetails={(data) => {
-                  console.log("<JobDetailsCard data", data);
                   setJobInformation((prevState) => ({
                     ...prevState,
                     ...data,
