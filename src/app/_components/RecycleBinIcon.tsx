@@ -13,7 +13,7 @@ const RecycleBinIcon = ({ disabled = false }: RecycleBinIconProps) => {
   const { mode } = useConfig();
 
   const iconColor = disabled
-    ? theme.palette.grey[400] // Color deshabilitado
+    ? theme.palette.grey[400] // Color disabled
     : mode === ThemeMode.DARK
     ? theme.palette.text.primary
     : defaultBlueColor;
@@ -27,7 +27,7 @@ const RecycleBinIcon = ({ disabled = false }: RecycleBinIconProps) => {
       xmlns="http://www.w3.org/2000/svg"
       style={{
         color: iconColor,
-        opacity: disabled ? 0.5 : 1, // Baja la opacidad si está deshabilitado
+        opacity: disabled ? 0.5 : 1, // changing the opacity in case its disabled
       }}
     >
       <path

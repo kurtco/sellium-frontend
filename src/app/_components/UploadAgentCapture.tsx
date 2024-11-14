@@ -21,12 +21,14 @@ import {
 import CloseIcon from "./CloseIcon";
 import RecycleBinIcon from "./RecycleBinIcon";
 import useConfig from "@/hooks/useConfig";
-import { ThemeMode } from "@/constants/config.enum";
+import { defaultImageUploapError, ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 import LoadingSpinner from "./LoadingSpinner";
 import { DataFromImage } from "@/interfaces/interfaces";
 import { AppDispatch, RootState } from "../../../store/store";
-import { processImage } from "../../../store/imageSlice";
+import { processImage, setShowErrorAlert } from "../../../store/imageSlice";
+import { Alert } from "@mui/material";
+import WarningIcon from "./WarningIcon";
 
 interface UploadAgentCaptureProps {
   error?: boolean;
@@ -62,12 +64,10 @@ const UploadAgentCapture = ({
   const theme = useTheme();
   const { mode } = useConfig();
   const dispatch = useDispatch<AppDispatch>();
-
-  const { loading, dataFromImage, error } = useSelector(
-    (state: RootState) => state.image
-  );
-
   useState<DataFromImage | null>(null);
+
+  const { loading, dataFromImage, error, showSuccessSnackbar, showErrorAlert } =
+    useSelector((state: RootState) => state.image);
 
   const {
     getRootProps,
@@ -81,6 +81,7 @@ const UploadAgentCapture = ({
     },
     multiple: false,
     onDrop: (acceptedFiles: any) => {
+      dispatch(setShowErrorAlert(false));
       setFieldValue(
         "files",
         acceptedFiles.map((file: FileWithPreview) =>
@@ -94,29 +95,50 @@ const UploadAgentCapture = ({
 
   const closeModal = useCallback(() => {
     if (loading) return;
-    handleCloseModal();
+    if (typeof closeModal === "function") {
+      handleCloseModal();
+    }
   }, [loading, handleCloseModal]);
 
   const onRemoveScreenShot = useCallback(() => {
     if (loading) return;
+
     setFieldValue("files", null);
-  }, [loading, setFieldValue]);
+    dispatch(setShowErrorAlert(false));
+  }, [loading, setFieldValue, dispatch]);
 
   useEffect(() => {
-    if (!dataFromImage || !dataFromImage?.userCode || loading) {
+    if (
+      !dataFromImage ||
+      !dataFromImage?.userCode ||
+      loading ||
+      !showSuccessSnackbar
+    ) {
       return;
     }
     onRemoveScreenShot();
     closeModal();
-  }, [loading, dataFromImage, onRemoveScreenShot, closeModal]);
+  }, [
+    loading,
+    dataFromImage,
+    onRemoveScreenShot,
+    closeModal,
+    showSuccessSnackbar,
+  ]);
 
   const onSendScreenShot = () => {
     if (!file || file.length === 0) return;
+    dispatch(setShowErrorAlert(false));
     dispatch(processImage(file[0]));
   };
 
   return (
-    <Box sx={{ width: "100%", ...sx }}>
+    <Box
+      sx={{
+        width: "100%",
+        ...sx,
+      }}
+    >
       {!loading && (
         <Box
           sx={{
@@ -148,7 +170,6 @@ const UploadAgentCapture = ({
         </Box>
       )}
 
-      {error && <Typography color="error">{error}</Typography>}
       {loading && <LoadingSpinner text={LoadingSpinnerLabels.message} />}
 
       {!loading && (
@@ -158,8 +179,8 @@ const UploadAgentCapture = ({
             ...(isDragActive && { opacity: 0.72 }),
             ...((isDragReject || error) && {
               color: theme.palette.error.main,
-              borderColor: theme.palette.error.light,
-              bgcolor: theme.palette.error.lighter,
+              borderColor: theme.palette.common.black,
+              bgcolor: theme.palette.background.default,
             }),
             ...(file && {
               padding: "0", // removing padding when there is a image
@@ -174,7 +195,10 @@ const UploadAgentCapture = ({
           {!file && (
             <Stack spacing={2} alignItems="center" justifyContent="center">
               <UploadFileIcon />
-              <Typography variant="h6" fontWeight={"bold"}>
+              <Typography
+                color={theme.palette.text.primary}
+                sx={{ fontWeight: 500 }}
+              >
                 {UploadAgentCaptureLabels.CONTENTTITLE}
               </Typography>
               <Typography variant="body2" color="textSecondary">
@@ -203,6 +227,17 @@ const UploadAgentCapture = ({
 
       {fileRejections.length > 0 && (
         <RejectionFiles fileRejections={fileRejections} />
+      )}
+
+      {showErrorAlert && (
+        <Alert
+          sx={{ marginTop: 2 }}
+          variant="filled"
+          severity="error"
+          icon={<WarningIcon />}
+        >
+          {error.message || defaultImageUploapError.message}
+        </Alert>
       )}
 
       {!loading && (

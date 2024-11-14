@@ -12,6 +12,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material";
 
 interface TablePaginationProps {
   getPageCount: () => number;
@@ -28,6 +29,7 @@ export default function TablePagination({
   getState,
   initialPageSize,
 }: TablePaginationProps) {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   let options = [10, 25, 50, 100];
 
@@ -86,7 +88,10 @@ export default function TablePagination({
                 value={getState().pagination.pageSize}
                 onChange={handleChange}
                 size="small"
-                sx={{ "& .MuiSelect-select": { py: 0.75, px: 1.25 } }}
+                sx={{
+                  "& .MuiSelect-select": { py: 0.75, px: 1.25 },
+                  color: theme.palette.text.primary,
+                }}
               >
                 {options.map((option) => (
                   <MenuItem key={option} value={option}>

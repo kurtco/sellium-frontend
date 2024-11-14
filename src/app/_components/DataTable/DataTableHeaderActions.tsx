@@ -1,3 +1,6 @@
+"use client";
+
+import React, { Suspense, useState } from "react";
 import {
   Box,
   Button,
@@ -12,9 +15,7 @@ import { TableView } from "@/constants/config.enum";
 import FilterButton from "../FilterButton";
 import SearchBar from "../SearchBar";
 import AddAgentButton from "../AddAgentButton";
-
 import { DataTableLabels } from "@/constants/labels.enums";
-import { useState } from "react";
 
 const DataTableHeaderActions = () => {
   const theme = useTheme();
@@ -31,6 +32,7 @@ const DataTableHeaderActions = () => {
       setToogleViewSelected(newAlignment as TableView);
     }
   };
+
   return (
     <>
       <Box
@@ -96,8 +98,11 @@ const DataTableHeaderActions = () => {
           </ToggleButtonGroup>
           <SearchBar />
         </Box>
+
         <Box>
-          <AddAgentButton />
+          <Suspense>
+            <AddAgentButton />
+          </Suspense>
         </Box>
       </Box>
     </>

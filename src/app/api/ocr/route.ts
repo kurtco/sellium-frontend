@@ -1,4 +1,13 @@
+import { defaultImageUploapError } from "@/constants/config.enum";
+import { ErrorResponse } from "@/interfaces/interfaces";
 import { NextResponse } from "next/server";
+
+// Constante para los encabezados
+const noCacheHeaders = new Headers({
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  Pragma: "no-cache",
+  Expires: "0",
+});
 
 export async function POST(req: Request) {
   try {
@@ -12,15 +21,31 @@ export async function POST(req: Request) {
     });
 
     if (!nestResponse.ok) {
-      throw new Error(`NestJS API Error: ${nestResponse.statusText}`);
+      const errorData = await nestResponse.json();
+      return NextResponse.json(errorData, {
+        status: nestResponse.status,
+        headers: noCacheHeaders,
+      });
     }
 
     const data = await nestResponse.json();
-    return NextResponse.json(data);
+
+    return NextResponse.json(data, { headers: noCacheHeaders });
   } catch (error) {
-    console.error("Error processing image: ", error);
-    return new NextResponse("Error en la API POST", {
-      status: 500,
-    });
+    const uploadError = error as ErrorResponse;
+
+    const errorMessage =
+      uploadError?.message || defaultImageUploapError.message;
+    const errorType = uploadError?.error || defaultImageUploapError.error;
+    const userCode = uploadError?.userCode || "";
+
+    return NextResponse.json(
+      {
+        error: errorType,
+        message: errorMessage,
+        userCode,
+      },
+      { status: 500, headers: noCacheHeaders }
+    );
   }
 }

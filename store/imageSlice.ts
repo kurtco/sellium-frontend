@@ -1,93 +1,209 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { DataFromImage } from "@/interfaces/interfaces";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { DataFromImage, ErrorResponse } from "@/interfaces/interfaces";
+import {
+  defaultImageUploapError,
+  OcrServiceStatus,
+} from "@/constants/config.enum";
 
-// Acción asíncrona para procesar la imagen
-export const processImage = createAsyncThunk(
-  "image/processImage",
-  async (file: File, { rejectWithValue }) => {
+// Request to proccess the Image
+export const processImage = createAsyncThunk<
+  DataFromImage, // Tipo de datos cuando la promesa se resuelve correctamente
+  File, // Tipo del argumento (archivo) que se pasa a la función
+  { rejectValue: ErrorResponse } // Tipo del valor rechazado
+>("image/processImage", async (file: File, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const base64Response = await fetch("/api/base64", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!base64Response.ok) {
+      throw new Error("Error al convertir la imagen a base64");
+    }
+
+    const { base64 } = await base64Response.json();
+
+    const processResponse = await fetch("/api/ocr", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64: base64 }),
+    });
+
+    if (!processResponse.ok) {
+      const errorData: ErrorResponse = await processResponse.json();
+      return rejectWithValue(errorData);
+    }
+
+    const processedData = await processResponse.json();
+    return processedData.data;
+  } catch (error) {
+    const errorMessage = error as ErrorResponse;
+    const errorContent: ErrorResponse = {
+      statusCode: errorMessage.statusCode || 404,
+      error: errorMessage.error || defaultImageUploapError.error,
+      message: errorMessage.message || defaultImageUploapError.message,
+      userCode: errorMessage.userCode || "",
+      data: errorMessage.data || null,
+    };
+    return rejectWithValue(errorContent);
+  }
+});
+
+// Request to update the representative position once google AI processed the image
+export const updateUserPosition = createAsyncThunk<
+  DataFromImage, // Tipo de datos cuando la promesa se resuelve correctamente
+  DataFromImage, // Tipo del argumento (interface ) que se pasa a la función
+  { rejectValue: ErrorResponse } // Tipo del valor rechazado
+>(
+  "image/updateUserPosition",
+  async (data: DataFromImage, { rejectWithValue }) => {
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      // Convertir a base64
-      const base64Response = await fetch("/api/base64", {
+      const response = await fetch("/api/users/updateuserposition", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
 
-      if (!base64Response.ok) {
-        throw new Error("Error al convertir la imagen a base64");
+      if (!response.ok) {
+        const errorData: ErrorResponse = await response.json();
+        return rejectWithValue(errorData);
       }
 
-      const { base64 } = await base64Response.json();
-
-      // Procesar la imagen
-      const processResponse = await fetch("/api/ocr", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64: base64 }),
-      });
-
-      if (!processResponse.ok) {
-        throw new Error("Error al procesar la imagen");
-      }
-
-      const processedData = await processResponse.json();
-      return processedData.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      const errorMessage = error as ErrorResponse;
+      const errorContent: ErrorResponse = {
+        statusCode: errorMessage.statusCode || 404,
+        error: errorMessage.error || defaultImageUploapError.error,
+        message: errorMessage.message || defaultImageUploapError.message,
+        userCode: errorMessage.userCode || "",
+        data: errorMessage.data || null,
+      };
+      return rejectWithValue(errorContent);
     }
   }
 );
 
+// Initial state
 interface ImageState {
   loading: boolean;
   dataFromImage: DataFromImage | null;
-  error: string | null;
-  showSnackbar: boolean;
+  error: ErrorResponse;
+  showSuccessSnackbar: boolean;
+  showErrorAlert?: boolean;
 }
 
 const initialState: ImageState = {
   loading: false,
   dataFromImage: null,
-  error: null,
-  showSnackbar: false,
+  error: {
+    error: "",
+    message: "",
+    userCode: "",
+    data: null,
+  },
+  showSuccessSnackbar: false,
+  showErrorAlert: false,
 };
 
 const imageSlice = createSlice({
   name: "image",
   initialState,
   reducers: {
-    // action to trigger from the UI
-    setShowSnackbar(state, action) {
-      state.showSnackbar = action.payload;
+    setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
+      state.showSuccessSnackbar = action.payload;
+    },
+    setShowErrorAlert(state, action: PayloadAction<boolean>) {
+      state.showErrorAlert = action.payload;
     },
     resetImageState: (state) => {
-      state.loading = false;
-      state.dataFromImage = null;
-      state.error = null;
-      state.showSnackbar = false;
+      return {
+        ...state,
+        loading: false,
+        error: {
+          error: "",
+          message: "",
+          userCode: "",
+        },
+        showSuccessSnackbar: false,
+        showErrorAlert: false,
+      };
     },
   },
   extraReducers: (builder) => {
     builder
+      // *********************  processImage cases  *******************
       .addCase(processImage.pending, (state) => {
         state.loading = true;
-        state.error = null;
-        state.showSnackbar = false;
+        state.error = {
+          error: "",
+          message: "",
+          userCode: "",
+        };
+        state.showSuccessSnackbar = false;
       })
-      .addCase(processImage.fulfilled, (state, action) => {
-        state.loading = false;
-        state.dataFromImage = action.payload;
-        state.showSnackbar = true;
+      .addCase(
+        processImage.fulfilled,
+        (state, action: PayloadAction<DataFromImage>) => {
+          state.loading = false;
+          state.dataFromImage = action.payload;
+          state.showSuccessSnackbar = true;
+        }
+      )
+      .addCase(
+        processImage.rejected,
+        (state, action: PayloadAction<ErrorResponse | undefined>) => {
+          state.loading = false;
+          state.error = {
+            error: action.payload?.error || defaultImageUploapError.error,
+            message: action.payload?.message || defaultImageUploapError.message,
+            userCode: action.payload?.userCode || "",
+          };
+          state.dataFromImage = action.payload?.data as DataFromImage;
+          state.showSuccessSnackbar = false;
+          state.showErrorAlert =
+            String(action.payload?.error) === String(OcrServiceStatus.BadImage);
+        }
+      )
+
+      // *********************  updateUserPosition cases  *******************
+      .addCase(updateUserPosition.pending, (state) => {
+        state.error = {
+          error: "",
+          message: "",
+          userCode: "",
+        };
+        state.showSuccessSnackbar = false;
       })
-      .addCase(processImage.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+      .addCase(
+        updateUserPosition.fulfilled,
+        (state, action: PayloadAction<DataFromImage>) => {
+          state.loading = false;
+          state.dataFromImage = action.payload;
+          state.showSuccessSnackbar = true;
+        }
+      )
+      .addCase(
+        updateUserPosition.rejected,
+        (state, action: PayloadAction<ErrorResponse | undefined>) => {
+          state.loading = false;
+          state.error = {
+            error: action.payload?.error || defaultImageUploapError.error,
+            message: action.payload?.message || defaultImageUploapError.message,
+            userCode: action.payload?.userCode || "",
+          };
+          state.showSuccessSnackbar = false;
+        }
+      );
   },
 });
 
-export const { setShowSnackbar, resetImageState } = imageSlice.actions; // Let's import the actions to handle the snack bar throughout the UI.
+export const { setShowSuccessSnackbar, resetImageState, setShowErrorAlert } =
+  imageSlice.actions;
 export default imageSlice.reducer;

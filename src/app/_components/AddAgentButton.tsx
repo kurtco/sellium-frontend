@@ -1,18 +1,38 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Button } from "@mui/material";
 import { ButtonsLabels } from "@/constants/labels.enums";
 import AddAgentModal from "./AddAgentModal";
+import { resetImageState } from "../../../store/imageSlice";
+import { AppDispatch } from "../../../store/store";
 import { FileWithPreview } from "@/interfaces/interfaces";
+import { useSearchParams } from "next/navigation";
 
 const AddAgentButton = () => {
   const [open, setOpen] = useState(false);
-  const [files, setFiles] = useState<FileWithPreview[] | null>(null);
+  const searchParams = useSearchParams();
 
-  const handleOpen = () => setOpen(true);
+  const [files, setFiles] = useState<FileWithPreview[] | null>(null);
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    const openModal = searchParams.get("openmodal");
+    if (openModal === "true") {
+      setOpen(true);
+      dispatch(resetImageState());
+    }
+  }, [searchParams, dispatch]);
+
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    setOpen(true);
+    dispatch(resetImageState());
+  };
 
   const handleClose = () => {
-    setFiles(null);
     setOpen(false);
+    setFiles(null);
   };
 
   return (
@@ -34,14 +54,12 @@ const AddAgentButton = () => {
         {ButtonsLabels.ADDAGENT}
       </Button>
 
-      {open && (
-        <AddAgentModal
-          open={open}
-          handleClose={handleClose}
-          files={files}
-          setFiles={setFiles}
-        />
-      )}
+      <AddAgentModal
+        open={open}
+        files={files}
+        setFiles={setFiles}
+        handleClose={handleClose}
+      />
     </>
   );
 };

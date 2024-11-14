@@ -4,7 +4,7 @@ import useConfig from "@/hooks/useConfig";
 import { ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 
-const ThemeModeAvatar = () => {
+const SunIcon = () => {
   const theme = useTheme();
   const { mode } = useConfig();
 
@@ -34,4 +34,4 @@ const ThemeModeAvatar = () => {
   );
 };
 
-export default ThemeModeAvatar;
+export default SunIcon;
