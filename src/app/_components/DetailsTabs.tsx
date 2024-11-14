@@ -18,6 +18,8 @@ import { setShowSuccessSnackbar as showJobInfoSnackbar } from "../../../store/de
 import { setShowSuccessSnackbar as showLicenseSnackbar } from "../../../store/details/LicenseAndTrainingsSlice";
 import { setShowSuccessSnackbar as showProgressSnackbar } from "../../../store/details/progressSlice";
 import { useTabContext } from "@/context/TabContext";
+import Link from "next/link";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface TabContent {
   label: string;
@@ -58,9 +60,26 @@ const DetailsTabs = ({ tabs, profileCompletion }: DetailsTabsProps) => {
       }}
     >
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h6" gutterBottom>
-          {AgentDetailsLabels.title}
-        </Typography>
+        <Box display="flex" alignItems="center">
+          <Link
+            href="/"
+            passHref
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ArrowBackIcon
+              sx={{
+                marginRight: 1,
+                cursor: "pointer",
+                color: (theme) => theme.palette.text.primary,
+              }}
+            />
+          </Link>
+          <Typography variant="h6">{AgentDetailsLabels.title}</Typography>
+        </Box>
         <Box
           display="flex"
           flexDirection="row"
