@@ -24,41 +24,41 @@ import { formatDateToString, splitDateString } from "@/utils/commonFunctions";
 import { JobInformation, Users } from "@/interfaces/interfaces";
 
 interface JobDetailsCardProps {
-  jobDetails: JobInformation;
-  jobDependencies: Users;
-  setJobDetails: (details: any) => void;
-  setJobDependencies: (details: any) => void;
+  personalInfoData: JobInformation;
+  userData: Users;
+  setPersonalInfoData: (details: Partial<JobInformation>) => void;
+  setUserData: (details: Pick<Users, "position">) => void;
 }
 
 const JobDetailsCard = ({
-  jobDependencies,
-  jobDetails,
-  setJobDetails,
-  setJobDependencies,
+  userData,
+  personalInfoData,
+  setPersonalInfoData,
+  setUserData,
 }: JobDetailsCardProps) => {
   const theme = useTheme();
   const {
     month: promoMonth,
     day: promoDay,
     year: promoYear,
-  } = splitDateString(formatDateToString(jobDetails.promotionDate));
+  } = splitDateString(formatDateToString(personalInfoData.promotionDate));
 
   const {
     month: companyMonth,
     day: companyDay,
     year: companyYear,
-  } = splitDateString(formatDateToString(jobDetails.partOfCompanySince));
+  } = splitDateString(formatDateToString(personalInfoData.partOfCompanySince));
 
   const handlePromitionDateChange = (newDate: string) => {
-    setJobDetails({
-      ...jobDetails,
+    setPersonalInfoData({
+      ...personalInfoData,
       promotionDate: newDate,
     });
   };
 
   const handleSinceInCompanyDateChange = (newDate: string) => {
-    setJobDetails({
-      ...jobDetails,
+    setPersonalInfoData({
+      ...personalInfoData,
       partOfCompanySince: newDate,
     });
   };
@@ -87,10 +87,10 @@ const JobDetailsCard = ({
               </Typography>
               <FormControl fullWidth>
                 <Select
-                  value={jobDependencies?.position}
+                  value={userData?.position}
                   onChange={(e) =>
-                    setJobDependencies({
-                      ...jobDetails,
+                    setUserData({
+                      ...personalInfoData,
                       position: e.target.value,
                     })
                   }
@@ -125,11 +125,11 @@ const JobDetailsCard = ({
               </Typography>
               <TextField
                 fullWidth
-                value={jobDetails.personalCode}
+                value={personalInfoData.personalCode}
                 variant="outlined"
                 onChange={(e) =>
-                  setJobDetails({
-                    ...jobDetails,
+                  setPersonalInfoData({
+                    ...personalInfoData,
                     personalCode: e.target.value,
                   })
                 }
@@ -158,10 +158,10 @@ const JobDetailsCard = ({
               </Typography>
               <RadioGroup
                 row
-                value={jobDetails.eo ? "true" : "false"}
+                value={personalInfoData.eo ? "true" : "false"}
                 onChange={(e) => {
-                  setJobDetails({
-                    ...jobDetails,
+                  setPersonalInfoData({
+                    ...personalInfoData,
                     eo: e.target.value === "true",
                   });
                 }}
@@ -184,9 +184,12 @@ const JobDetailsCard = ({
               <FormControl fullWidth>
                 <InputLabel>{JobDetailsCardLabels.appointedField}</InputLabel>
                 <Select
-                  value={jobDetails.appointed}
+                  value={personalInfoData.appointed}
                   onChange={(e) =>
-                    setJobDetails({ ...jobDetails, appointed: e.target.value })
+                    setPersonalInfoData({
+                      ...personalInfoData,
+                      appointed: e.target.value,
+                    })
                   }
                   label={JobDetailsCardLabels.appointedField}
                   sx={{

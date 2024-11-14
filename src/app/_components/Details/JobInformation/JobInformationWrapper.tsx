@@ -31,7 +31,7 @@ const JobInformationWrapper = () => {
     error,
     showErrorAlert,
     loading,
-    jobInformation: initialData,
+    jobInformation: jobInformationData,
     user,
   } = useSelector((state: RootState) => state.jobInformation);
 
@@ -40,11 +40,11 @@ const JobInformationWrapper = () => {
   );
 
   const [jobInformation, setJobInformation] =
-    useState<JobInformation>(initialData);
+    useState<JobInformation>(jobInformationData);
   const [jobDependencies, setJobDependencies] = useState<Users>(user);
 
   useEffect(() => {
-    if (!initialData.position && user?.position) {
+    if (user?.position) {
       setJobInformation((prevState) => ({
         ...prevState,
         position: user.position || prevState.position,
@@ -52,7 +52,7 @@ const JobInformationWrapper = () => {
     }
 
     setJobDependencies(user);
-  }, [initialData, user]);
+  }, [jobInformationData, user]);
 
   const handleSubmit = async () => {
     const dataToSave = {
@@ -111,15 +111,15 @@ const JobInformationWrapper = () => {
           >
             <Grid>
               <JobDetailsCard
-                jobDetails={jobInformation}
-                jobDependencies={jobDependencies}
-                setJobDependencies={(data) => {
+                personalInfoData={jobInformation}
+                userData={jobDependencies}
+                setUserData={(data) => {
                   setJobDependencies((prevState) => ({
                     ...prevState,
                     ...data,
                   }));
                 }}
-                setJobDetails={(data) => {
+                setPersonalInfoData={(data) => {
                   setJobInformation((prevState) => ({
                     ...prevState,
                     ...data,
