@@ -19,10 +19,21 @@ export async function POST(req: Request) {
       throw new Error(`NestJS API Error: ${nestResponse.statusText}`);
     }
     const base64Data = await nestResponse.text();
-    return NextResponse.json({
-      statusCode: nestResponse.status,
-      base64: base64Data,
+
+    // Agregar encabezados para deshabilitar el caché
+    const headers = new Headers({
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
     });
+
+    return NextResponse.json(
+      {
+        statusCode: nestResponse.status,
+        base64: base64Data,
+      },
+      { headers }
+    );
   } catch (error) {
     console.error("Error converting image to base64:", error);
     return new NextResponse("Error converting image to base64", {

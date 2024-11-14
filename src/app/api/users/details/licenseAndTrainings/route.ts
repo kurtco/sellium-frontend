@@ -27,7 +27,15 @@ export async function POST(req: Request) {
 
     // Parse the response data
     const responseData = await response.json();
-    return NextResponse.json(responseData);
+
+    // Add headers to disable caching
+    const headers = new Headers({
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    });
+
+    return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error("Error saving license and training data:", error);
     return new NextResponse("Error saving license and training data", {

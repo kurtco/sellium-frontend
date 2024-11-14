@@ -8,7 +8,11 @@ export async function GET(
 
   try {
     const response = await fetch(
-      `${process.env.API_HOST}user-details/${userCode}`
+      `${process.env.API_HOST}user-details/${userCode}`,
+      {
+        method: "GET",
+        cache: "no-store", // Deshabilitar caché explícitamente
+      }
     );
 
     if (!response.ok) {
@@ -45,7 +49,15 @@ export async function GET(
     }
 
     const data = await response.json();
-    return NextResponse.json(data); // success response
+
+    // Agregar encabezados que deshabilitan el caché en la respuesta
+    const headers = new Headers({
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    });
+
+    return NextResponse.json(data, { headers }); // Success response con encabezados de no-caché
   } catch (error) {
     console.error("Error fetching user details:", error);
     return NextResponse.json(

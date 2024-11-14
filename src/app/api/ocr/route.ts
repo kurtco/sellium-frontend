@@ -2,6 +2,13 @@ import { defaultImageUploapError } from "@/constants/config.enum";
 import { ErrorResponse } from "@/interfaces/interfaces";
 import { NextResponse } from "next/server";
 
+// Constante para los encabezados
+const noCacheHeaders = new Headers({
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  Pragma: "no-cache",
+  Expires: "0",
+});
+
 export async function POST(req: Request) {
   try {
     const { imageBase64 } = await req.json();
@@ -15,11 +22,15 @@ export async function POST(req: Request) {
 
     if (!nestResponse.ok) {
       const errorData = await nestResponse.json();
-      return NextResponse.json(errorData, { status: nestResponse.status });
+      return NextResponse.json(errorData, {
+        status: nestResponse.status,
+        headers: noCacheHeaders,
+      });
     }
 
     const data = await nestResponse.json();
-    return NextResponse.json(data);
+
+    return NextResponse.json(data, { headers: noCacheHeaders });
   } catch (error) {
     const uploadError = error as ErrorResponse;
 
@@ -34,7 +45,7 @@ export async function POST(req: Request) {
         message: errorMessage,
         userCode,
       },
-      { status: 500 }
+      { status: 500, headers: noCacheHeaders }
     );
   }
 }

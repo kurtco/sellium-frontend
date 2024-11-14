@@ -20,7 +20,15 @@ export async function POST(req: Request) {
     }
 
     const responseData = await response.json();
-    return NextResponse.json(responseData);
+
+    // Agregar encabezados para eliminar el caché
+    const headers = new Headers({
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    });
+
+    return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error("Error saving job information:", error);
     return new NextResponse("Error saving job information", {
