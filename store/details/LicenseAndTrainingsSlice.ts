@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { LicenseAndTrainings, ErrorResponse } from "@/interfaces/interfaces";
+import {
+  LicenseAndTrainings,
+  ErrorResponse,
+  Users,
+} from "@/interfaces/interfaces";
 import {
   defaultUpdateLicenseAndTrainingsError,
   defaultUpdateUserError,
@@ -30,8 +34,9 @@ export const saveLicenseAndTrainings = createAsyncThunk<
 
       const data = await response.json();
 
-      if (data.user) {
-        dispatch(setUser(data.user));
+      if (data.data?.user) {
+        const userData: Users = data.data.user;
+        dispatch(setUser(userData));
       }
 
       return {

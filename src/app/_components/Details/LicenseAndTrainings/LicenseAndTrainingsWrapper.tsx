@@ -37,7 +37,7 @@ const LicenseAndTrainingsWrapper = () => {
     error,
   } = useSelector((state: RootState) => state.userDetails.licenseAndTrainings);
   const { loading: gettingDetailsloading } = useSelector(
-    (state: RootState) => state.userDetails.userOverview.user
+    (state: RootState) => state.userDetails.userOverview
   );
   const [licenseAndTrainings, setLicenseAndTrainings] =
     useState<LicenseAndTrainings>(initialData);

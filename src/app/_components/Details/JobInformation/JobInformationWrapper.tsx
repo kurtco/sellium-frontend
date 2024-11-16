@@ -35,7 +35,7 @@ const JobInformationWrapper = () => {
   } = useSelector((state: RootState) => state.userDetails.jobInformation);
 
   const { loading: gettingDetailsloading, data: userData } = useSelector(
-    (state: RootState) => state.userDetails.userOverview.user
+    (state: RootState) => state.userDetails.userOverview
   );
   const [jobInformation, setJobInformation] =
     useState<JobInformation>(jobInformationData);

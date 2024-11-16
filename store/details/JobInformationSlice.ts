@@ -30,9 +30,9 @@ export const saveJobInformation = createAsyncThunk<
 
       const data = await response.json();
 
-      // Actualizar `user` si está presente en la respuesta
-      if (data.user) {
-        dispatch(setUser(data.user));
+      if (data.data?.user) {
+        const userData: Users = data.data.user;
+        dispatch(setUser(userData));
       }
 
       return {

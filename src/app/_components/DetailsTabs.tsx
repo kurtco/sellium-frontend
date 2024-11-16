@@ -41,30 +41,10 @@ const DetailsTabs = ({ tabs, profileCompletion }: DetailsTabsProps) => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
     dispatch(fetchUserOverview(id));
-    dispatch(
-      showPersonalInfoSnackbar({
-        section: "personalInformation",
-        value: false,
-      })
-    );
-    dispatch(
-      showJobInfoSnackbar({
-        section: "jobInformation",
-        value: false,
-      })
-    );
-    dispatch(
-      showLicenseSnackbar({
-        section: "licenseAndTrainings",
-        value: false,
-      })
-    );
-    dispatch(
-      showProgressSnackbar({
-        section: "progress",
-        value: false,
-      })
-    );
+    dispatch(showPersonalInfoSnackbar(false));
+    dispatch(showJobInfoSnackbar(false));
+    dispatch(showLicenseSnackbar(false));
+    dispatch(showProgressSnackbar(false));
   };
 
   return (

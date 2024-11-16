@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { Progress, ErrorResponse } from "@/interfaces/interfaces";
+import { Progress, ErrorResponse, Users } from "@/interfaces/interfaces";
 import {
   defaultUpdateProgressError,
   defaultUpdateUserError,
@@ -30,8 +30,9 @@ export const saveProgress = createAsyncThunk<
 
       const data = await response.json();
 
-      if (data.user) {
-        dispatch(setUser(data.user));
+      if (data.data?.user) {
+        const userData: Users = data.data.user;
+        dispatch(setUser(userData));
       }
 
       return {

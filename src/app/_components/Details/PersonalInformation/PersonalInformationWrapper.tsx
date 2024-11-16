@@ -38,7 +38,7 @@ const PersonalInformationWrapper = () => {
   } = useSelector((state: RootState) => state.userDetails.personalInformation);
 
   const { loading: gettingDetailsloading } = useSelector(
-    (state: RootState) => state.userDetails.userOverview.user
+    (state: RootState) => state.userDetails.userOverview
   );
   const [personalInformation, setPersonalInformation] =
     useState<PersonalInformation>(initialData);

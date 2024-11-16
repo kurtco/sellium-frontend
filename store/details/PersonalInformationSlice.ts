@@ -36,8 +36,9 @@ export const savePersonalInformation = createAsyncThunk<
       }
       const data = await response.json();
 
-      if (data.user) {
-        dispatch(setUser(data.user));
+      if (data.data?.user) {
+        const userData: Users = data.data.user;
+        dispatch(setUser(userData));
       }
 
       return {
