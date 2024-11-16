@@ -30,13 +30,11 @@ const LicenseAndTrainingsWrapper = () => {
   const userCode = params.id as string;
 
   const {
-    licenseAndTrainings: {
-      data: initialData,
-      loading,
-      showSuccessSnackbar,
-      showErrorAlert,
-      error,
-    },
+    data: initialData,
+    loading,
+    showSuccessSnackbar,
+    showErrorAlert,
+    error,
   } = useSelector((state: RootState) => state.userDetails.licenseAndTrainings);
   const { loading: gettingDetailsloading } = useSelector(
     (state: RootState) => state.userDetails.userOverview.user
@@ -58,12 +56,8 @@ const LicenseAndTrainingsWrapper = () => {
   };
 
   const handleCloseSnackbar = useCallback(() => {
-    dispatch(
-      setShowSuccessSnackbar({ section: "licenseAndTrainings", value: false })
-    );
-    dispatch(
-      setShowErrorAlert({ section: "licenseAndTrainings", value: false })
-    );
+    dispatch(setShowSuccessSnackbar(false));
+    dispatch(setShowErrorAlert(false));
   }, [dispatch]);
 
   return (

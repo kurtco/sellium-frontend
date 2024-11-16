@@ -55,3 +55,10 @@ export enum defaultUpdateProgressError {
   message = "There was a issue updating the progress details, please try again!",
   error = "Internal Server Error",
 }
+
+export enum saveUserSuccessMessage {
+  personalInformation = "Personal information saved",
+  jobInformation = "Job information saved",
+  licenseInformation = "License and trainnings  information saved",
+  progress = "Progress information saved",
+}

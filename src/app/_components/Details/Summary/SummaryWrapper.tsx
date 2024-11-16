@@ -10,21 +10,19 @@ import { PersonalInformation } from "@/interfaces/interfaces";
 
 const SummaryWrapper = () => {
   const { data: personalInformationData } = useSelector(
-    (state: RootState) =>
-      state.userDetails.personalInformation.personalInformation
+    (state: RootState) => state.userDetails.personalInformation
   );
 
   const { data: jobInformation } = useSelector(
-    (state: RootState) => state.userDetails.jobInformation.jobInformation
+    (state: RootState) => state.userDetails.jobInformation
   );
 
   const { data: licenseAndTrainings } = useSelector(
-    (state: RootState) =>
-      state.userDetails.licenseAndTrainings.licenseAndTrainings
+    (state: RootState) => state.userDetails.licenseAndTrainings
   );
 
   const { data: user, loading: userLoading } = useSelector(
-    (state: RootState) => state.userDetails.userOverview.user
+    (state: RootState) => state.userDetails.userOverview
   );
 
   return (

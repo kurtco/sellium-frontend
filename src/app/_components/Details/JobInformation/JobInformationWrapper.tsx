@@ -27,17 +27,14 @@ const JobInformationWrapper = () => {
   const userCode = params.id as string;
 
   const {
-    jobInformation: {
-      data: jobInformationData,
-      loading,
-      showSuccessSnackbar,
-      showErrorAlert,
-      error,
-    },
-    user: { data: userData },
+    data: jobInformationData,
+    loading,
+    showSuccessSnackbar,
+    showErrorAlert,
+    error,
   } = useSelector((state: RootState) => state.userDetails.jobInformation);
 
-  const { loading: gettingDetailsloading } = useSelector(
+  const { loading: gettingDetailsloading, data: userData } = useSelector(
     (state: RootState) => state.userDetails.userOverview.user
   );
   const [jobInformation, setJobInformation] =
@@ -72,10 +69,8 @@ const JobInformationWrapper = () => {
   };
 
   const handleCloseSnackbar = useCallback(() => {
-    dispatch(
-      setShowSuccessSnackbar({ section: "jobInformation", value: false })
-    );
-    dispatch(setShowErrorAlert({ section: "jobInformation", value: false }));
+    dispatch(setShowSuccessSnackbar(false));
+    dispatch(setShowErrorAlert(false));
   }, [dispatch]);
 
   return (

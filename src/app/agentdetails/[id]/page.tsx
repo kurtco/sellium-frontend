@@ -41,13 +41,21 @@ const AgentDetails = () => {
   const params = useParams();
   const userCode = params.id as string;
 
-  // Selector adaptado al nuevo reducer
-  const {
-    user: { isFetched, notFound },
-    personalInformation: { data: personalInformation },
-    jobInformation: { data: jobInformation },
-    licenseAndTrainings: { data: licenseAndTrainings },
-  } = useSelector((state: RootState) => state.userDetails.userOverview);
+  const { isFetched, notFound } = useSelector(
+    (state: RootState) => state.userDetails.userOverview
+  );
+
+  const { data: personalInformation } = useSelector(
+    (state: RootState) => state.userDetails.personalInformation
+  );
+
+  const { data: jobInformation } = useSelector(
+    (state: RootState) => state.userDetails.jobInformation
+  );
+
+  const { data: licenseAndTrainings } = useSelector(
+    (state: RootState) => state.userDetails.licenseAndTrainings
+  );
 
   // Memoized calculation for overall profile completion
   const overallProfileCompletion = useMemo(() => {

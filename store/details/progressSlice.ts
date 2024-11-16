@@ -3,6 +3,7 @@ import { Progress, ErrorResponse } from "@/interfaces/interfaces";
 import {
   defaultUpdateProgressError,
   defaultUpdateUserError,
+  saveUserSuccessMessage,
 } from "@/constants/config.enum";
 import { initialState } from "../userDetails.reducer";
 import { fetchUserOverview, setUser } from "./userOverviewSlice";
@@ -13,7 +14,7 @@ export const saveProgress = createAsyncThunk<
   Progress,
   { rejectValue: ErrorResponse }
 >(
-  "userDetails/saveProgress",
+  "details/saveProgress",
   async (progressData: Progress, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch("/api/users/details/progress", {
@@ -29,87 +30,88 @@ export const saveProgress = createAsyncThunk<
 
       const data = await response.json();
 
-      // Si la respuesta contiene datos de 'user', actualizamos 'user' utilizando la acción setUser
       if (data.user) {
-        dispatch(setUser(data.user)); // Despachamos la acción para actualizar 'user'
+        dispatch(setUser(data.user));
       }
 
-      return { message: "Progress data saved", data: data.progress };
+      return {
+        message: saveUserSuccessMessage.progress,
+        data: data.progress,
+      };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
-      const errorContent: ErrorResponse = {
+      return rejectWithValue({
         statusCode: errorMessage.statusCode || 404,
         error: errorMessage.error || defaultUpdateUserError.error,
         message: errorMessage.message || defaultUpdateProgressError.message,
         userCode: errorMessage.userCode || "",
         data: errorMessage.data || null,
-      };
-      return rejectWithValue(errorContent);
+      });
     }
   }
 );
 
 const progressSlice = createSlice({
-  name: "progressSlice",
-  initialState,
+  name: "progress",
+  initialState: initialState.progress,
   reducers: {
-    setShowSuccessSnackbar(
-      state,
-      action: PayloadAction<{ section: "progress"; value: boolean }>
-    ) {
-      state.progress.showSuccessSnackbar = action.payload.value;
+    setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
+      state.showSuccessSnackbar = action.payload;
     },
-    setShowErrorAlert(
-      state,
-      action: PayloadAction<{ section: "progress"; value: boolean }>
-    ) {
-      state.progress.showErrorAlert = action.payload.value;
+    setShowErrorAlert(state, action: PayloadAction<boolean>) {
+      state.showErrorAlert = action.payload;
     },
     resetProgressState(state) {
-      state.progress = {
-        ...initialState.progress,
-      };
+      state.data = initialState.progress.data;
+      state.loading = false;
+      state.error = { message: "", error: "" };
+      state.showSuccessSnackbar = false;
+      state.showErrorAlert = false;
+      state.isFetched = false;
     },
   },
   extraReducers: (builder) => {
     builder
+
       .addCase(saveProgress.pending, (state) => {
-        state.progress.loading = true;
-        state.progress.error = { message: "", error: "" };
-        state.progress.showSuccessSnackbar = false;
+        state.loading = true;
+        state.error = { message: "", error: "" };
+        state.showSuccessSnackbar = false;
       })
+
       .addCase(
         saveProgress.fulfilled,
         (state, action: PayloadAction<{ message: string; data: Progress }>) => {
-          state.progress.loading = false;
-          state.progress.data = action.payload.data;
-          state.progress.showSuccessSnackbar = true;
+          state.loading = false;
+          state.data = action.payload.data;
+          state.showSuccessSnackbar = true;
         }
       )
+
       .addCase(
         saveProgress.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
-          state.progress.loading = false;
-          state.progress.error = {
+          state.loading = false;
+          state.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message || defaultUpdateProgressError.message,
           };
-          state.progress.showSuccessSnackbar = false;
-          state.progress.showErrorAlert = true;
+          state.showSuccessSnackbar = false;
+          state.showErrorAlert = true;
         }
       )
-      // Sincronización de datos desde el UserOverviewSlice
+
       .addCase(fetchUserOverview.fulfilled, (state, action) => {
-        state.progress.data = {
-          ...state.progress.data,
+        state.data = {
+          ...state.data,
           ...action.payload.progress,
         };
+        state.isFetched = true;
       });
   },
 });
 
-// Exportar acciones y reducer
 export const { setShowSuccessSnackbar, setShowErrorAlert, resetProgressState } =
   progressSlice.actions;
 

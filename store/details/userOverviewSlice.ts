@@ -3,7 +3,6 @@ import { DetailsState, ErrorResponse, Users } from "@/interfaces/interfaces";
 import { defaultUpdateUserError } from "@/constants/config.enum";
 import { initialState } from "../userDetails.reducer";
 
-// Async thunk para obtener los detalles del usuario
 export const fetchUserOverview = createAsyncThunk<
   DetailsState,
   string,
@@ -20,74 +19,55 @@ export const fetchUserOverview = createAsyncThunk<
     return data;
   } catch (error) {
     const errorMessage = error as ErrorResponse;
-    const errorContent: ErrorResponse = {
+    return rejectWithValue({
       statusCode: errorMessage.statusCode || 404,
       error: errorMessage.error || defaultUpdateUserError.error,
       message: errorMessage.message || defaultUpdateUserError.message,
       userCode: errorMessage.userCode || "",
       data: errorMessage.data || null,
-    };
-    return rejectWithValue(errorContent);
+    });
   }
 });
 
 const userOverviewSlice = createSlice({
-  name: "userOverviewSlice",
-  initialState,
+  name: "userOverview",
+  initialState: initialState.user,
   reducers: {
-    setShowErrorAlert(
-      state,
-      action: PayloadAction<{
-        section: keyof typeof initialState;
-        value: boolean;
-      }>
-    ) {
-      state[action.payload.section].showErrorAlert = action.payload.value;
+    setShowErrorAlert(state, action: PayloadAction<boolean>) {
+      state.showErrorAlert = action.payload;
     },
-    resetIsFetched(
-      state,
-      action: PayloadAction<{
-        section: keyof typeof initialState;
-        value: boolean;
-      }>
-    ) {
-      state[action.payload.section].isFetched = action.payload.value;
-    },
-    resetUserDetailsState() {
-      return initialState;
+    resetUserState(state) {
+      state.data = initialState.user.data;
+      state.loading = false;
+      state.error = { message: "", error: "" };
+      state.showSuccessSnackbar = false;
+      state.showErrorAlert = false;
+      state.isFetched = false;
+      state.notFound = false;
     },
     setUser(state, action: PayloadAction<Users>) {
-      // Actualizamos la sección de `user` en el estado
-      state.user.data = {
-        ...state.user.data,
-        ...action.payload, // Actualizamos solo las propiedades nuevas
+      state.data = {
+        ...state.data,
+        ...action.payload,
       };
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserOverview.pending, (state) => {
-        state.user.loading = true;
-        state.user.error = { message: "", error: "" };
-        state.user.showErrorAlert = false;
-        state.user.notFound = false;
+        state.loading = true;
+        state.error = { message: "", error: "" };
+        state.showErrorAlert = false;
+        state.notFound = false;
       })
       .addCase(
         fetchUserOverview.fulfilled,
         (state, action: PayloadAction<DetailsState>) => {
-          state.user.notFound = false;
-          state.user.isFetched = true;
-          state.user.loading = false;
-
-          // Actualizamos las secciones específicas
-          state.personalInformation.data = action.payload.personalInformation;
-          state.jobInformation.data = action.payload.jobInformation;
-          state.licenseAndTrainings.data = action.payload.licenseAndTrainings;
-          state.progress.data = action.payload.progress;
-
-          // Actualizamos directamente `user` usando `setUser`
-          state.user.data = {
-            ...state.user.data,
+          state.notFound = false;
+          state.isFetched = true;
+          state.loading = false;
+          state.data = {
+            ...state.data,
             ...action.payload.user,
           };
         }
@@ -95,24 +75,19 @@ const userOverviewSlice = createSlice({
       .addCase(
         fetchUserOverview.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
-          state.user.loading = false;
-          state.user.error = {
+          state.loading = false;
+          state.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message: action.payload?.message || defaultUpdateUserError.message,
           };
-          state.user.showErrorAlert = true;
-          state.user.notFound = action.payload?.statusCode === 404;
+          state.showErrorAlert = true;
+          state.notFound = action.payload?.statusCode === 404;
         }
       );
   },
 });
 
-// Exportar acciones y reducer
-export const {
-  setShowErrorAlert,
-  resetUserDetailsState,
-  resetIsFetched,
-  setUser,
-} = userOverviewSlice.actions;
+export const { setShowErrorAlert, resetUserState, setUser } =
+  userOverviewSlice.actions;
 
 export default userOverviewSlice.reducer;

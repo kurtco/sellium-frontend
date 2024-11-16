@@ -35,10 +35,7 @@ const PersonalInformationWrapper = () => {
     showSuccessSnackbar,
     showErrorAlert,
     error,
-  } = useSelector(
-    (state: RootState) =>
-      state.userDetails.personalInformation.personalInformation
-  );
+  } = useSelector((state: RootState) => state.userDetails.personalInformation);
 
   const { loading: gettingDetailsloading } = useSelector(
     (state: RootState) => state.userDetails.userOverview.user
@@ -61,12 +58,8 @@ const PersonalInformationWrapper = () => {
   };
 
   const handleCloseSnackbar = useCallback(() => {
-    dispatch(
-      setShowSuccessSnackbar({ section: "personalInformation", value: false })
-    );
-    dispatch(
-      setShowErrorAlert({ section: "personalInformation", value: false })
-    );
+    dispatch(setShowSuccessSnackbar(false));
+    dispatch(setShowErrorAlert(false));
   }, [dispatch]);
 
   return (

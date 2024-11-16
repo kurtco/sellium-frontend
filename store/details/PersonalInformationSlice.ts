@@ -7,11 +7,10 @@ import {
 import {
   defaultUpdatePersonalInformationError,
   defaultUpdateUserError,
+  saveUserSuccessMessage,
 } from "@/constants/config.enum";
 import { initialState } from "../iniitialState";
 import { fetchUserOverview, setUser } from "./userOverviewSlice";
-
-// Acción asíncrona para guardar información personal
 
 // Async thunk para guardar `personalInformation`
 export const savePersonalInformation = createAsyncThunk<
@@ -25,7 +24,7 @@ export const savePersonalInformation = createAsyncThunk<
   "details/savePersonalInformation",
   async (personalInfo: PersonalInformation, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch("/api/users/details/PersonalInformation", {
+      const response = await fetch("/api/users/details/personalInformation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(personalInfo),
@@ -41,9 +40,12 @@ export const savePersonalInformation = createAsyncThunk<
         dispatch(setUser(data.user));
       }
 
-      return (await response.json()) as {
-        message: string;
-        data: { personalInformation: PersonalInformation; user: Users };
+      return {
+        message: saveUserSuccessMessage.personalInformation,
+        data: {
+          personalInformation: data.personalInformation,
+          user: data.user,
+        },
       };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
@@ -60,35 +62,35 @@ export const savePersonalInformation = createAsyncThunk<
   }
 );
 
+// Slice para manejar el estado de `personalInformation`
 const personalInformationSlice = createSlice({
-  name: "personalInformationSlice",
-  initialState,
+  name: "personalInformation",
+  initialState: initialState.personalInformation, // Usamos solo la porción específica del estado inicial
   reducers: {
-    setShowSuccessSnackbar(
-      state,
-      action: PayloadAction<{ section: "personalInformation"; value: boolean }>
-    ) {
-      state.personalInformation.showSuccessSnackbar = action.payload.value;
+    setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
+      state.showSuccessSnackbar = action.payload;
     },
-    setShowErrorAlert(
-      state,
-      action: PayloadAction<{ section: "personalInformation"; value: boolean }>
-    ) {
-      state.personalInformation.showErrorAlert = action.payload.value;
+    setShowErrorAlert(state, action: PayloadAction<boolean>) {
+      state.showErrorAlert = action.payload;
     },
     resetPersonalInformationState(state) {
-      state.personalInformation = {
-        ...initialState.personalInformation,
-      };
+      state.data = initialState.personalInformation.data;
+      state.loading = false;
+      state.error = { message: "", error: "" };
+      state.showSuccessSnackbar = false;
+      state.showErrorAlert = false;
+      state.isFetched = false;
     },
   },
   extraReducers: (builder) => {
     builder
+      // Mientras se guarda la información personal
       .addCase(savePersonalInformation.pending, (state) => {
-        state.personalInformation.loading = true;
-        state.personalInformation.error = { message: "", error: "" };
-        state.personalInformation.showSuccessSnackbar = false;
+        state.loading = true;
+        state.error = { message: "", error: "" };
+        state.showSuccessSnackbar = false;
       })
+      // Cuando se guarda con éxito
       .addCase(
         savePersonalInformation.fulfilled,
         (
@@ -98,35 +100,33 @@ const personalInformationSlice = createSlice({
             data: { personalInformation: PersonalInformation; user: Users };
           }>
         ) => {
-          state.personalInformation.loading = false;
-          state.personalInformation.data =
-            action.payload.data.personalInformation;
-          state.personalInformation.showSuccessSnackbar = true;
+          state.loading = false;
+          state.data = action.payload.data.personalInformation;
+          state.showSuccessSnackbar = true;
         }
       )
+      // Cuando falla al guardar
       .addCase(
         savePersonalInformation.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
-          state.personalInformation.loading = false;
-          state.personalInformation.error = {
+          state.loading = false;
+          state.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message ||
               defaultUpdatePersonalInformationError.message,
           };
-          state.personalInformation.showSuccessSnackbar = false;
-          state.personalInformation.showErrorAlert = true;
+          state.showSuccessSnackbar = false;
+          state.showErrorAlert = true;
         }
       )
+      // Sincronizar con `fetchUserOverview`
       .addCase(fetchUserOverview.fulfilled, (state, action) => {
-        state.personalInformation.data = {
-          ...state.personalInformation.data,
+        state.data = {
+          ...state.data,
           ...action.payload.personalInformation,
         };
-        state.user.data = {
-          ...state.user.data,
-          ...action.payload.user,
-        };
+        state.isFetched = true; // Marcamos que los datos han sido obtenidos
       });
   },
 });
