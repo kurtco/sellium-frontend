@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { Box, Button } from "@mui/material";
 
@@ -11,23 +11,27 @@ import { AppDispatch, RootState } from "../../../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { MonthlyPoints, Progress } from "@/interfaces/interfaces";
 
-import { saveProgress } from "../../../../../store/details/progressSlice";
 import { createMonthlyPointsArray } from "@/utils/commonFunctions";
 import { useParams } from "next/navigation";
+import { saveProgress } from "../../../../../store/details/progressSlice";
 
 const ProgressWrapper = () => {
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams();
   const userCode = params.id as string;
 
-  const { progress: initialData } = useSelector(
-    (state: RootState) => state.progress
-  );
+  const {
+    progress: { data: initialData },
+  } = useSelector((state: RootState) => state.userDetails.progress);
 
   const [progressData, setProgressData] = useState<Progress>(initialData);
-  const [progressYearSelected, setprogressYearSelected] = useState<number>(
+  const [progressYearSelected, setProgressYearSelected] = useState<number>(
     initialData.year || new Date().getFullYear()
   );
+
+  useEffect(() => {
+    setProgressData(initialData);
+  }, [initialData]);
 
   const handleMonthlyPointsChange = (updatedMonthlyPoints: MonthlyPoints[]) => {
     setProgressData((prevState) => {
@@ -67,7 +71,7 @@ const ProgressWrapper = () => {
           <MonthlyPointsCard
             monthlyPoints={createMonthlyPointsArray(progressData)}
             setMonthlyPoints={handleMonthlyPointsChange}
-            setYear={setprogressYearSelected}
+            setYear={setProgressYearSelected}
             year={progressYearSelected}
           />
         </Grid>

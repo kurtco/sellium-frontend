@@ -36,6 +36,11 @@ export enum defaultUpdateUserError {
   error = "Internal Server Error",
 }
 
+export enum defaultUpdatePersonalInformationError {
+  message = "There was a issue updating the personal information details, please try again!",
+  error = "Internal Server Error",
+}
+
 export enum defaultUpdateJobInformationError {
   message = "There was a issue updating the job information details, please try again!",
   error = "Internal Server Error",

@@ -1,66 +1,21 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  ErrorResponse,
-  JobInformation,
-  Recruiter,
-  Users,
-} from "@/interfaces/interfaces";
+import { JobInformation, Users, ErrorResponse } from "@/interfaces/interfaces";
+
 import {
   defaultUpdateJobInformationError,
   defaultUpdateUserError,
 } from "@/constants/config.enum";
-import { fetchUserDetails } from "./UserDetailsSlice"; // Importamos la acción
+import { initialState } from "../userDetails.reducer";
+import { fetchUserOverview, setUser } from "./userOverviewSlice";
 
-// initial state of job info. data
-const initialState: {
-  jobInformation: JobInformation;
-  user: Users;
-  loading: boolean;
-  error: ErrorResponse;
-  showSuccessSnackbar: boolean;
-  showErrorAlert: boolean;
-} = {
-  jobInformation: {
-    userCode: "",
-    position: "",
-    promotionDate: "",
-    personalCode: "",
-    partOfCompanySince: "",
-    appointed: "",
-    eo: undefined,
-  },
-  user: {
-    id: 0,
-    recruiterName: "",
-    leaderName: "",
-    leaderCode: "",
-    userName: "",
-    position: "",
-    recruiterCode: "",
-    userCode: "",
-    startDate: "",
-    birthDate: "",
-    phone: "",
-    email: "",
-    homeAddress: "",
-    businessAddress: "",
-    spouseName: "",
-    recruiter: {} as Recruiter,
-    recruits: [],
-  },
-  loading: false,
-  error: { message: "", error: "" },
-  showSuccessSnackbar: false,
-  showErrorAlert: false,
-};
-
+// Async thunk para guardar `jobInformation`
 export const saveJobInformation = createAsyncThunk<
-  { message: string; data: { jobInformation: JobInformation; user: Users } }, //response type
-  JobInformation, // paramerts type
-  { rejectValue: ErrorResponse } // error case type
+  { message: string; data: { jobInformation: JobInformation; user: Users } },
+  JobInformation,
+  { rejectValue: ErrorResponse }
 >(
   "details/saveJobInformation",
-  async (jobInfo: JobInformation, { rejectWithValue }) => {
+  async (jobInfo: JobInformation, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch("/api/users/details/jobInformation", {
         method: "POST",
@@ -73,51 +28,58 @@ export const saveJobInformation = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
+      const data = await response.json();
+
+      if (data.user) {
+        dispatch(setUser(data.user));
+      }
+
       return (await response.json()) as {
         message: string;
         data: { jobInformation: JobInformation; user: Users };
       };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
-      const errorContent: ErrorResponse = {
+      return rejectWithValue({
         statusCode: errorMessage.statusCode || 404,
         error: errorMessage.error || defaultUpdateUserError.error,
-        message: errorMessage.message || defaultUpdateUserError.message,
+        message:
+          errorMessage.message || defaultUpdateJobInformationError.message,
         userCode: errorMessage.userCode || "",
         data: errorMessage.data || null,
-      };
-      return rejectWithValue(errorContent);
+      });
     }
   }
 );
 
 const jobInformationSlice = createSlice({
-  name: "jobInformation",
+  name: "jobInformationSlice",
   initialState,
   reducers: {
-    setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
-      state.showSuccessSnackbar = action.payload;
+    setShowSuccessSnackbar(
+      state,
+      action: PayloadAction<{ section: "jobInformation"; value: boolean }>
+    ) {
+      state.jobInformation.showSuccessSnackbar = action.payload.value;
     },
-    setShowErrorAlert(state, action: PayloadAction<boolean>) {
-      state.showErrorAlert = action.payload;
+    setShowErrorAlert(
+      state,
+      action: PayloadAction<{ section: "jobInformation"; value: boolean }>
+    ) {
+      state.jobInformation.showErrorAlert = action.payload.value;
     },
     resetJobInformationState(state) {
-      return {
-        ...state,
-        loading: false,
-        error: { message: "", error: "" },
-        showSuccessSnackbar: false,
-        showErrorAlert: false,
-        jobInformation: initialState.jobInformation,
+      state.jobInformation = {
+        ...initialState.jobInformation,
       };
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(saveJobInformation.pending, (state) => {
-        state.loading = true;
-        state.error = { message: "", error: "" };
-        state.showSuccessSnackbar = false;
+        state.jobInformation.loading = true;
+        state.jobInformation.error = { message: "", error: "" };
+        state.jobInformation.showSuccessSnackbar = false;
       })
       .addCase(
         saveJobInformation.fulfilled,
@@ -128,45 +90,40 @@ const jobInformationSlice = createSlice({
             data: { jobInformation: JobInformation; user: Users };
           }>
         ) => {
-          state.loading = false;
-
-          // Guardar solo jobInformation de la respuesta
-          state.jobInformation = action.payload.data.jobInformation;
-
-          state.user.position = action.payload.data.user.position;
-
-          state.showSuccessSnackbar = true;
+          state.jobInformation.loading = false;
+          state.jobInformation.data = action.payload.data.jobInformation;
+          state.user.data.position = action.payload.data.user.position;
+          state.jobInformation.showSuccessSnackbar = true;
         }
       )
       .addCase(
         saveJobInformation.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
-          state.loading = false;
-          state.error = {
+          state.jobInformation.loading = false;
+          state.jobInformation.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message ||
               defaultUpdateJobInformationError.message,
           };
-          state.showSuccessSnackbar = false;
-          state.showErrorAlert = true;
+          state.jobInformation.showSuccessSnackbar = false;
+          state.jobInformation.showErrorAlert = true;
         }
       )
-      //Synchronizing data from UserDetails Tabs reducer for job Information
-      .addCase(fetchUserDetails.fulfilled, (state, action) => {
-        state.jobInformation = {
-          ...state.jobInformation,
+      .addCase(fetchUserOverview.fulfilled, (state, action) => {
+        state.jobInformation.data = {
+          ...state.jobInformation.data,
           ...action.payload.jobInformation,
         };
-        state.user = {
-          ...state.user,
+        state.user.data = {
+          ...state.user.data,
           ...action.payload.user,
         };
       });
   },
 });
 
-// export the actions and the reducer
+// Exportar acciones y reducer
 export const {
   setShowSuccessSnackbar,
   setShowErrorAlert,

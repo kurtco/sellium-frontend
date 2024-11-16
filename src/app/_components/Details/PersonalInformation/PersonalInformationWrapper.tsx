@@ -8,13 +8,12 @@ import ContactDetailsCard from "./ContactDetailsCard";
 import FamilyDetailsCard from "./FamilyDetailsCard";
 import ProductCard from "./ProductCard";
 import { useDispatch, useSelector } from "react-redux";
-
 import { AppDispatch, RootState } from "../../../../../store/store";
 import {
   savePersonalInformation,
   setShowErrorAlert,
   setShowSuccessSnackbar,
-} from "../../../../../store/details/PersonalInformationSlice";
+} from "../../../../../store/details/personalInformationSlice";
 import { PersonalInformation } from "@/interfaces/interfaces";
 import {
   LoadingSpinnerLabels,
@@ -31,24 +30,26 @@ const PersonalInformationWrapper = () => {
   const userCode = params.id as string;
 
   const {
-    showSuccessSnackbar,
-    error,
-    showErrorAlert,
+    data: initialData,
     loading,
-    personalInformation: initialData,
-  } = useSelector((state: RootState) => state.personalInformation);
-
-  const { loading: gettingDetailsloading } = useSelector(
-    (state: RootState) => state.userDetailsTabs
+    showSuccessSnackbar,
+    showErrorAlert,
+    error,
+  } = useSelector(
+    (state: RootState) =>
+      state.userDetails.personalInformation.personalInformation
   );
 
-  // Usar el initialData solo para inicializar el estado
+  const { loading: gettingDetailsloading } = useSelector(
+    (state: RootState) => state.userDetails.userOverview.user
+  );
   const [personalInformation, setPersonalInformation] =
     useState<PersonalInformation>(initialData);
 
-  // Sincronizar el estado cuando el initialData cambie
   useEffect(() => {
-    setPersonalInformation(initialData);
+    if (initialData) {
+      setPersonalInformation(initialData);
+    }
   }, [initialData]);
 
   const handleSubmit = async () => {
@@ -60,8 +61,12 @@ const PersonalInformationWrapper = () => {
   };
 
   const handleCloseSnackbar = useCallback(() => {
-    dispatch(setShowSuccessSnackbar(false));
-    dispatch(setShowErrorAlert(false));
+    dispatch(
+      setShowSuccessSnackbar({ section: "personalInformation", value: false })
+    );
+    dispatch(
+      setShowErrorAlert({ section: "personalInformation", value: false })
+    );
   }, [dispatch]);
 
   return (

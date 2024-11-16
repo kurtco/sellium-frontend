@@ -10,12 +10,12 @@ import {
 } from "@mui/material";
 import { AgentDetailsLabels } from "@/constants/labels.enums";
 import { useParams } from "next/navigation";
-import { fetchUserDetails } from "../../../store/details/UserDetailsSlice";
+import { fetchUserOverview } from "../../../store/details/userOverviewSlice";
 import { AppDispatch } from "../../../store/store";
 import { useDispatch } from "react-redux";
-import { setShowSuccessSnackbar as showPersonalInfoSnackbar } from "../../../store/details/PersonalInformationSlice";
-import { setShowSuccessSnackbar as showJobInfoSnackbar } from "../../../store/details/JobInformationSlice";
-import { setShowSuccessSnackbar as showLicenseSnackbar } from "../../../store/details/LicenseAndTrainingsSlice";
+import { setShowSuccessSnackbar as showPersonalInfoSnackbar } from "../../../store/details/personalInformationSlice";
+import { setShowSuccessSnackbar as showJobInfoSnackbar } from "../../../store/details/jobInformationSlice";
+import { setShowSuccessSnackbar as showLicenseSnackbar } from "../../../store/details/licenseAndTrainingsSlice";
 import { setShowSuccessSnackbar as showProgressSnackbar } from "../../../store/details/progressSlice";
 import { useTabContext } from "@/context/TabContext";
 import Link from "next/link";
@@ -40,11 +40,31 @@ const DetailsTabs = ({ tabs, profileCompletion }: DetailsTabsProps) => {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
-    dispatch(fetchUserDetails(id));
-    dispatch(showPersonalInfoSnackbar(false));
-    dispatch(showJobInfoSnackbar(false));
-    dispatch(showLicenseSnackbar(false));
-    dispatch(showProgressSnackbar(false));
+    dispatch(fetchUserOverview(id));
+    dispatch(
+      showPersonalInfoSnackbar({
+        section: "personalInformation",
+        value: false,
+      })
+    );
+    dispatch(
+      showJobInfoSnackbar({
+        section: "jobInformation",
+        value: false,
+      })
+    );
+    dispatch(
+      showLicenseSnackbar({
+        section: "licenseAndTrainings",
+        value: false,
+      })
+    );
+    dispatch(
+      showProgressSnackbar({
+        section: "progress",
+        value: false,
+      })
+    );
   };
 
   return (
@@ -74,7 +94,7 @@ const DetailsTabs = ({ tabs, profileCompletion }: DetailsTabsProps) => {
               sx={{
                 marginRight: 1,
                 cursor: "pointer",
-                color: (theme) => theme.palette.text.primary,
+                color: theme.palette.text.primary,
               }}
             />
           </Link>

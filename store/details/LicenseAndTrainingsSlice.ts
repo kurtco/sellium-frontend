@@ -1,64 +1,21 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  ErrorResponse,
-  LicenseAndTrainings,
-  Users,
-} from "@/interfaces/interfaces";
+import { LicenseAndTrainings, ErrorResponse } from "@/interfaces/interfaces";
 import {
   defaultUpdateLicenseAndTrainingsError,
   defaultUpdateUserError,
 } from "@/constants/config.enum";
-import { fetchUserDetails } from "./UserDetailsSlice"; // Importamos la acción
 
-// Estado inicial para LicenseAndTrainings
-const initialState: {
-  licenseAndTrainings: LicenseAndTrainings;
-  user: Users;
-  loading: boolean;
-  error: ErrorResponse;
-  showSuccessSnackbar: boolean;
-  showErrorAlert: boolean;
-} = {
-  licenseAndTrainings: {
-    userCode: "",
-    licenseType: "",
-    expires: "",
+import { fetchUserOverview, setUser } from "./userOverviewSlice";
+import { initialState } from "../iniitialState";
 
-    state: "",
-    presented: "",
-  },
-  user: {
-    id: 0,
-    recruiterName: "",
-    leaderName: "",
-    leaderCode: "",
-    userName: "",
-    position: "",
-    recruiterCode: "",
-    userCode: "",
-    startDate: "",
-    birthDate: "",
-    phone: "",
-    email: "",
-    homeAddress: "",
-    businessAddress: "",
-    spouseName: "",
-    recruiter: {} as Users,
-    recruits: [],
-  },
-  loading: false,
-  error: { message: "", error: "" },
-  showSuccessSnackbar: false,
-  showErrorAlert: false,
-};
-
+// Async thunk para guardar 'licenseAndTrainings'
 export const saveLicenseAndTrainings = createAsyncThunk<
   { message: string; data: LicenseAndTrainings },
-  LicenseAndTrainings, // Tipo de entrada
-  { rejectValue: ErrorResponse } // Tipo en caso de error
+  LicenseAndTrainings,
+  { rejectValue: ErrorResponse }
 >(
-  "details/saveLicenseAndTrainings",
-  async (licenseData: LicenseAndTrainings, { rejectWithValue }) => {
+  "saveLicenseAndTrainings",
+  async (licenseData: LicenseAndTrainings, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch("/api/users/details/licenseAndTrainings", {
         method: "POST",
@@ -71,10 +28,16 @@ export const saveLicenseAndTrainings = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
-      // La respuesta debe ser de la forma { message: string; data: unknown }
-      return (await response.json()) as {
-        message: string;
-        data: LicenseAndTrainings;
+      const data = await response.json();
+
+      // Despachamos la acción para actualizar 'user' cuando los datos de 'user' están disponibles
+      if (data.user) {
+        dispatch(setUser(data.user)); // Despachamos la acción para actualizar 'user'
+      }
+
+      return {
+        message: "License and Trainings data saved",
+        data: data.licenseAndTrainings,
       };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
@@ -92,32 +55,36 @@ export const saveLicenseAndTrainings = createAsyncThunk<
 );
 
 const licenseAndTrainingsSlice = createSlice({
-  name: "licenseAndTrainings",
+  name: "licenseAndTrainingsSlice",
   initialState,
   reducers: {
-    setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
-      state.showSuccessSnackbar = action.payload;
+    setShowSuccessSnackbar(
+      state,
+      action: PayloadAction<{
+        section: "licenseAndTrainings";
+        value: boolean;
+      }>
+    ) {
+      state.licenseAndTrainings.showSuccessSnackbar = action.payload.value;
     },
-    setShowErrorAlert(state, action: PayloadAction<boolean>) {
-      state.showErrorAlert = action.payload;
+    setShowErrorAlert(
+      state,
+      action: PayloadAction<{ section: "licenseAndTrainings"; value: boolean }>
+    ) {
+      state.licenseAndTrainings.showErrorAlert = action.payload.value;
     },
     resetLicenseAndTrainingsState(state) {
-      return {
-        ...state,
-        loading: false,
-        error: { message: "", error: "" },
-        showSuccessSnackbar: false,
-        showErrorAlert: false,
-        licenseAndTrainings: initialState.licenseAndTrainings,
+      state.licenseAndTrainings = {
+        ...initialState.licenseAndTrainings,
       };
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(saveLicenseAndTrainings.pending, (state) => {
-        state.loading = true;
-        state.error = { message: "", error: "" };
-        state.showSuccessSnackbar = false;
+        state.licenseAndTrainings.loading = true;
+        state.licenseAndTrainings.error = { message: "", error: "" };
+        state.licenseAndTrainings.showSuccessSnackbar = false;
       })
       .addCase(
         saveLicenseAndTrainings.fulfilled,
@@ -125,35 +92,33 @@ const licenseAndTrainingsSlice = createSlice({
           state,
           action: PayloadAction<{ message: string; data: LicenseAndTrainings }>
         ) => {
-          state.loading = false;
-          state.licenseAndTrainings = action.payload
-            .data as LicenseAndTrainings;
-          state.showSuccessSnackbar = true;
+          state.licenseAndTrainings.loading = false;
+          state.licenseAndTrainings.data = action.payload.data;
+          state.licenseAndTrainings.showSuccessSnackbar = true;
         }
       )
-
       .addCase(
         saveLicenseAndTrainings.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
-          state.loading = false;
-          state.error = {
+          state.licenseAndTrainings.loading = false;
+          state.licenseAndTrainings.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message ||
               defaultUpdateLicenseAndTrainingsError.message,
           };
-          state.showSuccessSnackbar = false;
-          state.showErrorAlert = true;
+          state.licenseAndTrainings.showSuccessSnackbar = false;
+          state.licenseAndTrainings.showErrorAlert = true;
         }
       )
-      // Sincronizando datos del UserDetails Tabs reducer para licenseAndTrainings
-      .addCase(fetchUserDetails.fulfilled, (state, action) => {
-        state.licenseAndTrainings = {
-          ...state.licenseAndTrainings,
+      // Sincronización de datos desde el UserOverviewSlice
+      .addCase(fetchUserOverview.fulfilled, (state, action) => {
+        state.licenseAndTrainings.data = {
+          ...state.licenseAndTrainings.data,
           ...action.payload.licenseAndTrainings,
         };
-        state.user = {
-          ...state.user,
+        state.user.data = {
+          ...state.user.data,
           ...action.payload.user,
         };
       });

@@ -1,46 +1,31 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { ErrorResponse, PersonalInformation } from "@/interfaces/interfaces";
-import { defaultUpdateUserError } from "@/constants/config.enum";
-import { fetchUserDetails } from "./UserDetailsSlice"; // Importamos la acción
+import {
+  ErrorResponse,
+  PersonalInformation,
+  Users,
+} from "@/interfaces/interfaces";
+import {
+  defaultUpdatePersonalInformationError,
+  defaultUpdateUserError,
+} from "@/constants/config.enum";
+import { initialState } from "../iniitialState";
+import { fetchUserOverview, setUser } from "./userOverviewSlice";
 
-// Estado inicial
-const initialState: {
-  personalInformation: PersonalInformation;
-  loading: boolean;
-  error: ErrorResponse;
-  showSuccessSnackbar: boolean;
-  showErrorAlert: boolean;
-} = {
-  personalInformation: {
-    userCode: "",
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
+// Acción asíncrona para guardar información personal
 
-    productType: "",
-    phoneCode: "",
-    phoneNumber: "",
-    email: "",
-    homeAddress: "",
-    businessAddress: "",
-    spouseName: "",
-  },
-  loading: false,
-  error: { message: "", error: "" },
-  showSuccessSnackbar: false,
-  showErrorAlert: false,
-};
-
-// Acción para guardar la información personal
+// Async thunk para guardar `personalInformation`
 export const savePersonalInformation = createAsyncThunk<
-  { message: string; data: PersonalInformation },
+  {
+    message: string;
+    data: { personalInformation: PersonalInformation; user: Users };
+  },
   PersonalInformation,
   { rejectValue: ErrorResponse }
 >(
   "details/savePersonalInformation",
-  async (personalInfo: PersonalInformation, { rejectWithValue }) => {
+  async (personalInfo: PersonalInformation, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch("/api/users/details/personalInformation", {
+      const response = await fetch("/api/users/details/PersonalInformation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(personalInfo),
@@ -50,86 +35,97 @@ export const savePersonalInformation = createAsyncThunk<
         const errorData = await response.json();
         return rejectWithValue(errorData);
       }
+      const data = await response.json();
+
+      if (data.user) {
+        dispatch(setUser(data.user));
+      }
 
       return (await response.json()) as {
         message: string;
-        data: PersonalInformation;
+        data: { personalInformation: PersonalInformation; user: Users };
       };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
-      const errorContent: ErrorResponse = {
+      return rejectWithValue({
         statusCode: errorMessage.statusCode || 404,
-        error: errorMessage.error || defaultUpdateUserError.error,
-        message: errorMessage.message || defaultUpdateUserError.message,
+        error:
+          errorMessage.error || defaultUpdatePersonalInformationError.error,
+        message:
+          errorMessage.message || defaultUpdatePersonalInformationError.message,
         userCode: errorMessage.userCode || "",
         data: errorMessage.data || null,
-      };
-      return rejectWithValue(errorContent);
+      });
     }
   }
 );
 
-const detailsSlice = createSlice({
-  name: "details",
+const personalInformationSlice = createSlice({
+  name: "personalInformationSlice",
   initialState,
   reducers: {
-    setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
-      state.showSuccessSnackbar = action.payload;
+    setShowSuccessSnackbar(
+      state,
+      action: PayloadAction<{ section: "personalInformation"; value: boolean }>
+    ) {
+      state.personalInformation.showSuccessSnackbar = action.payload.value;
     },
-    setShowErrorAlert(state, action: PayloadAction<boolean>) {
-      state.showErrorAlert = action.payload;
+    setShowErrorAlert(
+      state,
+      action: PayloadAction<{ section: "personalInformation"; value: boolean }>
+    ) {
+      state.personalInformation.showErrorAlert = action.payload.value;
     },
     resetPersonalInformationState(state) {
-      return {
-        ...state,
-        loading: false,
-        error: { message: "", error: "" },
-        showSuccessSnackbar: false,
-        showErrorAlert: false,
-        personalInformation: initialState.personalInformation,
+      state.personalInformation = {
+        ...initialState.personalInformation,
       };
     },
   },
   extraReducers: (builder) => {
     builder
-      // Guardar información personal
       .addCase(savePersonalInformation.pending, (state) => {
-        state.loading = true;
-        state.error = { message: "", error: "" };
-        state.showSuccessSnackbar = false;
+        state.personalInformation.loading = true;
+        state.personalInformation.error = { message: "", error: "" };
+        state.personalInformation.showSuccessSnackbar = false;
       })
       .addCase(
         savePersonalInformation.fulfilled,
-
         (
           state,
-          action: PayloadAction<{ message: string; data: PersonalInformation }>
+          action: PayloadAction<{
+            message: string;
+            data: { personalInformation: PersonalInformation; user: Users };
+          }>
         ) => {
-          state.loading = false;
-          state.personalInformation = action.payload
-            .data as PersonalInformation;
-          state.showSuccessSnackbar = true;
+          state.personalInformation.loading = false;
+          state.personalInformation.data =
+            action.payload.data.personalInformation;
+          state.personalInformation.showSuccessSnackbar = true;
         }
       )
       .addCase(
         savePersonalInformation.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
-          state.loading = false;
-          state.error = {
+          state.personalInformation.loading = false;
+          state.personalInformation.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message ||
-              "Error al guardar la información personal",
+              defaultUpdatePersonalInformationError.message,
           };
-          state.showSuccessSnackbar = false;
-          state.showErrorAlert = true;
+          state.personalInformation.showSuccessSnackbar = false;
+          state.personalInformation.showErrorAlert = true;
         }
       )
-      // Sincronizing data  from the UserDetailsTabs reducer  to set here the particular data for personal information
-      .addCase(fetchUserDetails.fulfilled, (state, action) => {
-        state.personalInformation = {
-          ...state.personalInformation, // Mantén cualquier estado que ya haya sido modificado
-          ...action.payload.personalInformation, // Actualiza con los datos traídos del servidor
+      .addCase(fetchUserOverview.fulfilled, (state, action) => {
+        state.personalInformation.data = {
+          ...state.personalInformation.data,
+          ...action.payload.personalInformation,
+        };
+        state.user.data = {
+          ...state.user.data,
+          ...action.payload.user,
         };
       });
   },
@@ -140,6 +136,6 @@ export const {
   setShowSuccessSnackbar,
   setShowErrorAlert,
   resetPersonalInformationState,
-} = detailsSlice.actions;
+} = personalInformationSlice.actions;
 
-export default detailsSlice.reducer;
+export default personalInformationSlice.reducer;

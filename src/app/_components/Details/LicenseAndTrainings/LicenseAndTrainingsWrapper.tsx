@@ -17,7 +17,7 @@ import {
   saveLicenseAndTrainings,
   setShowErrorAlert,
   setShowSuccessSnackbar,
-} from "../../../../../store/details/LicenseAndTrainingsSlice";
+} from "../../../../../store/details/licenseAndTrainingsSlice";
 
 import SnackbarMessage from "../../SnackbarMessage";
 import LoadingSpinner from "../../LoadingSpinner";
@@ -30,18 +30,17 @@ const LicenseAndTrainingsWrapper = () => {
   const userCode = params.id as string;
 
   const {
-    showSuccessSnackbar,
-    error,
-    showErrorAlert,
-    loading,
-    licenseAndTrainings: initialData,
-  } = useSelector((state: RootState) => state.licenseAndTraining);
-
+    licenseAndTrainings: {
+      data: initialData,
+      loading,
+      showSuccessSnackbar,
+      showErrorAlert,
+      error,
+    },
+  } = useSelector((state: RootState) => state.userDetails.licenseAndTrainings);
   const { loading: gettingDetailsloading } = useSelector(
-    (state: RootState) => state.userDetailsTabs
+    (state: RootState) => state.userDetails.userOverview.user
   );
-
-  // Usar el initialData solo para inicializar el estado
   const [licenseAndTrainings, setLicenseAndTrainings] =
     useState<LicenseAndTrainings>(initialData);
 
@@ -59,8 +58,12 @@ const LicenseAndTrainingsWrapper = () => {
   };
 
   const handleCloseSnackbar = useCallback(() => {
-    dispatch(setShowSuccessSnackbar(false));
-    dispatch(setShowErrorAlert(false));
+    dispatch(
+      setShowSuccessSnackbar({ section: "licenseAndTrainings", value: false })
+    );
+    dispatch(
+      setShowErrorAlert({ section: "licenseAndTrainings", value: false })
+    );
   }, [dispatch]);
 
   return (

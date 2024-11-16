@@ -1,57 +1,20 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { ErrorResponse, Progress, Users } from "@/interfaces/interfaces";
+import { Progress, ErrorResponse } from "@/interfaces/interfaces";
 import {
   defaultUpdateProgressError,
   defaultUpdateUserError,
 } from "@/constants/config.enum";
-import { fetchUserDetails } from "./UserDetailsSlice"; // Importamos la acción
+import { initialState } from "../userDetails.reducer";
+import { fetchUserOverview, setUser } from "./userOverviewSlice";
 
-// Initial state for Progress data
-const initialState: {
-  progress: Progress;
-  user: Users;
-  loading: boolean;
-  error: ErrorResponse;
-  showSuccessSnackbar: boolean;
-  showErrorAlert: boolean;
-} = {
-  progress: {
-    userCode: "",
-    year: new Date().getFullYear(),
-  },
-  user: {
-    id: 0,
-    recruiterName: "",
-    leaderName: "",
-    leaderCode: "",
-    userName: "",
-    position: "",
-    recruiterCode: "",
-    userCode: "",
-    startDate: "",
-    birthDate: "",
-    phone: "",
-    email: "",
-    homeAddress: "",
-    businessAddress: "",
-    spouseName: "",
-    recruiter: {} as Users,
-    recruits: [],
-  },
-  loading: false,
-  error: { message: "", error: "" },
-  showSuccessSnackbar: false,
-  showErrorAlert: false,
-};
-
-// Action to save or update Progress data
+// Async thunk para guardar `progress`
 export const saveProgress = createAsyncThunk<
-  { message: string; data: Progress }, // response type
-  Progress, // Parameters type
-  { rejectValue: ErrorResponse } // Error type
+  { message: string; data: Progress },
+  Progress,
+  { rejectValue: ErrorResponse }
 >(
-  "details/saveProgress",
-  async (progressData: Progress, { rejectWithValue }) => {
+  "userDetails/saveProgress",
+  async (progressData: Progress, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch("/api/users/details/progress", {
         method: "POST",
@@ -64,10 +27,14 @@ export const saveProgress = createAsyncThunk<
         return rejectWithValue(errorData);
       }
 
-      return (await response.json()) as {
-        message: string;
-        data: Progress;
-      };
+      const data = await response.json();
+
+      // Si la respuesta contiene datos de 'user', actualizamos 'user' utilizando la acción setUser
+      if (data.user) {
+        dispatch(setUser(data.user)); // Despachamos la acción para actualizar 'user'
+      }
+
+      return { message: "Progress data saved", data: data.progress };
     } catch (error) {
       const errorMessage = error as ErrorResponse;
       const errorContent: ErrorResponse = {
@@ -83,69 +50,66 @@ export const saveProgress = createAsyncThunk<
 );
 
 const progressSlice = createSlice({
-  name: "progress",
+  name: "progressSlice",
   initialState,
   reducers: {
-    setShowSuccessSnackbar(state, action: PayloadAction<boolean>) {
-      state.showSuccessSnackbar = action.payload;
+    setShowSuccessSnackbar(
+      state,
+      action: PayloadAction<{ section: "progress"; value: boolean }>
+    ) {
+      state.progress.showSuccessSnackbar = action.payload.value;
     },
-    setShowErrorAlert(state, action: PayloadAction<boolean>) {
-      state.showErrorAlert = action.payload;
+    setShowErrorAlert(
+      state,
+      action: PayloadAction<{ section: "progress"; value: boolean }>
+    ) {
+      state.progress.showErrorAlert = action.payload.value;
     },
     resetProgressState(state) {
-      return {
-        ...state,
-        loading: false,
-        error: { message: "", error: "" },
-        showSuccessSnackbar: false,
-        showErrorAlert: false,
-        progress: initialState.progress,
+      state.progress = {
+        ...initialState.progress,
       };
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(saveProgress.pending, (state) => {
-        state.loading = true;
-        state.error = { message: "", error: "" };
-        state.showSuccessSnackbar = false;
+        state.progress.loading = true;
+        state.progress.error = { message: "", error: "" };
+        state.progress.showSuccessSnackbar = false;
       })
       .addCase(
         saveProgress.fulfilled,
         (state, action: PayloadAction<{ message: string; data: Progress }>) => {
-          state.loading = false;
-          state.progress = action.payload.data as Progress;
-          state.showSuccessSnackbar = true;
+          state.progress.loading = false;
+          state.progress.data = action.payload.data;
+          state.progress.showSuccessSnackbar = true;
         }
       )
       .addCase(
         saveProgress.rejected,
         (state, action: PayloadAction<ErrorResponse | undefined>) => {
-          state.loading = false;
-          state.error = {
+          state.progress.loading = false;
+          state.progress.error = {
             error: action.payload?.error || defaultUpdateUserError.error,
             message:
               action.payload?.message || defaultUpdateProgressError.message,
           };
-          state.showSuccessSnackbar = false;
-          state.showErrorAlert = true;
+          state.progress.showSuccessSnackbar = false;
+          state.progress.showErrorAlert = true;
         }
       )
-      // Synchronizing data from UserDetails Tabs reducer for Progress
-      .addCase(fetchUserDetails.fulfilled, (state, action) => {
-        state.progress = {
-          ...state.progress,
+      // Sincronización de datos desde el UserOverviewSlice
+      .addCase(fetchUserOverview.fulfilled, (state, action) => {
+        state.progress.data = {
+          ...state.progress.data,
           ...action.payload.progress,
-        };
-        state.user = {
-          ...state.user,
-          ...action.payload.user,
         };
       });
   },
 });
 
-// Export actions and reducer
+// Exportar acciones y reducer
 export const { setShowSuccessSnackbar, setShowErrorAlert, resetProgressState } =
   progressSlice.actions;
 

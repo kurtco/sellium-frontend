@@ -6,22 +6,30 @@ import { RootState } from "../../../../../store/store";
 import { useSelector } from "react-redux";
 import { LoadingSpinnerLabels } from "@/constants/labels.enums";
 import LoadingSpinner from "../../LoadingSpinner";
+import { PersonalInformation } from "@/interfaces/interfaces";
 
 const SummaryWrapper = () => {
-  const { loading: gettingDetailsloading, userDetails } = useSelector(
-    (state: RootState) => state.userDetailsTabs
+  const { data: personalInformationData } = useSelector(
+    (state: RootState) =>
+      state.userDetails.personalInformation.personalInformation
   );
 
-  const { personalInformation, jobInformation, licenseAndTrainings } =
-    useSelector((state: RootState) => ({
-      personalInformation: state.personalInformation.personalInformation,
-      jobInformation: state.jobInformation.jobInformation,
-      licenseAndTrainings: state.licenseAndTraining.licenseAndTrainings,
-    }));
+  const { data: jobInformation } = useSelector(
+    (state: RootState) => state.userDetails.jobInformation.jobInformation
+  );
+
+  const { data: licenseAndTrainings } = useSelector(
+    (state: RootState) =>
+      state.userDetails.licenseAndTrainings.licenseAndTrainings
+  );
+
+  const { data: user, loading: userLoading } = useSelector(
+    (state: RootState) => state.userDetails.userOverview.user
+  );
 
   return (
     <>
-      {gettingDetailsloading ? (
+      {userLoading ? (
         <LoadingSpinner text={LoadingSpinnerLabels.details} />
       ) : (
         <Grid
@@ -35,11 +43,11 @@ const SummaryWrapper = () => {
           }}
         >
           <Grid>
-            <SummaryCard userDetails={userDetails.user} />
+            <SummaryCard userDetails={user} />
           </Grid>
           <Grid>
             <DetailedInformation
-              personalDetails={personalInformation}
+              personalDetails={personalInformationData as PersonalInformation}
               jobDetails={jobInformation}
               licenseDetails={licenseAndTrainings}
             />

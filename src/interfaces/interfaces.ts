@@ -46,7 +46,7 @@ export interface Users {
   homeAddress: string;
   businessAddress: string;
   spouseName: string;
-  recruiter: Recruiter;
+  recruiter: Recruiter | null;
   recruits: Recruit[];
 }
 
@@ -213,9 +213,26 @@ export interface DetailsState {
   jobInformation: JobInformation;
   licenseAndTrainings: LicenseAndTrainings;
   progress: Progress;
-  user: Users | null;
+  user: Users;
 }
 
+export interface SectionState<T> {
+  data: T;
+  loading: boolean;
+  error: ErrorResponse;
+  showSuccessSnackbar: boolean;
+  showErrorAlert: boolean;
+  isFetched: boolean;
+  notFound?: boolean;
+}
+
+export interface UserDetailsState {
+  personalInformation: SectionState<PersonalInformation>;
+  jobInformation: SectionState<JobInformation>;
+  licenseAndTrainings: SectionState<LicenseAndTrainings>;
+  progress: SectionState<Progress>;
+  user: SectionState<Users>;
+}
 export type Months =
   | "january"
   | "february"

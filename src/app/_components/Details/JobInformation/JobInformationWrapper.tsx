@@ -16,7 +16,7 @@ import {
   saveJobInformation,
   setShowErrorAlert,
   setShowSuccessSnackbar,
-} from "../../../../../store/details/JobInformationSlice";
+} from "../../../../../store/details/jobInformationSlice";
 import SnackbarMessage from "../../SnackbarMessage";
 import LoadingSpinner from "../../LoadingSpinner";
 import { useParams } from "next/navigation";
@@ -27,32 +27,32 @@ const JobInformationWrapper = () => {
   const userCode = params.id as string;
 
   const {
-    showSuccessSnackbar,
-    error,
-    showErrorAlert,
-    loading,
-    jobInformation: jobInformationData,
-    user,
-  } = useSelector((state: RootState) => state.jobInformation);
+    jobInformation: {
+      data: jobInformationData,
+      loading,
+      showSuccessSnackbar,
+      showErrorAlert,
+      error,
+    },
+    user: { data: userData },
+  } = useSelector((state: RootState) => state.userDetails.jobInformation);
 
   const { loading: gettingDetailsloading } = useSelector(
-    (state: RootState) => state.userDetailsTabs
+    (state: RootState) => state.userDetails.userOverview.user
   );
-
   const [jobInformation, setJobInformation] =
     useState<JobInformation>(jobInformationData);
-  const [jobDependencies, setJobDependencies] = useState<Users>(user);
+  const [jobDependencies, setJobDependencies] = useState<Users>(userData);
 
   useEffect(() => {
-    if (user?.position) {
+    if (userData?.position) {
       setJobInformation((prevState) => ({
         ...prevState,
-        position: user.position || prevState.position,
+        position: userData.position || prevState.position,
       }));
     }
-
-    setJobDependencies(user);
-  }, [jobInformationData, user]);
+    setJobDependencies(userData);
+  }, [jobInformationData, userData]);
 
   const handleSubmit = async () => {
     const dataToSave = {
@@ -72,8 +72,10 @@ const JobInformationWrapper = () => {
   };
 
   const handleCloseSnackbar = useCallback(() => {
-    dispatch(setShowSuccessSnackbar(false));
-    dispatch(setShowErrorAlert(false));
+    dispatch(
+      setShowSuccessSnackbar({ section: "jobInformation", value: false })
+    );
+    dispatch(setShowErrorAlert({ section: "jobInformation", value: false }));
   }, [dispatch]);
 
   return (
