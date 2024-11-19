@@ -296,3 +296,55 @@ export const positionsSelect = [
   "Executive Marketing Director",
   "Broker",
 ];
+export const dummyPolicyData = [
+  {
+    policyYear: 1,
+    ageBegOfYr: 45,
+    guaranteedAnnualPremium: 2195,
+    deathBenefit: 500000,
+  },
+  {
+    policyYear: 2,
+    ageBegOfYr: 46,
+    guaranteedAnnualPremium: 2195,
+    deathBenefit: 500000,
+  },
+  {
+    policyYear: 3,
+    ageBegOfYr: 47,
+    guaranteedAnnualPremium: 2195,
+    deathBenefit: 500000,
+  },
+  {
+    policyYear: 4,
+    ageBegOfYr: 48,
+    guaranteedAnnualPremium: 2195,
+    deathBenefit: 500000,
+  },
+  {
+    policyYear: 5,
+    ageBegOfYr: 49,
+    guaranteedAnnualPremium: 2195,
+    deathBenefit: 500000,
+  },
+  { policyYear: 10, total: 21950, average: 2195 },
+  {
+    policyYear: 11,
+    ageBegOfYr: 55,
+    guaranteedAnnualPremium: 2195,
+    deathBenefit: 500000,
+  },
+  { policyYear: 15, total: 43900, average: 2195 },
+  {
+    policyYear: 31,
+    ageBegOfYr: 75,
+    guaranteedAnnualPremium: 36410,
+    deathBenefit: 500000,
+  },
+  {
+    policyYear: 51,
+    ageBegOfYr: 95,
+    guaranteedAnnualPremium: 365150,
+    deathBenefit: 500000,
+  },
+];

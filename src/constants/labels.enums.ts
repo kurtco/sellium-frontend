@@ -14,6 +14,17 @@ export enum AgentsDataTableHeaders {
 
 export enum ButtonsLabels {
   ADDAGENT = "Add Agent",
+  ADDAGENTPDF = "Add PDF",
+}
+
+export enum UploadAgentPDFCaptureLabels {
+  MODALTITLE = "Add Agent from PDF",
+  CONTENTTITLE = "Drag & Drop or Select PDF",
+  CONTENT = "Drop here the PDF with the agent information or click",
+  CHOSEIMAGE = "Choose PDF to upload",
+  CANCELBUTTON = "Cancel",
+  ADDBUTTON = "Add Agent",
+  REMOVEICON = "Remove",
 }
 
 export enum UploadAgentCaptureLabels {
