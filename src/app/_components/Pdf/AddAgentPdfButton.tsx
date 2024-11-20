@@ -6,9 +6,10 @@ import { ButtonsLabels } from "@/constants/labels.enums";
 
 import { FileWithPreview } from "@/interfaces/interfaces";
 import { useSearchParams } from "next/navigation";
-import { resetImageState } from "../../../../store/imageSlice";
+
 import { AppDispatch } from "../../../../store/store";
 import AddAgentPdfModal from "./AddAgentPdfModal";
+import { resetPdfState } from "../../../../store/pdfSlice";
 
 const AddAgentPdfButton = () => {
   const [open, setOpen] = useState(false);
@@ -21,14 +22,14 @@ const AddAgentPdfButton = () => {
     const openModal = searchParams.get("openmodal");
     if (openModal === "true") {
       setOpen(true);
-      dispatch(resetImageState());
+      dispatch(resetPdfState());
     }
   }, [searchParams, dispatch]);
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setOpen(true);
-    dispatch(resetImageState());
+    dispatch(resetPdfState());
   };
 
   const handleClose = () => {

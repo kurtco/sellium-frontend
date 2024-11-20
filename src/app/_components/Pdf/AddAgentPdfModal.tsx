@@ -1,6 +1,8 @@
 import { Box, Modal, useTheme } from "@mui/material";
 import UploadAgentCapturePdf from "./UploadAgentCapturePdf";
 import { FileWithPreview } from "@/interfaces/interfaces";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/store";
 
 interface AddAgentModalProps {
   open: boolean;
@@ -16,8 +18,9 @@ const AddAgentPdfModal = ({
   handleClose,
 }: AddAgentModalProps) => {
   const theme = useTheme();
-  const loading = false;
-  const showWarningMessage = false;
+
+  const { loading } = useSelector((state: RootState) => state.pdf);
+
   const setFieldValue = (field: string, value: unknown) => {
     if (field === "files") {
       setFiles(value as FileWithPreview[]);
@@ -55,7 +58,7 @@ const AddAgentPdfModal = ({
           boxShadow: 24,
           p: 4,
           borderRadius: "4px",
-          width: showWarningMessage ? "444px" : "100%",
+          width: "100%",
         }}
       >
         <UploadAgentCapturePdf
