@@ -1,19 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { styled, useTheme } from "@mui/material/styles";
-import {
-  Box,
-  Button,
-  CardMedia,
-  Stack,
-  Typography,
-  Link,
-  Alert,
-} from "@mui/material";
+import { Box, Button, Stack, Typography, Link, Alert } from "@mui/material";
 import { useDropzone } from "react-dropzone";
-
-// project imports
 
 import {
   LoadingSpinnerLabels,
@@ -22,16 +12,16 @@ import {
 
 import useConfig from "@/hooks/useConfig";
 import { defaultImageUploapError, ThemeMode } from "@/constants/config.enum";
-import { defaultBlueColor, dummyPolicyData } from "@/constants/constant";
-import { AppDispatch } from "../../../../store/store";
+import { defaultBlueColor } from "@/constants/constant";
+import { AppDispatch, RootState } from "../../../../store/store";
 import LoadingSpinner from "../LoadingSpinner";
 import WarningIcon from "../WarningIcon";
 import UploadFileIcon from "../UploapFileIcon";
 import RejectionFiles from "../RejectionFiles";
 import CloseIcon from "../CloseIcon";
 import RecycleBinIcon from "../RecycleBinIcon";
-import GenericInformation from "./GenericPdf";
-import PdfTable from "./PdfTable";
+import GenericInformation from "./GenericInformation";
+import { processPdf, setShowErrorAlert } from "../../../../store/pdfSlice";
 
 interface UploadAgentCaptureProps {
   error?: boolean;
@@ -69,16 +59,9 @@ const UploadAgentCapturePdf = ({
   const dispatch = useDispatch<AppDispatch>();
   useState<FileWithPreview | null>(null);
 
-  const [dataToDisplay, setDataToDisplay] = useState<Record<
-    string,
-    any
-  > | null>(null); // Estado para los datos
-  const [showGenericInfo, setShowGenericInfo] = useState(false); // Controla si se muestra GenericInformation
-
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-
-  const loading = false;
-  const error = false;
+  const { loading, extractedData, showErrorAlert, error } = useSelector(
+    (state: RootState) => state.pdf
+  );
 
   const {
     getRootProps,
@@ -92,8 +75,7 @@ const UploadAgentCapturePdf = ({
     },
     multiple: false,
     onDrop: (acceptedFiles: any) => {
-      // dispatch(setShowErrorAlert(false));
-      setShowErrorAlert(false);
+      dispatch(setShowErrorAlert(false));
       setFieldValue(
         "files",
         acceptedFiles.map((file: FileWithPreview) =>
@@ -119,22 +101,20 @@ const UploadAgentCapturePdf = ({
     if (loading) return;
 
     setFieldValue("files", null);
-    // dispatch(setShowErrorAlert(false));
+    dispatch(setShowErrorAlert(false));
   }, [loading, setFieldValue, dispatch]);
 
-  const onSendScreenShot = () => {
+  const onSendPdf = () => {
     if (!file || file.length === 0) return;
-    console.log("file pdf ---->", file);
 
-    // Actualizar estado para mostrar GenericInformation
-    setDataToDisplay(dummyPolicyData);
-    setShowGenericInfo(true);
-    setFieldValue("files", []);
+    dispatch(setShowErrorAlert(false));
+    dispatch(processPdf(file[0])).unwrap();
   };
 
-  if (showGenericInfo && dataToDisplay) {
-    // return <GenericInformation data={dataToDisplay} />;
-    return <PdfTable data={dummyPolicyData} />;
+  if (extractedData) {
+    return (
+      <GenericInformation data={extractedData} handleCloseModal={closeModal} />
+    );
   }
 
   return (
@@ -174,7 +154,7 @@ const UploadAgentCapturePdf = ({
         </Box>
       )}
 
-      {loading && <LoadingSpinner text={LoadingSpinnerLabels.message} />}
+      {loading && <LoadingSpinner text={LoadingSpinnerLabels.pdf} />}
 
       {!loading && (
         <DropzoneWrapper
@@ -214,35 +194,22 @@ const UploadAgentCapturePdf = ({
               </Typography>
             </Stack>
           )}
-
           {file && !loading && (
-            <>
-              {file[0].type === "application/pdf" ? (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Typography variant="body1">{file[0].name}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    PDF File
-                  </Typography>
-                </Box>
-              ) : (
-                <CardMedia
-                  component="img"
-                  src={file[0].preview}
-                  sx={{
-                    width: "100%",
-                    maxHeight: "500px",
-                    objectFit: "contain",
-                  }}
-                />
-              )}
-            </>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography variant="body1">
+                {file[0]?.name || "Unnamed PDF"}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                PDF File
+              </Typography>
+            </Box>
           )}
         </DropzoneWrapper>
       )}
@@ -258,7 +225,7 @@ const UploadAgentCapturePdf = ({
           severity="error"
           icon={<WarningIcon />}
         >
-          {defaultImageUploapError.message}
+          {error.message || defaultImageUploapError.message}
         </Alert>
       )}
 
@@ -276,7 +243,7 @@ const UploadAgentCapturePdf = ({
             <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
               <Button
                 disableElevation
-                variant="contained"
+                variant="outlined"
                 onClick={onRemoveScreenShot}
                 disabled={!file || file?.length === 0}
                 startIcon={
@@ -316,7 +283,7 @@ const UploadAgentCapturePdf = ({
             <Button
               variant="contained"
               color="info"
-              onClick={onSendScreenShot}
+              onClick={onSendPdf}
               disabled={!file || file?.length === 0}
               sx={{ textTransform: "none" }}
               disableElevation

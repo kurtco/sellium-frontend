@@ -61,7 +61,6 @@ const AddAgentPdfModal = ({
         <UploadAgentCapturePdf
           file={files}
           setFieldValue={setFieldValue}
-          error={false}
           handleCloseModal={handleClose}
         />
       </Box>

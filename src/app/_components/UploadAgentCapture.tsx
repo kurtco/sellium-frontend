@@ -21,7 +21,7 @@ import {
 import CloseIcon from "./CloseIcon";
 import RecycleBinIcon from "./RecycleBinIcon";
 import useConfig from "@/hooks/useConfig";
-import { defaultImageUploapError, ThemeMode } from "@/constants/config.enum";
+import { defaultPdfUploapError, ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
 import LoadingSpinner from "./LoadingSpinner";
 import { DataFromImage } from "@/interfaces/interfaces";
@@ -77,19 +77,22 @@ const UploadAgentCapture = ({
     fileRejections,
   } = useDropzone({
     accept: {
-      "image/*": [],
+      "image/jpeg": [],
+      "image/png": [],
     },
     multiple: false,
-    onDrop: (acceptedFiles: any) => {
-      dispatch(setShowErrorAlert(false));
-      setFieldValue(
-        "files",
-        acceptedFiles.map((file: FileWithPreview) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
+    onDrop: (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        dispatch(setShowErrorAlert(false));
+        setFieldValue(
+          "files",
+          acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          )
+        );
+      }
     },
   });
 
@@ -236,7 +239,7 @@ const UploadAgentCapture = ({
           severity="error"
           icon={<WarningIcon />}
         >
-          {error.message || defaultImageUploapError.message}
+          {error.message || defaultPdfUploapError.message}
         </Alert>
       )}
 

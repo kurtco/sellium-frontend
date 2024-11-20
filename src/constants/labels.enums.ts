@@ -14,7 +14,7 @@ export enum AgentsDataTableHeaders {
 
 export enum ButtonsLabels {
   ADDAGENT = "Add Agent",
-  ADDAGENTPDF = "Add PDF",
+  ADDAGENTPDF = "Add Sale",
 }
 
 export enum UploadAgentPDFCaptureLabels {
@@ -39,6 +39,7 @@ export enum UploadAgentCaptureLabels {
 
 export enum LoadingSpinnerLabels {
   message = "Processing the image. This may take a few minutes, please wait.",
+  pdf = "Processing the PDF file. This may take a few minutes, please wait.",
   details = "Loading agent details",
   datatable = "Loading agents",
 }

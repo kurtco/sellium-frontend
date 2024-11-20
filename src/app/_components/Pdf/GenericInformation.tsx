@@ -1,13 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Button } from "@mui/material";
+import { pdfExtractedData } from "@/interfaces/interfaces";
+import { UploadAgentPDFCaptureLabels } from "@/constants/labels.enums";
 
 interface GenericInformationProps {
-  data: Record<string, any>; // Acepta cualquier objeto
+  data: pdfExtractedData; // Se asegura de tipar con la interfaz correspondiente
+  handleCloseModal: () => void;
 }
 
-const GenericInformation = ({ data }: GenericInformationProps) => {
+const GenericInformation = ({
+  data,
+  handleCloseModal,
+}: GenericInformationProps) => {
   const theme = useTheme();
+  const formatKeyToLabel = (key: string): string => {
+    return key
+      .replace(/_/g, " ")
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/^./, (str) => str.toUpperCase());
+  };
 
   const isEven = (index: number) => index % 2 === 0;
 
@@ -46,9 +58,9 @@ const GenericInformation = ({ data }: GenericInformationProps) => {
           fontWeight: "bold",
         }}
       >
-        Information
+        Sale Informatin.
       </Typography>
-      {Object.entries(data).map(([key, value], index) => (
+      {Object.entries(data?.data).map(([key, value], index) => (
         <Box
           key={key}
           sx={{
@@ -70,7 +82,7 @@ const GenericInformation = ({ data }: GenericInformationProps) => {
               color: theme.palette.text.secondary,
             }}
           >
-            {key.replace(/_/g, " ")}{" "}
+            {formatKeyToLabel(key)}
           </Typography>
           <Typography>
             {Array.isArray(value)
@@ -81,6 +93,24 @@ const GenericInformation = ({ data }: GenericInformationProps) => {
           </Typography>
         </Box>
       ))}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          gap: 2,
+          flexGrow: 1,
+        }}
+      >
+        <Button
+          variant="outlined"
+          disableElevation
+          onClick={handleCloseModal}
+          sx={{ textTransform: "none" }}
+        >
+          {UploadAgentPDFCaptureLabels.CANCELBUTTON}
+        </Button>
+      </Box>
     </Box>
   );
 };
