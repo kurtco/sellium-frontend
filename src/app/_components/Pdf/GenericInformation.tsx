@@ -58,7 +58,7 @@ const GenericInformation = ({
           fontWeight: "bold",
         }}
       >
-        Sale Informatin.
+        Sale Information.
       </Typography>
       {Object.entries(data?.data).map(([key, value], index) => (
         <Box
