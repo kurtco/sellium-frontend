@@ -1,34 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import CardMedia from "@mui/material/CardMedia";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
+import { Box, Button, Stack, Typography, Link, Alert } from "@mui/material";
 import { useDropzone } from "react-dropzone";
-import Link from "@mui/material/Link";
 
-// project import
-import RejectionFiles from "./RejectionFiles";
-import UploadFileIcon from "./UploapFileIcon";
 import {
   LoadingSpinnerLabels,
-  UploadAgentCaptureLabels,
+  UploadAgentPDFCaptureLabels,
 } from "@/constants/labels.enums";
-import CloseIcon from "./CloseIcon";
-import RecycleBinIcon from "./RecycleBinIcon";
+
 import useConfig from "@/hooks/useConfig";
-import { defaultPdfUploapError, ThemeMode } from "@/constants/config.enum";
+import { defaultImageUploapError, ThemeMode } from "@/constants/config.enum";
 import { defaultBlueColor } from "@/constants/constant";
-import LoadingSpinner from "./LoadingSpinner";
-import { DataFromImage } from "@/interfaces/interfaces";
-import { AppDispatch, RootState } from "../../../store/store";
-import { processImage, setShowErrorAlert } from "../../../store/imageSlice";
-import { Alert } from "@mui/material";
-import WarningIcon from "./WarningIcon";
+import { AppDispatch, RootState } from "../../../../store/store";
+import LoadingSpinner from "../LoadingSpinner";
+import WarningIcon from "../WarningIcon";
+import UploadFileIcon from "../UploapFileIcon";
+import RejectionFiles from "../RejectionFiles";
+import CloseIcon from "../CloseIcon";
+import RecycleBinIcon from "../RecycleBinIcon";
+import GenericInformation from "./GenericInformation";
+import { processPdf, setShowErrorAlert } from "../../../../store/pdfSlice";
 
 interface UploadAgentCaptureProps {
   error?: boolean;
@@ -55,7 +48,7 @@ const DropzoneWrapper = styled("div")(({ theme }) => ({
   textAlign: "center",
 }));
 
-const UploadAgentCapture = ({
+const UploadAgentCapturePdf = ({
   file,
   setFieldValue,
   sx,
@@ -64,10 +57,11 @@ const UploadAgentCapture = ({
   const theme = useTheme();
   const { mode } = useConfig();
   const dispatch = useDispatch<AppDispatch>();
-  useState<DataFromImage | null>(null);
+  useState<FileWithPreview | null>(null);
 
-  const { loading, dataFromImage, error, showSuccessSnackbar, showErrorAlert } =
-    useSelector((state: RootState) => state.image);
+  const { loading, extractedData, showErrorAlert, error } = useSelector(
+    (state: RootState) => state.pdf
+  );
 
   const {
     getRootProps,
@@ -77,22 +71,22 @@ const UploadAgentCapture = ({
     fileRejections,
   } = useDropzone({
     accept: {
-      "image/jpeg": [],
-      "image/png": [],
+      "application/pdf": [], // PDFs
     },
     multiple: false,
-    onDrop: (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        dispatch(setShowErrorAlert(false));
-        setFieldValue(
-          "files",
-          acceptedFiles.map((file) =>
-            Object.assign(file, {
-              preview: URL.createObjectURL(file),
-            })
-          )
-        );
-      }
+    onDrop: (acceptedFiles: any) => {
+      dispatch(setShowErrorAlert(false));
+      setFieldValue(
+        "files",
+        acceptedFiles.map((file: FileWithPreview) =>
+          Object.assign(file, {
+            preview:
+              file.type === "application/pdf"
+                ? null
+                : URL.createObjectURL(file),
+          })
+        )
+      );
     },
   });
 
@@ -110,30 +104,18 @@ const UploadAgentCapture = ({
     dispatch(setShowErrorAlert(false));
   }, [loading, setFieldValue, dispatch]);
 
-  useEffect(() => {
-    if (
-      !dataFromImage ||
-      !dataFromImage?.userCode ||
-      loading ||
-      !showSuccessSnackbar
-    ) {
-      return;
-    }
-    onRemoveScreenShot();
-    closeModal();
-  }, [
-    loading,
-    dataFromImage,
-    onRemoveScreenShot,
-    closeModal,
-    showSuccessSnackbar,
-  ]);
-
-  const onSendScreenShot = () => {
+  const onSendPdf = () => {
     if (!file || file.length === 0) return;
+
     dispatch(setShowErrorAlert(false));
-    dispatch(processImage(file[0]));
+    dispatch(processPdf(file[0])).unwrap();
   };
+
+  if (extractedData) {
+    return (
+      <GenericInformation data={extractedData} handleCloseModal={closeModal} />
+    );
+  }
 
   return (
     <Box
@@ -151,7 +133,7 @@ const UploadAgentCapture = ({
           }}
         >
           <Typography fontWeight={"bold"}>
-            {UploadAgentCaptureLabels.MODALTITLE}
+            {UploadAgentPDFCaptureLabels.MODALTITLE}
           </Typography>
           <Button
             disableElevation
@@ -160,7 +142,6 @@ const UploadAgentCapture = ({
             startIcon={<CloseIcon />}
             sx={{
               paddingRight: 0,
-
               justifyContent: "flex-end",
               border: "none",
               boxShadow: "none",
@@ -173,7 +154,7 @@ const UploadAgentCapture = ({
         </Box>
       )}
 
-      {loading && <LoadingSpinner text={LoadingSpinnerLabels.message} />}
+      {loading && <LoadingSpinner text={LoadingSpinnerLabels.pdf} />}
 
       {!loading && (
         <DropzoneWrapper
@@ -186,7 +167,7 @@ const UploadAgentCapture = ({
               bgcolor: theme.palette.background.default,
             }),
             ...(file && {
-              padding: "0", // removing padding when there is a image
+              padding: "0",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -202,28 +183,33 @@ const UploadAgentCapture = ({
                 color={theme.palette.text.primary}
                 sx={{ fontWeight: 500 }}
               >
-                {UploadAgentCaptureLabels.CONTENTTITLE}
+                {UploadAgentPDFCaptureLabels.CONTENTTITLE}
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                {UploadAgentCaptureLabels.CONTENT}
+                {UploadAgentPDFCaptureLabels.CONTENT}
                 <Link href="#" color="primary">
                   {" "}
-                  {UploadAgentCaptureLabels.CHOSEIMAGE}
+                  {UploadAgentPDFCaptureLabels.CHOSEIMAGE}
                 </Link>
               </Typography>
             </Stack>
           )}
-
           {file && !loading && (
-            <CardMedia
-              component="img"
-              src={file[0].preview}
+            <Box
               sx={{
-                width: "100%",
-                maxHeight: "500px",
-                objectFit: "contain",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-            />
+            >
+              <Typography variant="body1">
+                {file[0]?.name || "Unnamed PDF"}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                PDF File
+              </Typography>
+            </Box>
           )}
         </DropzoneWrapper>
       )}
@@ -239,7 +225,7 @@ const UploadAgentCapture = ({
           severity="error"
           icon={<WarningIcon />}
         >
-          {error.message || defaultPdfUploapError.message}
+          {error.message || defaultImageUploapError.message}
         </Alert>
       )}
 
@@ -271,7 +257,7 @@ const UploadAgentCapture = ({
                   textTransform: "none",
                 }}
               >
-                {UploadAgentCaptureLabels.REMOVEICON}
+                {UploadAgentPDFCaptureLabels.REMOVEICON}
               </Button>
             </Box>
           )}
@@ -291,19 +277,19 @@ const UploadAgentCapture = ({
               onClick={closeModal}
               sx={{ textTransform: "none" }}
             >
-              {UploadAgentCaptureLabels.CANCELBUTTON}
+              {UploadAgentPDFCaptureLabels.CANCELBUTTON}
             </Button>
 
             <Button
               variant="contained"
               color="info"
-              onClick={onSendScreenShot}
+              onClick={onSendPdf}
               disabled={!file || file?.length === 0}
               sx={{ textTransform: "none" }}
               disableElevation
             >
               <Typography sx={{ color: theme.palette.grey[100] }}>
-                {UploadAgentCaptureLabels.ADDBUTTON}
+                {UploadAgentPDFCaptureLabels.ADDBUTTON}
               </Typography>
             </Button>
           </Box>
@@ -313,4 +299,4 @@ const UploadAgentCapture = ({
   );
 };
 
-export default UploadAgentCapture;
+export default UploadAgentCapturePdf;

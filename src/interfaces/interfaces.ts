@@ -229,3 +229,23 @@ export type Months =
   | "october"
   | "november"
   | "december";
+
+export interface pdfExtractedData {
+  statusCode: number;
+  data: pdfData;
+}
+
+export interface pdfData {
+  agentName: string;
+  companyName: string;
+  productName: string;
+  clientName: string;
+  gender: string;
+  initialPremium: string;
+  specifiedAmount: string;
+  state: string;
+  totalYearsProduct: string;
+  applicationDate: string;
+  clientYearsOld: string;
+  primaAnual: string;
+}

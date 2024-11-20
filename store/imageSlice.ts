@@ -21,7 +21,7 @@ export const processImage = createAsyncThunk<
     });
 
     if (!base64Response.ok) {
-      throw new Error("Error al convertir la imagen a base64");
+      throw new Error("Error converting the image to base64");
     }
 
     const { base64 } = await base64Response.json();

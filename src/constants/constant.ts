@@ -296,3 +296,9 @@ export const positionsSelect = [
   "Executive Marketing Director",
   "Broker",
 ];
+
+export const noCacheHeaders = new Headers({
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  Pragma: "no-cache",
+  Expires: "0",
+});

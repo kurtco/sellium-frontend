@@ -26,6 +26,11 @@ export enum OcrServiceStatus {
   Default = "Failed to process image",
 }
 
+export enum defaultPdfUploapError {
+  message = "There was a issue processing the PDF, please try again!",
+  error = "Internal Server Error",
+}
+
 export enum defaultImageUploapError {
   message = "There was a issue processing the image, please try again!",
   error = "Internal Server Error",

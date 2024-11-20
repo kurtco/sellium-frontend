@@ -16,6 +16,7 @@ import FilterButton from "../FilterButton";
 import SearchBar from "../SearchBar";
 import AddAgentButton from "../AddAgentButton";
 import { DataTableLabels } from "@/constants/labels.enums";
+import AddAgentPdfButton from "../Pdf/AddAgentPdfButton";
 
 const DataTableHeaderActions = () => {
   const theme = useTheme();
@@ -101,6 +102,7 @@ const DataTableHeaderActions = () => {
 
         <Box>
           <Suspense>
+            <AddAgentPdfButton />
             <AddAgentButton />
           </Suspense>
         </Box>
